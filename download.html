@@ -6,8 +6,6 @@
 
 <title>Download Foto Customer</title>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
 <style>
@@ -26,19 +24,20 @@ body{
 
 .header h1{
   margin:0;
-  font-size:32px;
+  font-size:42px;
 }
 
 .header p{
   opacity:0.7;
+  margin-top:10px;
 }
 
 .gallery{
   max-width:1200px;
   margin:auto;
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-  gap:20px;
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:25px;
   padding:20px;
 }
 
@@ -47,6 +46,11 @@ body{
   border-radius:20px;
   overflow:hidden;
   box-shadow:0 10px 25px rgba(0,0,0,0.3);
+  transition:0.3s;
+}
+
+.card:hover{
+  transform:translateY(-5px);
 }
 
 .card img{
@@ -60,19 +64,31 @@ body{
   background:#25D366;
   color:white;
   text-decoration:none;
-  padding:14px;
+  padding:15px;
   font-weight:600;
+  transition:0.3s;
+}
+
+.download-btn:hover{
+  background:#1ebe5d;
 }
 
 .loading{
   text-align:center;
-  padding:50px;
+  padding:60px 20px;
+  opacity:0.8;
 }
 
 .empty{
   text-align:center;
-  padding:50px;
+  padding:60px 20px;
   opacity:0.7;
+}
+
+footer{
+  text-align:center;
+  padding:40px 20px;
+  opacity:0.5;
 }
 
 </style>
@@ -95,85 +111,71 @@ body{
   Foto tidak ditemukan
 </div>
 
+<footer>
+  © 2026 DR Self Photo Studio
+</footer>
+
 <script>
-
-const supabaseUrl = 'https://dokayeukqfzbkktnmcoy.supabase.co';
-
-const supabaseKey = 'sb_publishable_iUb2y0mBwhZN_Lkqq-PH_A_JCozJTxT';
-
-const supabaseClient = supabase.createClient(
-  supabaseUrl,
-  supabaseKey
-);
 
 const params = new URLSearchParams(window.location.search);
 
 const kode = params.get('id');
 
-async function loadGallery(){
+const gallery = document.getElementById('gallery');
 
-  const loading = document.getElementById('loading');
-  const gallery = document.getElementById('gallery');
-  const empty = document.getElementById('empty');
+const loading = document.getElementById('loading');
 
-  const { data, error } = await supabaseClient
-    .storage
-    .from('customer-photo')
-    .list('', {
-      limit: 100
-    });
+const empty = document.getElementById('empty');
 
-  console.log(data);
+loading.style.display = 'none';
 
-  loading.style.display = 'none';
+/*
+========================================
+TAMBAHKAN CUSTOMER DI SINI
+========================================
+*/
 
-  if(error){
-    console.log(error);
-    empty.style.display = 'block';
-    return;
-  }
+const customerPhotos = {
 
-  const folder = data.find(item => item.name === kode);
+  "DR25001": [
+    "https://dokayeukqfzbkktnmcoy.supabase.co/storage/v1/object/public/customer-photo/DR25001/foto1.jpeg"
+  ],
 
-  if(!folder){
-    empty.style.display = 'block';
-    return;
-  }
+  /*
+  Contoh tambah customer baru:
 
-  const { data: files, error: fileError } = await supabaseClient
-    .storage
-    .from('customer-photo')
-    .list(kode);
+  "DR25002": [
+    "LINK_FOTO_1",
+    "LINK_FOTO_2"
+  ],
+  */
 
-  console.log(files);
+};
 
-  if(fileError || !files || files.length === 0){
-    empty.style.display = 'block';
-    return;
-  }
+if(customerPhotos[kode]){
 
-  files.forEach(file => {
-
-    const { data: publicUrlData } = supabaseClient
-      .storage
-      .from('customer-photo')
-      .getPublicUrl(`${kode}/${file.name}`);
-
-    const imageUrl = publicUrlData.publicUrl;
+  customerPhotos[kode].forEach(imageUrl => {
 
     gallery.innerHTML += `
+    
       <div class="card">
-        <img src="${imageUrl}">
+
+        <img src="${imageUrl}" alt="Foto Customer">
+
         <a class="download-btn" href="${imageUrl}" download>
           Download Foto
         </a>
+
       </div>
+
     `;
   });
 
-}
+}else{
 
-loadGallery();
+  empty.style.display = 'block';
+
+}
 
 </script>
 
