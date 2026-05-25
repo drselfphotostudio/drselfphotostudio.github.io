@@ -429,12 +429,12 @@ form.addEventListener('submit', async (e) => {
 
   if(error){
 
-    alert('Booking gagal');
+  alert(error.message);
 
-    console.log(error);
+  console.log(error);
 
-    return;
-  }
+  return;
+}
 
   document.getElementById('successMsg')
     .innerHTML =
