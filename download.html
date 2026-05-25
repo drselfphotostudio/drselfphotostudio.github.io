@@ -242,11 +242,17 @@ loadGallery();
     .src = imageUrl;
 
 }
-function downloadPhoto(url, fileName){
+async function downloadPhoto(url, fileName){
+
+  const response = await fetch(url);
+
+  const blob = await response.blob();
+
+  const blobUrl = window.URL.createObjectURL(blob);
 
   const link = document.createElement('a');
 
-  link.href = url;
+  link.href = blobUrl;
 
   link.download = fileName;
 
@@ -255,6 +261,8 @@ function downloadPhoto(url, fileName){
   link.click();
 
   link.remove();
+
+  window.URL.revokeObjectURL(blobUrl);
 
 }
 function closePreview(){
