@@ -75,9 +75,63 @@ button{
 </style>
 </head>
 
-<body>
+<body onload="checkLogin()">
+<div id="loginPage">
+
+  <div style="
+    max-width:400px;
+    margin:100px auto;
+    background:#1a1a1a;
+    padding:30px;
+    border-radius:20px;
+  ">
+
+    <h2 style="text-align:center;">
+      Login Admin
+    </h2>
+
+    <input
+      type="password"
+      id="adminPassword"
+      placeholder="Masukkan Password"
+      style="
+        width:100%;
+        padding:15px;
+        margin-top:20px;
+        border:none;
+        border-radius:10px;
+      "
+    >
+
+    <button
+      onclick="loginAdmin()"
+      style="
+        width:100%;
+        margin-top:20px;
+      "
+    >
+      Login
+    </button>
+
+  </div>
+
+</div>
+
+<div id="adminContent" style="display:none;">
+<div style="
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:30px;
+">
 
 <h1>Admin Dashboard Booking</h1>
+
+<button onclick="logoutAdmin()">
+  Logout
+</button>
+
+</div>
 
 <div class="table-wrapper">
 
@@ -103,7 +157,7 @@ button{
 </table>
 
 </div>
-
+</div>
 <script>
 
 const supabaseUrl = 'https://dokayeukqfzbkktnmcoy.supabase.co';
@@ -361,6 +415,60 @@ async function checkUploadedPhotos(kodeBooking, id){
       'Belum ada foto';
 
   }
+
+}
+  function loginAdmin(){
+
+  const password =
+    document.getElementById('adminPassword').value;
+
+  if(password === 'drstudio123'){
+
+    localStorage.setItem(
+      'admin_login',
+      'true'
+    );
+
+    checkLogin();
+
+  }else{
+
+    alert('Password salah');
+
+  }
+
+}
+
+function checkLogin(){
+
+  const isLogin =
+    localStorage.getItem('admin_login');
+
+  if(isLogin === 'true'){
+
+    document.getElementById('loginPage')
+      .style.display = 'none';
+
+    document.getElementById('adminContent')
+      .style.display = 'block';
+
+  }else{
+
+    document.getElementById('loginPage')
+      .style.display = 'block';
+
+    document.getElementById('adminContent')
+      .style.display = 'none';
+
+  }
+
+}
+
+function logoutAdmin(){
+
+  localStorage.removeItem('admin_login');
+
+  location.reload();
 
 }
 </script>
