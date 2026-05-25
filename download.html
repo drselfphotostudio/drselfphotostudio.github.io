@@ -106,6 +106,8 @@ font-size:16px;
   max-width:100%;
   max-height:90vh;
   border-radius:20px;
+  object-fit:contain;
+image-rendering:auto;
 }
 
 .close-preview{
@@ -204,10 +206,11 @@ async function loadGallery(){
   <div class="card">
 
     <img 
-      src="${imageUrl}" 
-      alt="Foto Customer"
-      onclick="openPreview('${imageUrl}')"
-    >
+  src="${imageUrl}"
+  alt="Foto Customer"
+  loading="lazy"
+  onclick="openPreview('${imageUrl}')"
+/>
 
     <button 
   class="download-btn"
@@ -235,29 +238,17 @@ loadGallery();
 }
 function downloadPhoto(url){
 
-  fetch(url)
-    .then(res => res.blob())
-    .then(blob => {
+  const a = document.createElement('a');
 
-      const blobUrl =
-        window.URL.createObjectURL(blob);
+  a.href = url;
 
-      const a =
-        document.createElement('a');
+  a.download = '';
 
-      a.href = blobUrl;
+  document.body.appendChild(a);
 
-      a.download = 'foto-customer.jpg';
+  a.click();
 
-      document.body.appendChild(a);
-
-      a.click();
-
-      a.remove();
-
-      window.URL.revokeObjectURL(blobUrl);
-
-    });
+  a.remove();
 
 }
 function closePreview(){
