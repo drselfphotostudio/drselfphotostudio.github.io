@@ -145,10 +145,18 @@ async function loadBookings(){
         <td>${item.paket}</td>
 
         <td>
-          <span class="status pending">
-            ${item.payment_status}
-          </span>
-        </td>
+
+  <span class="status ${item.payment_status}">
+    ${item.payment_status}
+  </span>
+
+  <br><br>
+
+  <button onclick="approvePayment(${item.id})">
+    Approve
+  </button>
+
+</td>
 
       </tr>
 
@@ -159,6 +167,34 @@ async function loadBookings(){
 }
 
 loadBookings();
+  async function approvePayment(id){
+
+  const confirmApprove =
+    confirm('Approve pembayaran customer ini?');
+
+  if(!confirmApprove) return;
+
+  const { error } = await supabaseClient
+    .from('bookings')
+    .update({
+      payment_status:'paid'
+    })
+    .eq('id', id);
+
+  if(error){
+
+    alert('Gagal approve');
+
+    console.log(error);
+
+    return;
+  }
+
+  alert('Pembayaran berhasil diapprove');
+
+  loadBookings();
+
+}
 
 </script>
 
