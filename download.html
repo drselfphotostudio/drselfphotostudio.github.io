@@ -87,6 +87,31 @@ body{
   opacity:0.7;
 }
 
+  .preview-modal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.95);
+  display:none;
+  justify-content:center;
+  align-items:center;
+  z-index:9999;
+  padding:20px;
+}
+
+.preview-modal img{
+  max-width:100%;
+  max-height:90vh;
+  border-radius:20px;
+}
+
+.close-preview{
+  position:absolute;
+  top:20px;
+  right:30px;
+  font-size:50px;
+  cursor:pointer;
+  color:white;
+}
 footer{
   text-align:center;
   padding:40px 20px;
@@ -113,6 +138,15 @@ footer{
   Foto tidak ditemukan
 </div>
 
+  <div id="previewModal" class="preview-modal">
+
+  <span class="close-preview" onclick="closePreview()">
+    ×
+  </span>
+
+  <img id="previewImage">
+
+</div>
 <footer>
   © 2026 DR Self Photo Studio
 </footer>
@@ -163,22 +197,47 @@ async function loadGallery(){
 
     gallery.innerHTML += `
     
-      <div class="card">
+  <div class="card">
 
-        <img src="${imageUrl}" alt="Foto Customer">
+    <img 
+      src="${imageUrl}" 
+      alt="Foto Customer"
+      onclick="openPreview('${imageUrl}')"
+    >
 
-        <a class="download-btn" href="${imageUrl}" download>
-          Download Foto
-        </a>
+    <a 
+      class="download-btn" 
+      href="${imageUrl}" 
+      download
+      target="_blank"
+    >
+      Download Foto
+    </a>
 
-      </div>
+  </div>
 
-    `;
+`;
   });
 
 }
 
 loadGallery();
+  function openPreview(imageUrl){
+
+  document.getElementById('previewModal')
+    .style.display = 'flex';
+
+  document.getElementById('previewImage')
+    .src = imageUrl;
+
+}
+
+function closePreview(){
+
+  document.getElementById('previewModal')
+    .style.display = 'none';
+
+}
 
 </script>
 
