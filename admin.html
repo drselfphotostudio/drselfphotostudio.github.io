@@ -93,6 +93,7 @@ button{
   <th>Paket</th>
   <th>Status</th>
 <th>Upload Foto</th>
+<th>Kirim WA</th>
 </tr>
 </thead>
 
@@ -175,6 +176,14 @@ async function loadBookings(){
 
 </td>
 
+<td>
+
+  <button onclick="sendWhatsapp('${item.kode_booking}','${item.no_wa}')">
+    Kirim WA
+  </button>
+
+</td>
+
 </tr>
 
     `;
@@ -251,6 +260,28 @@ loadBookings();
   alert('Pembayaran berhasil diapprove');
 
   loadBookings();
+
+}
+
+function sendWhatsapp(kodeBooking, nomor){
+
+  nomor = nomor.replace(/^0/, '62');
+
+  const pesan =
+`Halo Kak 👋
+
+Foto self photo studio sudah selesai 😊
+
+Silakan download melalui link berikut:
+
+https://drselfphotostudio.github.io/download.html?id=${kodeBooking}
+
+Terima kasih 🙏`;
+
+  const url =
+`https://wa.me/${nomor}?text=${encodeURIComponent(pesan)}`;
+
+  window.open(url, '_blank');
 
 }
 
