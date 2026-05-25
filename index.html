@@ -436,11 +436,15 @@ form.addEventListener('submit', async (e) => {
   return;
 }
 
-  document.getElementById('successMsg')
-    .innerHTML =
-    `Booking berhasil! Kode Booking: ${kode}`;
+  alert(
+`Booking berhasil!
 
-  form.reset();
+Kode Booking: ${kode}
+
+Silakan screenshot / simpan kode booking ini untuk pembayaran dan pengambilan foto 🙏`
+);
+
+form.reset();
 
 });
 
