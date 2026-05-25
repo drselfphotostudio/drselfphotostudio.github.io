@@ -103,11 +103,12 @@ font-size:16px;
 }
 
 .preview-modal img{
-  max-width:100%;
-  max-height:90vh;
+  width:auto;
+  height:auto;
+  max-width:95vw;
+  max-height:95vh;
   border-radius:20px;
   object-fit:contain;
-image-rendering:auto;
 }
 
 .close-preview{
@@ -201,25 +202,28 @@ async function loadGallery(){
     const imageUrl =
 `${supabaseUrl}/storage/v1/object/public/customer-photo/${kode}/${file.name}`;
 
+const downloadUrl =
+`${imageUrl}?download=1`;
+
     gallery.innerHTML += `
     
-  <div class="card">
+<div class="card">
 
-    <img 
-  src="${imageUrl}"
-  alt="Foto Customer"
-  loading="lazy"
-  onclick="openPreview('${imageUrl}')"
-/>
+  <img 
+    src="${imageUrl}"
+    alt="Foto Customer"
+    loading="lazy"
+    onclick="openPreview('${imageUrl}')"
+  >
 
-    <button 
-  class="download-btn"
-  onclick="downloadPhoto('${imageUrl}')"
->
-  Download Foto
-</button>
+  <button 
+    class="download-btn"
+    onclick="downloadPhoto('${downloadUrl}')"
+  >
+    Download Foto
+  </button>
 
-  </div>
+</div>
 
 `;
   });
@@ -238,17 +242,17 @@ loadGallery();
 }
 function downloadPhoto(url){
 
-  const a = document.createElement('a');
+  const link = document.createElement('a');
 
-  a.href = url;
+  link.href = url;
 
-  a.download = '';
+  link.setAttribute('download', '');
 
-  document.body.appendChild(a);
+  document.body.appendChild(link);
 
-  a.click();
+  link.click();
 
-  a.remove();
+  link.remove();
 
 }
 function closePreview(){
