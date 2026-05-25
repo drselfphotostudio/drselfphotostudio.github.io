@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Admin Dashboard</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+body{
+  margin:0;
+  background:#0f0f0f;
+  color:white;
+  font-family:'Poppins',sans-serif;
+  padding:30px;
+}
+
+h1{
+  margin-bottom:30px;
+}
+
+.table-wrapper{
+  overflow:auto;
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+  background:#1a1a1a;
+  border-radius:15px;
+  overflow:hidden;
+}
+
+th,td{
+  padding:15px;
+  border-bottom:1px solid #333;
+  text-align:left;
+}
+
+th{
+  background:#25D366;
+}
+
+.status{
+  padding:6px 12px;
+  border-radius:20px;
+  font-size:12px;
+  font-weight:600;
+}
+
+.pending{
+  background:orange;
+  color:black;
+}
+
+.paid{
+  background:#25D366;
+  color:white;
+}
+
+button{
+  background:#25D366;
+  border:none;
+  color:white;
+  padding:10px 15px;
+  border-radius:10px;
+  cursor:pointer;
+}
+
+</style>
+</head>
+
+<body>
+
+<h1>Admin Dashboard Booking</h1>
+
+<div class="table-wrapper">
+
+<table>
+
+<thead>
+<tr>
+  <th>Kode</th>
+  <th>Nama</th>
+  <th>WhatsApp</th>
+  <th>Tanggal</th>
+  <th>Jam</th>
+  <th>Paket</th>
+  <th>Status</th>
+</tr>
+</thead>
+
+<tbody id="bookingTable">
+</tbody>
+
+</table>
+
+</div>
+
+<script>
+
+const supabaseUrl = 'https://dokayeukqfzbkktnmcoy.supabase.co';
+
+const supabaseKey = 'sb_publishable_iUb2y0mBwhZN_Lkqq-PH_A_JCozJTxT';
+
+const supabaseClient = supabase.createClient(
+  supabaseUrl,
+  supabaseKey
+);
+
+async function loadBookings(){
+
+  const { data, error } = await supabaseClient
+    .from('bookings')
+    .select('*')
+    .order('id', { ascending:false });
+
+  console.log(data);
+
+  const table = document.getElementById('bookingTable');
+
+  table.innerHTML = '';
+
+  data.forEach(item => {
+
+    table.innerHTML += `
+
+      <tr>
+
+        <td>${item.kode_booking}</td>
+
+        <td>${item.nama}</td>
+
+        <td>${item.no_wa}</td>
+
+        <td>${item.tanggal}</td>
+
+        <td>${item.jam}</td>
+
+        <td>${item.paket}</td>
+
+        <td>
+          <span class="status pending">
+            ${item.payment_status}
+          </span>
+        </td>
+
+      </tr>
+
+    `;
+
+  });
+
+}
+
+loadBookings();
+
+</script>
+
+</body>
+</html>
