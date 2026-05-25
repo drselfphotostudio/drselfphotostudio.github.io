@@ -92,6 +92,7 @@ button{
   <th>Jam</th>
   <th>Paket</th>
   <th>Status</th>
+<th>Upload Foto</th>
 </tr>
 </thead>
 
@@ -158,7 +159,23 @@ async function loadBookings(){
 
 </td>
 
-      </tr>
+<td>
+
+  <input
+    type="file"
+    id="file-${item.id}"
+    multiple
+  >
+
+  <br><br>
+
+  <button onclick="uploadPhoto('${item.kode_booking}', ${item.id})">
+    Upload
+  </button>
+
+</td>
+
+</tr>
 
     `;
 
@@ -167,6 +184,47 @@ async function loadBookings(){
 }
 
 loadBookings();
+  async function uploadPhoto(kodeBooking, id){
+
+  const fileInput =
+    document.getElementById(`file-${id}`);
+
+  const files = fileInput.files;
+
+  if(files.length === 0){
+
+    alert('Pilih foto dulu');
+
+    return;
+  }
+
+  for(let file of files){
+
+    const fileName =
+      Date.now() + '-' + file.name;
+
+    const { error } = await supabaseClient
+      .storage
+      .from('customer-photo')
+      .upload(
+        `${kodeBooking}/${fileName}`,
+        file
+      );
+
+    if(error){
+
+      console.log(error);
+
+      alert('Upload gagal');
+
+      return;
+    }
+
+  }
+
+  alert('Foto berhasil diupload');
+
+}
   async function approvePayment(id){
 
   const confirmApprove =
