@@ -69,6 +69,10 @@ body{
   padding:15px;
   font-weight:600;
   transition:0.3s;
+  border:none;
+width:100%;
+cursor:pointer;
+font-size:16px;
 }
 
 .download-btn:hover{
@@ -205,14 +209,12 @@ async function loadGallery(){
       onclick="openPreview('${imageUrl}')"
     >
 
-    <a 
-      class="download-btn" 
-      href="${imageUrl}" 
-      download
-      target="_blank"
-    >
-      Download Foto
-    </a>
+    <button 
+  class="download-btn"
+  onclick="downloadPhoto('${imageUrl}')"
+>
+  Download Foto
+</button>
 
   </div>
 
@@ -231,7 +233,33 @@ loadGallery();
     .src = imageUrl;
 
 }
+function downloadPhoto(url){
 
+  fetch(url)
+    .then(res => res.blob())
+    .then(blob => {
+
+      const blobUrl =
+        window.URL.createObjectURL(blob);
+
+      const a =
+        document.createElement('a');
+
+      a.href = blobUrl;
+
+      a.download = 'foto-customer.jpg';
+
+      document.body.appendChild(a);
+
+      a.click();
+
+      a.remove();
+
+      window.URL.revokeObjectURL(blobUrl);
+
+    });
+
+}
 function closePreview(){
 
   document.getElementById('previewModal')
