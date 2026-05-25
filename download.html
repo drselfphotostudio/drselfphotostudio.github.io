@@ -117,9 +117,12 @@ async function loadGallery(){
   const empty = document.getElementById('empty');
 
   const { data, error } = await supabaseClient
-    .storage
-    .from('customer-photo')
-    .list(kode);
+  .storage
+  .from('customer-photo')
+  .list(kode, {
+    limit: 100,
+    offset: 0
+  });
 
   loading.style.display = 'none';
 
