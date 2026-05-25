@@ -136,6 +136,7 @@ async function loadGallery(){
     const imageUrl =
       `${supabaseUrl}/storage/v1/object/public/customer-photo/${kode}/${file.name}`;
 
+    console.log(data);
     gallery.innerHTML += `
       <div class="card">
         <img src="${imageUrl}">
