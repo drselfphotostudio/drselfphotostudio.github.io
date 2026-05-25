@@ -133,8 +133,12 @@ async function loadGallery(){
 
   data.forEach(file => {
 
-    const imageUrl =
-      `${supabaseUrl}/storage/v1/object/public/customer-photo/${kode}/${file.name}`;
+    const { data: publicUrlData } = supabaseClient
+.storage
+.from('customer-photo')
+.getPublicUrl(`${kode}/${file.name}`);
+
+const imageUrl = publicUrlData.publicUrl;
 
     console.log(data);
     gallery.innerHTML += `
