@@ -117,30 +117,50 @@ async function loadGallery(){
   const empty = document.getElementById('empty');
 
   const { data, error } = await supabaseClient
-  .storage
-  .from('customer-photo')
-  .list(kode, {
-    limit: 100,
-    offset: 0
-  });
+    .storage
+    .from('customer-photo')
+    .list('', {
+      limit: 100
+    });
+
+  console.log(data);
 
   loading.style.display = 'none';
 
-  if(error || !data || data.length === 0){
+  if(error){
+    console.log(error);
     empty.style.display = 'block';
     return;
   }
 
-  data.forEach(file => {
+  const folder = data.find(item => item.name === kode);
+
+  if(!folder){
+    empty.style.display = 'block';
+    return;
+  }
+
+  const { data: files, error: fileError } = await supabaseClient
+    .storage
+    .from('customer-photo')
+    .list(kode);
+
+  console.log(files);
+
+  if(fileError || !files || files.length === 0){
+    empty.style.display = 'block';
+    return;
+  }
+
+  files.forEach(file => {
 
     const { data: publicUrlData } = supabaseClient
-.storage
-.from('customer-photo')
-.getPublicUrl(`${kode}/${file.name}`);
+      .storage
+      .from('customer-photo')
+      .getPublicUrl(`${kode}/${file.name}`);
 
-const imageUrl = publicUrlData.publicUrl;
+    const imageUrl = publicUrlData.publicUrl;
 
-    console.log(data);
     gallery.innerHTML += `
       <div class="card">
         <img src="${imageUrl}">
