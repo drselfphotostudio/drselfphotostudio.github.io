@@ -154,13 +154,31 @@ async function loadBookings(){
 
   <br><br>
 
-  <button onclick="approvePayment(${item.id})">
-    Approve
-  </button>
+  ${item.payment_status !== 'paid' ? `
+
+<button onclick="approvePayment(${item.id})">
+  Approve
+</button>
+
+` : `
+
+<span style="color:#25D366;font-size:14px;">
+  Pembayaran sudah diapprove
+</span>
+
+`}
 
 </td>
 
 <td>
+
+${item.payment_status !== 'paid' ? `
+  
+  <span style="color:orange;">
+    Menunggu approve pembayaran
+  </span>
+
+` : `
 
   <input
     type="file"
@@ -173,6 +191,12 @@ async function loadBookings(){
   <button onclick="uploadPhoto('${item.kode_booking}', ${item.id})">
     Upload
   </button>
+
+  <div id="upload-status-${item.id}" style="margin-top:10px;font-size:14px;opacity:0.8;">
+    Mengecek foto...
+  </div>
+
+`}
 
 </td>
 
@@ -187,7 +211,14 @@ async function loadBookings(){
 </tr>
 
     `;
+if(item.payment_status === 'paid'){
 
+  checkUploadedPhotos(
+    item.kode_booking,
+    item.id
+  );
+
+}
   });
 
 }
@@ -207,16 +238,29 @@ loadBookings();
     return;
   }
 
+  const { data: existingFiles } =
+    await supabaseClient
+      .storage
+      .from('customer-photo')
+      .list(kodeBooking);
+
+  const existingNames =
+    existingFiles?.map(file => file.name) || [];
+
   for(let file of files){
 
-    const fileName =
-      Date.now() + '-' + file.name;
+    if(existingNames.includes(file.name)){
+
+      alert(`Foto ${file.name} sudah pernah diupload`);
+
+      continue;
+    }
 
     const { error } = await supabaseClient
       .storage
       .from('customer-photo')
       .upload(
-        `${kodeBooking}/${fileName}`,
+        `${kodeBooking}/${file.name}`,
         file
       );
 
@@ -232,6 +276,8 @@ loadBookings();
   }
 
   alert('Foto berhasil diupload');
+
+  checkUploadedPhotos(kodeBooking, id);
 
 }
   async function approvePayment(id){
@@ -284,7 +330,39 @@ Terima kasih 🙏`;
   window.open(url, '_blank');
 
 }
+async function checkUploadedPhotos(kodeBooking, id){
 
+  const { data, error } = await supabaseClient
+    .storage
+    .from('customer-photo')
+    .list(kodeBooking);
+
+  const statusDiv =
+    document.getElementById(`upload-status-${id}`);
+
+  if(!statusDiv) return;
+
+  if(error || !data){
+
+    statusDiv.innerHTML =
+      'Belum ada foto';
+
+    return;
+  }
+
+  if(data.length > 0){
+
+    statusDiv.innerHTML =
+      `✅ ${data.length} foto sudah diupload`;
+
+  }else{
+
+    statusDiv.innerHTML =
+      'Belum ada foto';
+
+  }
+
+}
 </script>
 
 </body>
