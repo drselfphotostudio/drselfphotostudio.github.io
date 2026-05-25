@@ -200,6 +200,39 @@
   justify-content: center;
   align-items: center;
 }
+  .booking-form{
+  max-width:500px;
+  margin:auto;
+  display:flex;
+  flex-direction:column;
+  gap:15px;
+}
+
+.booking-form input,
+.booking-form select,
+.booking-form textarea{
+  padding:15px;
+  border:none;
+  border-radius:12px;
+  font-family:Poppins,sans-serif;
+}
+
+.booking-form button{
+  background:#25D366;
+  color:white;
+  border:none;
+  padding:15px;
+  border-radius:12px;
+  font-weight:600;
+  cursor:pointer;
+}
+
+#successMsg{
+  text-align:center;
+  margin-top:20px;
+  color:#25D366;
+  font-weight:600;
+}
   </style>
 </head>
 <body>
@@ -299,29 +332,118 @@ track.innerHTML += track.innerHTML;
 </script>
 
 <div class="section" id="contact">
-  <h2 style="text-align:center;">Booking Sekarang</h2>
-<div class="wa-center">
-  <a href="https://wa.me/6281357574224?text=Halo%20DR%20Self%20Studio%20👋%0A%0ASaya%20ingin%20booking%20dengan%20detail%20berikut:%0A%0ANama:%0ATanggal:%0AJam:%0APaket:%0AJumlah%20orang:%0A%0ATerima%20kasih%20🙏" class="btn btn-primary">Chat WhatsApp</a>
-</div>  
-  <p style="text-align:center;">Follow Instagram: @drselfphotostudio.id</p>
-  <p style="text-align:center;">
-    📍 Dsn Pesuruan Rt. 003 Rw. 005 Kel. Kesemben Kec. Plumpang Kab. Tuban<br>
-    <a href="https://maps.app.goo.gl/pDuQoDV4Q6HWy5JQA" target="_blank" style="color:#25D366;">
-  Lihat di Google Maps
-</a>
-  </p>
-<iframe 
-  src="https://www.google.com/maps?q=-7.019843,112.063139&z=17&output=embed"
-  width="100%" 
-  height="250" 
-  style="border:0; border-radius:15px; margin-top:20px;">
-</iframe>
-  
+
+<h2 style="text-align:center;">Booking Sekarang</h2>
+
+<form id="bookingForm" class="booking-form">
+
+  <input type="text" id="nama" placeholder="Nama" required>
+
+  <input type="text" id="wa" placeholder="No WhatsApp" required>
+
+  <input type="date" id="tanggal" required>
+
+  <select id="jam" required>
+    <option value="">Pilih Jam</option>
+    <option>10:00</option>
+    <option>11:00</option>
+    <option>12:00</option>
+    <option>13:00</option>
+    <option>14:00</option>
+    <option>15:00</option>
+    <option>16:00</option>
+    <option>17:00</option>
+  </select>
+
+  <select id="paket" required>
+    <option value="">Pilih Paket</option>
+    <option>Basic</option>
+    <option>Standard</option>
+    <option>Premium</option>
+  </select>
+
+  <input type="number" id="jumlah" placeholder="Jumlah Orang" required>
+
+  <textarea id="catatan" placeholder="Catatan"></textarea>
+
+  <button type="submit">
+    Booking Sekarang
+  </button>
+
+</form>
+
+<div id="successMsg"></div>
+
+<p style="text-align:center; margin-top:40px;">
+📍 Dsn Pesuruan Rt.003 Rw.005 Kel. Kesemben Kec. Plumpang Kab. Tuban
+</p>
+
 </div>
 
 <footer>
   © 2026 DR Self Photo Studio - Self Photo Studio Tuban
 </footer>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+
+const supabaseUrl = 'https://dokayeukqfzbkktnmcoy.supabase.co';
+
+const supabaseKey = 'sb_publishable_iUb2y0mBwhZN_Lkqq-PH_A_JCozJTxT';
+
+const supabaseClient = supabase.createClient(
+  supabaseUrl,
+  supabaseKey
+);
+
+const form = document.getElementById('bookingForm');
+
+form.addEventListener('submit', async (e) => {
+
+  e.preventDefault();
+
+  const kode =
+    'DR' + Math.floor(Math.random() * 100000);
+
+  const { error } = await supabaseClient
+    .from('bookings')
+    .insert([{
+
+      kode_booking: kode,
+
+      nama: document.getElementById('nama').value,
+
+      no_wa: document.getElementById('wa').value,
+
+      tanggal: document.getElementById('tanggal').value,
+
+      jam: document.getElementById('jam').value,
+
+      paket: document.getElementById('paket').value,
+
+      jumlah_orang: document.getElementById('jumlah').value,
+
+      catatan: document.getElementById('catatan').value
+
+    }]);
+
+  if(error){
+
+    alert('Booking gagal');
+
+    console.log(error);
+
+    return;
+  }
+
+  document.getElementById('successMsg')
+    .innerHTML =
+    `Booking berhasil! Kode Booking: ${kode}`;
+
+  form.reset();
+
+});
+
+</script>
 </body>
 </html>
