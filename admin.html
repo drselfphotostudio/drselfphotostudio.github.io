@@ -116,8 +116,21 @@ button{
   id="adminPassword"
   placeholder="Masukkan Password"
   class="login-input"
+  onkeypress="handleEnter(event)"
 >
+<div style="margin-top:10px;display:flex;align-items:center;gap:8px;">
+  
+  <input
+    type="checkbox"
+    id="showPassword"
+    onclick="togglePassword()"
+  >
 
+  <label for="showPassword">
+    Lihat Password
+  </label>
+
+</div>
     <button
   onclick="loginAdmin()"
   class="login-btn"
@@ -481,6 +494,32 @@ function logoutAdmin(){
   localStorage.removeItem('admin_login');
 
   location.reload();
+
+}
+  function togglePassword(){
+
+  const input =
+    document.getElementById('adminPassword');
+
+  if(input.type === 'password'){
+
+    input.type = 'text';
+
+  }else{
+
+    input.type = 'password';
+
+  }
+
+}
+
+function handleEnter(event){
+
+  if(event.key === 'Enter'){
+
+    loginAdmin();
+
+  }
 
 }
 </script>
