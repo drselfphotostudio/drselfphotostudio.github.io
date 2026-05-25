@@ -71,6 +71,35 @@ button{
   border-radius:10px;
   cursor:pointer;
 }
+  .login-box{
+  max-width:400px;
+  margin:100px auto;
+  background:#1a1a1a;
+  padding:40px;
+  border-radius:25px;
+  box-sizing:border-box;
+}
+
+.login-box h2{
+  text-align:center;
+  margin-bottom:30px;
+}
+
+.login-input{
+  width:100%;
+  padding:15px;
+  border:none;
+  border-radius:12px;
+  box-sizing:border-box;
+  font-size:16px;
+}
+
+.login-btn{
+  width:100%;
+  margin-top:20px;
+  box-sizing:border-box;
+  font-size:16px;
+}
 
 </style>
 </head>
@@ -78,17 +107,27 @@ button{
 <body onload="checkLogin()">
 <div id="loginPage">
 
-  <div style="
-    max-width:400px;
-    margin:100px auto;
-    background:#1a1a1a;
-    padding:30px;
-    border-radius:20px;
-  ">
+  <div class="login-box">
 
-    <h2 style="text-align:center;">
-      Login Admin
-    </h2>
+    <h2>Login Admin</h2>
+
+    <input
+      type="password"
+      id="adminPassword"
+      placeholder="Masukkan Password"
+      class="login-input"
+    >
+
+    <button
+      onclick="loginAdmin()"
+      class="login-btn"
+    >
+      Login
+    </button>
+
+  </div>
+
+</div>
 
     <input
       type="password"
