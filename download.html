@@ -6,6 +6,8 @@
 
 <title>Download Foto Customer</title>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
 <style>
@@ -117,6 +119,15 @@ footer{
 
 <script>
 
+const supabaseUrl = 'https://dokayeukqfzbkktnmcoy.supabase.co';
+
+const supabaseKey = 'sb_publishable_iUb2y0mBwhZN_Lkqq-PH_A_JCozJTxT';
+
+const supabaseClient = supabase.createClient(
+  supabaseUrl,
+  supabaseKey
+);
+
 const params = new URLSearchParams(window.location.search);
 
 const kode = params.get('id');
@@ -127,34 +138,28 @@ const loading = document.getElementById('loading');
 
 const empty = document.getElementById('empty');
 
-loading.style.display = 'none';
+async function loadGallery(){
 
-/*
-========================================
-TAMBAHKAN CUSTOMER DI SINI
-========================================
-*/
+  const { data: files, error } = await supabaseClient
+    .storage
+    .from('customer-photo')
+    .list(kode);
 
-const customerPhotos = {
+  console.log(files);
 
-  "DR25001": [
-    "https://dokayeukqfzbkktnmcoy.supabase.co/storage/v1/object/public/customer-photo/DR25001/foto1.jpeg"
-  ],
+  loading.style.display = 'none';
 
-  /*
-  Contoh tambah customer baru:
+  if(error || !files || files.length === 0){
 
-  "DR25002": [
-    "LINK_FOTO_1",
-    "LINK_FOTO_2"
-  ],
-  */
+    empty.style.display = 'block';
 
-};
+    return;
+  }
 
-if(customerPhotos[kode]){
+  files.forEach(file => {
 
-  customerPhotos[kode].forEach(imageUrl => {
+    const imageUrl =
+`${supabaseUrl}/storage/v1/object/public/customer-photo/${kode}/${file.name}`;
 
     gallery.innerHTML += `
     
@@ -171,11 +176,9 @@ if(customerPhotos[kode]){
     `;
   });
 
-}else{
-
-  empty.style.display = 'block';
-
 }
+
+loadGallery();
 
 </script>
 
