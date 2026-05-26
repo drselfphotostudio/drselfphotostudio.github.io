@@ -237,6 +237,8 @@ h1{
   height:auto;
   max-width:90vw;
   max-height:90vh;
+  display:block;
+  margin:auto;
   border-radius:20px;
   box-shadow:0 10px 40px rgba(0,0,0,0.5);
   object-fit:contain;
@@ -549,7 +551,10 @@ function previewPhoto(url){
     panzoomInstance = Panzoom(img, {
       maxScale:5,
       minScale:1,
-      contain:'outside',
+      startScale:1,
+      startX:0,
+      startY:0,
+      contain:'automatic',
       cursor:'grab',
       step:0.15
     });
