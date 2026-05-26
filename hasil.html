@@ -18,15 +18,28 @@ body{
   padding:20px;
   box-sizing:border-box;
 }
+  body{
+  min-height:100vh;
+}
+  *{
+  scrollbar-width:none;
+}
+
+::-webkit-scrollbar{
+  display:none;
+}
 
 .container{
-  max-width:1200px;
+  max-width:1400px;
   margin:auto;
 }
 
 h1{
   text-align:center;
-  margin-bottom:30px;
+  margin-bottom:35px;
+  font-size:42px;
+  font-weight:800;
+  letter-spacing:1px;
 }
 
 .album-grid{
@@ -49,48 +62,93 @@ h1{
   transform:translateY(-5px);
   background:#25D366;
 }
+.album-card h3{
+  margin:0;
+  font-size:20px;
+}
 
+.album-card:hover h3{
+  color:white;
+}
 .album-icon{
   font-size:50px;
   margin-bottom:15px;
 }
-
-.gallery{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-  gap:20px;
+.album-card{
+  box-shadow:0 5px 20px rgba(0,0,0,0.25);
 }
 
+.album-card:hover{
+  box-shadow:0 10px 30px rgba(37,211,102,0.25);
+}
+.gallery{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:25px;
+  align-items:start;
+}
+.gallery{
+  padding-bottom:120px;
+}
 .photo-card{
   background:#1e1e1e;
   border-radius:20px;
   overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  height:100%;
 }
 
 .photo-card img{
   width:100%;
+  height:350px;
+  object-fit:cover;
   display:block;
+}
+  .photo-card img{
+  transition:0.3s;
+}
+
+.photo-card:hover img{
+  transform:scale(1.03);
+}
+  .photo-card{
+  transition:0.25s;
+}
+
+.photo-card:hover{
+  transform:translateY(-5px);
+  box-shadow:0 10px 30px rgba(0,0,0,0.35);
 }
 
 .photo-info{
   padding:15px;
+  margin-top:auto;
 }
 
 .photo-info label{
   display:flex;
   align-items:center;
   gap:10px;
+  margin-bottom:15px;
 }
 
 .download-btn{
-  margin-top:10px;
   width:100%;
   background:#25D366;
   border:none;
   color:white;
   padding:12px;
-  border-radius:10px;
+  border-radius:12px;
   cursor:pointer;
+  font-size:15px;
+  font-weight:600;
+  transition:0.2s;
+}
+
+.download-btn:hover{
+  opacity:0.9;
+  transform:translateY(-2px);
 }
 
 #status{
@@ -101,16 +159,23 @@ h1{
 
 #printBtn{
   position:fixed;
-  bottom:20px;
-  right:20px;
+  bottom:25px;
+  right:25px;
   background:#25D366;
   color:white;
   border:none;
-  padding:15px 20px;
+  padding:16px 24px;
   border-radius:50px;
   font-size:16px;
+  font-weight:700;
   cursor:pointer;
   display:none;
+  box-shadow:0 10px 30px rgba(37,211,102,0.35);
+  transition:0.2s;
+}
+
+#printBtn:hover{
+  transform:translateY(-3px);
 }
 
 .back-btn{
@@ -118,10 +183,17 @@ h1{
   background:#25D366;
   border:none;
   color:white;
-  padding:12px 20px;
-  border-radius:10px;
+  padding:14px 22px;
+  border-radius:12px;
   cursor:pointer;
   display:none;
+  font-size:15px;
+  font-weight:600;
+  transition:0.2s;
+}
+
+.back-btn:hover{
+  transform:translateY(-2px);
 }
 
 </style>
@@ -181,7 +253,7 @@ async function loadAlbums(){
     document.getElementById('status');
 
   status.innerHTML =
-    'Mengambil album...';
+  '📁 Mengambil album...';
 
   const { data, error } =
     await supabaseClient
@@ -253,7 +325,7 @@ async function openAlbum(kodeBooking){
   gallery.innerHTML = '';
 
   status.innerHTML =
-    'Mengambil foto...';
+  '📸 Mengambil foto...';
 
   const { data, error } =
     await supabaseClient
