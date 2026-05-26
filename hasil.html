@@ -565,6 +565,7 @@ function nextPhoto(){
 }
 
 function prevPhoto(){
+  
 
   currentIndex--;
 
@@ -651,7 +652,46 @@ document.addEventListener('keydown', e => {
   }
 
 });
+let touchStartX = 0;
+let touchEndX = 0;
 
+const previewModal =
+document.getElementById('previewModal');
+
+previewModal.addEventListener(
+'touchstart',
+e => {
+
+  touchStartX =
+    e.changedTouches[0].screenX;
+
+});
+
+previewModal.addEventListener(
+'touchend',
+e => {
+
+  touchEndX =
+    e.changedTouches[0].screenX;
+
+  handleSwipe();
+
+});
+
+function handleSwipe(){
+
+  const swipeDistance =
+    touchEndX - touchStartX;
+
+  if(swipeDistance < -50){
+    nextPhoto();
+  }
+
+  if(swipeDistance > 50){
+    prevPhoto();
+  }
+
+}
 function closePreview(){
 
   document.getElementById('previewModal')
