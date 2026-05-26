@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Kamera Upload</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+
+body{
+  margin:0;
+  background:#111;
+  color:white;
+  font-family:Arial,sans-serif;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  min-height:100vh;
+  flex-direction:column;
+  padding:20px;
+  box-sizing:border-box;
+}
+
+.box{
+  width:100%;
+  max-width:400px;
+  background:#1e1e1e;
+  padding:25px;
+  border-radius:20px;
+  box-sizing:border-box;
+  text-align:center;
+}
+
+h2{
+  margin-top:0;
+}
+
+input[type=file]{
+  width:100%;
+  margin-top:20px;
+  padding:15px;
+  background:#2a2a2a;
+  color:white;
+  border:none;
+  border-radius:12px;
+  box-sizing:border-box;
+}
+
+.status{
+  margin-top:20px;
+  font-size:14px;
+  opacity:0.9;
+}
+
+.success{
+  color:#25D366;
+}
+
+.error{
+  color:red;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="box">
+
+<h2>Upload Foto Studio</h2>
+
+<p id="kodeText"></p>
+
+<input
+  type="file"
+  id="cameraInput"
+  accept="image/*"
+  capture="environment"
+  multiple
+>
+
+<div id="status" class="status">
+  Menunggu upload...
+</div>
+
+</div>
+
+<script>
+
+const supabaseUrl =
+'https://dokayeukqfzbkktnmcoy.supabase.co';
+
+const supabaseKey =
+'sb_publishable_iUb2y0mBwhZN_Lkqq-PH_A_JCozJTxT';
+
+const supabaseClient =
+supabase.createClient(
+  supabaseUrl,
+  supabaseKey
+);
+
+const params =
+new URLSearchParams(window.location.search);
+
+const kodeBooking =
+params.get('id');
+
+document.getElementById('kodeText')
+.innerHTML =
+`Kode Booking: <b>${kodeBooking}</b>`;
+
+const input =
+document.getElementById('cameraInput');
+
+input.addEventListener('change', async () => {
+
+  const files = input.files;
+
+  if(files.length === 0) return;
+
+  const status =
+    document.getElementById('status');
+
+  status.innerHTML =
+    'Sedang upload...';
+
+  for(let file of files){
+
+    const fileName =
+      Date.now() + '-' + file.name;
+
+    const { error } =
+      await supabaseClient
+        .storage
+        .from('customer-photo')
+        .upload(
+          `${kodeBooking}/${fileName}`,
+          file
+        );
+
+    if(error){
+
+      console.log(error);
+
+      status.innerHTML =
+        '❌ Upload gagal';
+
+      status.className =
+        'status error';
+
+      return;
+    }
+
+  }
+
+  status.innerHTML =
+    '✅ Foto berhasil diupload';
+
+  status.className =
+    'status success';
+
+  input.value = '';
+
+});
+
+</script>
+
+</body>
+</html>
