@@ -239,6 +239,10 @@ h1{
   box-shadow:0 10px 40px rgba(0,0,0,0.5);
   object-fit:contain;
   animation:zoomPreview 0.2s ease;
+  cursor:grab;
+  user-select:none;
+-webkit-user-drag:none;
+touch-action:none;
 }
   @keyframes zoomPreview{
   from{
@@ -522,13 +526,34 @@ function togglePhoto(checkbox){
 
 }
 
+let panzoomInstance;
+
 function previewPhoto(url){
 
   document.getElementById('previewModal')
     .style.display = 'flex';
 
-  document.getElementById('previewImage')
-    .src = url;
+  const img =
+    document.getElementById('previewImage');
+
+  img.src = url;
+
+  if(panzoomInstance){
+    panzoomInstance.destroy();
+  }
+
+  panzoomInstance = Panzoom(img, {
+  maxScale:5,
+  minScale:1,
+  contain:'outside',
+  cursor:'grab',
+  step:0.15
+});
+
+  img.parentElement.addEventListener(
+    'wheel',
+    panzoomInstance.zoomWithWheel
+  );
 
 }
 
@@ -536,6 +561,10 @@ function closePreview(){
 
   document.getElementById('previewModal')
     .style.display = 'none';
+
+  if(panzoomInstance){
+    panzoomInstance.destroy();
+  }
 
 }
 
@@ -580,5 +609,6 @@ onclick="event.stopPropagation()"
 >
 
 </div>
+  <script src="https://cdn.jsdelivr.net/npm/@panzoom/panzoom/dist/panzoom.min.js"></script>
 </body>
 </html>
