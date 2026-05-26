@@ -374,7 +374,7 @@ async function openAlbum(kodeBooking){
   data.forEach(file => {
 
     const imageUrl =
-`${supabaseUrl}/storage/v1/render/image/public/customer-photo/${kodeBooking}/${file.name}?width=800&quality=70`;
+`${supabaseUrl}/storage/v1/object/public/customer-photo/${kodeBooking}/${file.name}`;
     const originalUrl =
 `${supabaseUrl}/storage/v1/object/public/customer-photo/${kodeBooking}/${file.name}`;
 
@@ -382,7 +382,10 @@ async function openAlbum(kodeBooking){
 
 <div class="photo-card">
 
-<img src="${imageUrl}">
+<img
+src="${imageUrl}"
+loading="lazy"
+>
 
 <div class="photo-info">
 
