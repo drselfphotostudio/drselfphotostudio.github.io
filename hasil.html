@@ -630,6 +630,27 @@ let panzoomInstance;
 let currentImages = [];
 let currentIndex = 0;
 function closePreview(){
+  document.addEventListener('keydown', e => {
+
+  const modal =
+    document.getElementById('previewModal');
+
+  if(modal.style.display !== 'flex')
+    return;
+
+  if(e.key === 'ArrowRight'){
+    nextPhoto();
+  }
+
+  if(e.key === 'ArrowLeft'){
+    prevPhoto();
+  }
+
+  if(e.key === 'Escape'){
+    closePreview();
+  }
+
+});
 
   document.getElementById('previewModal')
     .style.display = 'none';
