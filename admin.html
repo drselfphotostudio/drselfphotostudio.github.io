@@ -268,18 +268,15 @@ ${item.payment_status !== 'paid' ? `
 ` : `
 
   <input
-    type="file"
-    id="file-${item.id}"
-    multiple
-  >
+  type="file"
+  id="file-${item.id}"
+  accept="image/*"
+  capture="environment"
+  multiple
+  onchange="uploadPhoto('${item.kode_booking}', ${item.id})"
+>
 
-  <br><br>
-
-  <button onclick="uploadPhoto('${item.kode_booking}', ${item.id})">
-    Upload
-  </button>
-
-  <div id="upload-status-${item.id}" style="margin-top:10px;font-size:14px;opacity:0.8;">
+    <div id="upload-status-${item.id}" style="margin-top:10px;font-size:14px;opacity:0.8;">
     Mengecek foto...
   </div>
 
