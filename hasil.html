@@ -82,7 +82,7 @@ h1{
 }
 .gallery{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
   gap:25px;
   align-items:start;
   padding-bottom:120px;
@@ -90,14 +90,16 @@ h1{
 
 .photo-card img{
   width:100%;
-  height:350px;
-  object-fit:cover;
+  height:auto;
+  max-height:500px;
+  object-fit:contain;
   display:block;
   transition:0.3s;
+  background:#000;
 }
 
   .photo-card{
-  background:#1e1e1e;
+  background:#181818;
   border-radius:20px;
   overflow:hidden;
   display:flex;
