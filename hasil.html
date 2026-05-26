@@ -629,8 +629,8 @@ function togglePhoto(checkbox){
 let panzoomInstance;
 let currentImages = [];
 let currentIndex = 0;
-function closePreview(){
-  document.addEventListener('keydown', e => {
+
+document.addEventListener('keydown', e => {
 
   const modal =
     document.getElementById('previewModal');
@@ -651,6 +651,8 @@ function closePreview(){
   }
 
 });
+
+function closePreview(){
 
   document.getElementById('previewModal')
     .style.display = 'none';
