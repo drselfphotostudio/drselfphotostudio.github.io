@@ -447,6 +447,7 @@ async function openAlbum(kodeBooking){
 <img
 src="${imageUrl}"
 loading="lazy"
+onclick="previewPhoto('${originalUrl}')"
 >
 
 <div class="photo-info">
@@ -459,16 +460,9 @@ value="${file.name}"
 onchange="togglePhoto(this)"
 >
 
-Pilih untuk cetak
+Foto ${index + 1}
 
 </label>
-
-<button
-class="download-btn"
-onclick="previewPhoto('${originalUrl}')"
->
-Preview
-</button>
 
 </div>
 
