@@ -311,6 +311,28 @@ if(item.payment_status === 'paid'){
 }
 
 loadBookings();
+  // realtime booking baru / update otomatis
+supabaseClient
+  .channel('booking-realtime')
+
+  .on(
+    'postgres_changes',
+    {
+      event: '*',
+      schema: 'public',
+      table: 'bookings'
+    },
+
+    payload => {
+
+      console.log('Realtime update:', payload);
+
+      loadBookings();
+
+    }
+  )
+
+  .subscribe();
   async function uploadPhoto(kodeBooking, id){
 
   const fileInput =
@@ -391,8 +413,6 @@ loadBookings();
   }
 
   alert('Pembayaran berhasil diapprove');
-
-  loadBookings();
 
 }
 
