@@ -538,24 +538,38 @@ function previewPhoto(url){
   const img =
     document.getElementById('previewImage');
 
+  img.style.transform = 'scale(1) translate(0px,0px)';
+
+  img.onload = () => {
+
+    if(panzoomInstance){
+      panzoomInstance.destroy();
+    }
+
+    panzoomInstance = Panzoom(img, {
+      maxScale:5,
+      minScale:1,
+      contain:'outside',
+      cursor:'grab',
+      step:0.15
+    });
+
+    img.parentElement.addEventListener(
+      'wheel',
+      panzoomInstance.zoomWithWheel
+    );
+
+    panzoomInstance.zoom(1, {
+      animate:false
+    });
+
+    panzoomInstance.pan(0,0, {
+      animate:false
+    });
+
+  };
+
   img.src = url;
-
-  if(panzoomInstance){
-    panzoomInstance.destroy();
-  }
-
-  panzoomInstance = Panzoom(img, {
-  maxScale:5,
-  minScale:1,
-  contain:'outside',
-  cursor:'grab',
-  step:0.15
-});
-
-  img.parentElement.addEventListener(
-    'wheel',
-    panzoomInstance.zoomWithWheel
-  );
 
 }
 
