@@ -81,11 +81,26 @@ h1{
   box-shadow:0 10px 30px rgba(37,211,102,0.25);
 }
 .gallery{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-  gap:25px;
-  align-items:start;
+  column-count:4;
+  column-gap:20px;
   padding-bottom:120px;
+}
+  @media(max-width:1200px){
+  .gallery{
+    column-count:3;
+  }
+}
+
+@media(max-width:768px){
+  .gallery{
+    column-count:2;
+  }
+}
+
+@media(max-width:500px){
+  .gallery{
+    column-count:1;
+  }
 }
 
 .photo-card img{
@@ -99,10 +114,10 @@ h1{
   background:#181818;
   border-radius:20px;
   overflow:hidden;
-  display:flex;
-  flex-direction:column;
   position:relative;
   transition:0.25s;
+  margin-bottom:20px;
+  break-inside:avoid;
 }
 
 .photo-card::after{
