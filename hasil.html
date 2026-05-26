@@ -433,7 +433,7 @@ async function openAlbum(kodeBooking){
   status.innerHTML =
     `${data.length} foto ditemukan`;
 
-  data.forEach(file => {
+  data.forEach((file,index) => {
 
     const imageUrl =
 `${supabaseUrl}/storage/v1/object/public/customer-photo/${kodeBooking}/${file.name}`;
