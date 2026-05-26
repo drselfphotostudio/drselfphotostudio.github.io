@@ -26,7 +26,7 @@ body{
 
 .box{
   width:100%;
-  max-width:400px;
+  max-width:420px;
   background:#1e1e1e;
   padding:25px;
   border-radius:20px;
@@ -36,11 +36,16 @@ body{
 
 h2{
   margin-top:0;
+  margin-bottom:10px;
+}
+
+#kodeText{
+  opacity:0.8;
+  margin-bottom:20px;
 }
 
 input[type=file]{
   width:100%;
-  margin-top:20px;
   padding:15px;
   background:#2a2a2a;
   color:white;
@@ -63,6 +68,26 @@ input[type=file]{
   color:red;
 }
 
+.loading{
+  color:orange;
+}
+
+.preview{
+  margin-top:20px;
+}
+
+.preview img{
+  width:100%;
+  border-radius:15px;
+  margin-top:10px;
+}
+
+.info{
+  margin-top:15px;
+  font-size:13px;
+  opacity:0.7;
+}
+
 </style>
 </head>
 
@@ -78,12 +103,16 @@ input[type=file]{
   type="file"
   id="cameraInput"
   accept="image/*"
-  capture="environment"
-  multiple
 >
 
 <div id="status" class="status">
   Menunggu upload...
+</div>
+
+<div class="preview" id="preview"></div>
+
+<div class="info">
+  Foto akan upload dengan kualitas asli HP
 </div>
 
 </div>
@@ -115,6 +144,11 @@ document.getElementById('kodeText')
 const input =
 document.getElementById('cameraInput');
 
+input.setAttribute(
+  'accept',
+  'image/*;capture=camera'
+);
+
 input.addEventListener('change', async () => {
 
   const files = input.files;
@@ -124,10 +158,26 @@ input.addEventListener('change', async () => {
   const status =
     document.getElementById('status');
 
+  const preview =
+    document.getElementById('preview');
+
   status.innerHTML =
     'Sedang upload...';
 
+  status.className =
+    'status loading';
+
+  preview.innerHTML = '';
+
   for(let file of files){
+
+    const img =
+      document.createElement('img');
+
+    img.src =
+      URL.createObjectURL(file);
+
+    preview.appendChild(img);
 
     const fileName =
       Date.now() + '-' + file.name;
@@ -138,7 +188,12 @@ input.addEventListener('change', async () => {
         .from('customer-photo')
         .upload(
           `${kodeBooking}/${fileName}`,
-          file
+          file,
+          {
+            cacheControl:'3600',
+            upsert:false,
+            contentType:file.type
+          }
         );
 
     if(error){
