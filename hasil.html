@@ -361,6 +361,8 @@ async function openAlbum(kodeBooking){
   data.forEach(file => {
 
     const imageUrl =
+`${supabaseUrl}/storage/v1/render/image/public/customer-photo/${kodeBooking}/${file.name}?width=800&quality=70`;
+    const originalUrl =
 `${supabaseUrl}/storage/v1/object/public/customer-photo/${kodeBooking}/${file.name}`;
 
     gallery.innerHTML += `
@@ -385,7 +387,7 @@ Pilih untuk cetak
 
 <button
 class="download-btn"
-onclick="previewPhoto('${imageUrl}')"
+onclick="previewPhoto('${originalUrl}')"
 >
 Preview
 </button>
