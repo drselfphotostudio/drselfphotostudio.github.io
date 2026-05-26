@@ -385,9 +385,9 @@ Pilih untuk cetak
 
 <button
 class="download-btn"
-onclick="downloadPhoto('${imageUrl}')"
+onclick="previewPhoto('${imageUrl}')"
 >
-Download
+Preview
 </button>
 
 </div>
@@ -450,7 +450,7 @@ function togglePhoto(checkbox){
 
 }
 
-function downloadPhoto(url){
+function previewPhoto(url){
 
   window.open(url, '_blank');
 
