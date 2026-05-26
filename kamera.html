@@ -144,11 +144,6 @@ document.getElementById('kodeText')
 const input =
 document.getElementById('cameraInput');
 
-input.setAttribute(
-  'accept',
-  'image/*;capture=camera'
-);
-
 input.addEventListener('change', async () => {
 
   const files = input.files;
