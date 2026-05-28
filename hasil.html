@@ -357,7 +357,21 @@ supabase.createClient(
 let selectedPhotos = [];
 let currentKodeBooking = '';
 
-loadAlbums();
+const urlParams =
+new URLSearchParams(window.location.search);
+
+const kodeBooking =
+urlParams.get('kode');
+
+if(kodeBooking){
+
+  openAlbum(kodeBooking);
+
+}else{
+
+  loadAlbums();
+
+}
 
 async function loadAlbums(){
 
