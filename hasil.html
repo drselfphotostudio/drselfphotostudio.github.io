@@ -450,28 +450,12 @@ border-radius:20px;
 </div>
 
 </div>
-
-<button onclick="setMode('original')">
-Original
-</button>
-
-<button onclick="setMode('strip1')">
-Photostrip 01
-</button>
-
-<button onclick="setMode('strip2')">
-Photostrip 02
-</button>
-
+<div
+id="templateContainer"
+class="mode-picker">
 </div>
-<div class="gallery" id="gallery"></div>
-
-</div>
-
-<button id="printBtn" onclick="sendPrintRequest()">
-  Pesan Cetak
-</button>
-
+    <div class="gallery" id="gallery"></div>
+    </div>
 <script>
 
 const supabaseUrl =
@@ -487,7 +471,8 @@ supabase.createClient(
 );
 
 let selectedPhotos = [];
-let currentMode = 'original';
+  let currentMode = 'original';
+let currentTemplate = '';
 let currentKodeBooking = '';
 
 const urlParams =
@@ -495,6 +480,8 @@ new URLSearchParams(window.location.search);
 
 const kodeBooking =
 urlParams.get('kode');
+
+loadTemplates();
 
 if(kodeBooking){
 
@@ -651,20 +638,6 @@ Foto ${index + 1}
 
     let finalImage = imageUrl;
 
-if(currentMode === 'strip1'){
-
-  finalImage =
-`https://drselfphotostudio.github.io/photostrip1.png`;
-
-}
-
-if(currentMode === 'strip2'){
-
-  finalImage =
-`https://drselfphotostudio.github.io/photostrip2.png`;
-
-}
-
 if(currentMode === 'original'){
 
   gallery.innerHTML += `
@@ -740,11 +713,7 @@ height:190px;
 >
 
 <img
-src="${
-currentMode === 'strip1'
-? 'https://drselfphotostudio.github.io/photostrip1.png'
-: 'https://drselfphotostudio.github.io/photostrip2.png'
-}"
+src="${currentTemplate}"
 class="photostrip-template"
 >
 </div>
@@ -991,9 +960,64 @@ function searchAlbum(){
   }
 
 });
-  function setMode(mode){
+  async function loadTemplates(){
+
+  const { data, error } =
+    await supabaseClient
+    .from('template')
+    .select('*')
+    .order('id',{ ascending:true });
+
+  if(error){
+
+    console.log(error);
+
+    return;
+  }
+
+  const container =
+    document.getElementById('templateContainer');
+
+  container.innerHTML = '';
+
+  // tombol original
+  container.innerHTML += `
+
+<button onclick="
+setMode(
+'original',
+''
+)
+">
+Original
+</button>
+
+  `;
+
+  // template dari database
+  data.forEach(item => {
+
+    container.innerHTML += `
+
+<button onclick="
+setMode(
+'template',
+'${item.gambar}'
+)
+">
+${item.nama}
+</button>
+
+    `;
+
+  });
+
+}
+  function setMode(mode,template=''){
 
   currentMode = mode;
+
+  currentTemplate = template;
 
   if(currentKodeBooking){
 
