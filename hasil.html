@@ -319,6 +319,44 @@ h1{
 <div class="container">
 
 <h1>Hasil Foto Studio</h1>
+  <div style="
+display:flex;
+gap:10px;
+justify-content:center;
+margin-bottom:30px;
+flex-wrap:wrap;
+">
+
+<input
+type="text"
+id="searchKode"
+placeholder="Masukkan Kode Booking"
+style="
+padding:14px 18px;
+border:none;
+border-radius:12px;
+width:280px;
+font-size:16px;
+outline:none;
+"
+>
+
+<button
+onclick="searchAlbum()"
+style="
+background:#25D366;
+border:none;
+padding:14px 20px;
+border-radius:12px;
+color:white;
+font-weight:600;
+cursor:pointer;
+"
+>
+Cari Foto
+</button>
+
+</div>
 
 <div id="albumList" class="album-grid"></div>
 
@@ -741,7 +779,35 @@ Terima kasih`;
 );
 
 }
+function searchAlbum(){
 
+  const kode =
+    document.getElementById('searchKode')
+    .value
+    .trim();
+
+  if(!kode){
+
+    alert('Masukkan kode booking');
+
+    return;
+  }
+
+  openAlbum(kode);
+
+}
+  document
+.getElementById('searchKode')
+
+.addEventListener('keypress', function(e){
+
+  if(e.key === 'Enter'){
+
+    searchAlbum();
+
+  }
+
+});
 </script>
 <div
 id="previewModal"
