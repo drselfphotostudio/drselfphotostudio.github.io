@@ -9,6 +9,44 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
+  .photostrip{
+  position:relative;
+  width:320px;
+  height:900px;
+  margin:auto;
+}
+
+.photostrip .slot{
+  position:absolute;
+  width:120px;
+  height:180px;
+  object-fit:cover;
+  border-radius:18px;
+}
+
+.slot1{
+  top:120px;
+  left:38px;
+}
+
+.slot2{
+  top:340px;
+  left:38px;
+}
+
+.slot3{
+  top:560px;
+  left:38px;
+}
+
+.photostrip-template{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  pointer-events:none;
+}
   .strip-wrapper{
   position:relative;
   width:100%;
@@ -589,58 +627,64 @@ if(currentMode === 'strip2'){
 
 }
 
-gallery.innerHTML += `
+if(currentMode === 'original'){
 
-<div class="photo-card">
+  gallery.innerHTML += `
 
-<div class="strip-wrapper">
+  <div class="photo-card">
 
-<div
-class="photo-bg"
-style="
-background-image:url('${imageUrl}');
-"
-></div>
-loading="lazy"
-onclick="previewPhoto('${originalUrl}')"
->
+    <img
+      src="${imageUrl}"
+      loading="lazy"
+      onclick="previewPhoto('${originalUrl}')"
+    >
 
-${currentMode !== 'original' ? `
+  </div>
+
+  `;
+
+}else{
+
+  gallery.innerHTML = `
+
+<div class="photostrip">
 
 <img
-src="${finalImage}"
-class="strip-layer"
+src="${currentImages[0]}"
+class="slot slot1"
 >
 
-` : ''}
-
-</div>
-
-<div class="photo-info">
-
-<label>
-
-<input
-type="checkbox"
-value="${file.name}"
-onchange="togglePhoto(this)"
+<img
+src="${currentImages[1]}"
+class="slot slot2"
 >
 
-Foto ${index + 1}
+<img
+src="${currentImages[2]}"
+class="slot slot3"
+>
 
-</label>
+<img
+src="${
+currentMode === 'strip1'
+? 'https://drselfphotostudio.github.io/photostrip1.png'
+: 'https://drselfphotostudio.github.io/photostrip2.png'
+}"
+class="photostrip-template"
+>
 
 </div>
 
-</div>
+  `;
 
-    `;
-
-  });
+  return;
 
 }
-  function previewPhoto(url){
 
+});
+
+}
+function previewPhoto(url){
   currentIndex =
     currentImages.indexOf(url);
 
