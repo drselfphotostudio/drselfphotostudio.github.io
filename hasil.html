@@ -9,7 +9,46 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
+  .strip-wrapper{
+  position:relative;
+  width:100%;
+}
 
+.photo-layer{
+  width:100%;
+  display:block;
+}
+
+.strip-layer{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  pointer-events:none;
+}
+.mode-picker{
+  display:flex;
+  gap:15px;
+  justify-content:center;
+  margin-bottom:35px;
+  flex-wrap:wrap;
+}
+
+.mode-picker button{
+  background:#1f1f1f;
+  border:2px solid #25D366;
+  color:white;
+  padding:12px 20px;
+  border-radius:14px;
+  cursor:pointer;
+  font-weight:600;
+  transition:0.2s;
+}
+
+.mode-picker button:hover{
+  background:#25D366;
+}
 body{
   margin:0;
   background:#111;
@@ -361,7 +400,21 @@ Cari Foto
 <div id="albumList" class="album-grid"></div>
 
 <div id="status"></div>
+  <div class="mode-picker">
 
+<button onclick="setMode('original')">
+Original
+</button>
+
+<button onclick="setMode('strip1')">
+Photostrip 01
+</button>
+
+<button onclick="setMode('strip2')">
+Photostrip 02
+</button>
+
+</div>
 <div class="gallery" id="gallery"></div>
 
 </div>
@@ -385,6 +438,7 @@ supabase.createClient(
 );
 
 let selectedPhotos = [];
+let currentMode = 'original';
 let currentKodeBooking = '';
 
 const urlParams =
@@ -512,15 +566,45 @@ async function openAlbum(kodeBooking){
     const originalUrl =
 `${supabaseUrl}/storage/v1/object/public/customer-photo/${kodeBooking}/${file.name}`;
 
-    gallery.innerHTML += `
+    let finalImage = imageUrl;
+
+if(currentMode === 'strip1'){
+
+  finalImage =
+`https://drselfphotostudio.github.io/photostrip1.png`;
+
+}
+
+if(currentMode === 'strip2'){
+
+  finalImage =
+`https://drselfphotostudio.github.io/photostrip2.png`;
+
+}
+
+gallery.innerHTML += `
 
 <div class="photo-card">
 
+<div class="strip-wrapper">
+
 <img
 src="${imageUrl}"
+class="photo-layer"
 loading="lazy"
 onclick="previewPhoto('${originalUrl}')"
 >
+
+${currentMode !== 'original' ? `
+
+<img
+src="${finalImage}"
+class="strip-layer"
+>
+
+` : ''}
+
+</div>
 
 <div class="photo-info">
 
@@ -779,7 +863,19 @@ function searchAlbum(){
   }
 
 });
+  function setMode(mode){
+
+  currentMode = mode;
+
+  if(currentKodeBooking){
+
+    openAlbum(currentKodeBooking);
+
+  }
+
+}
 </script>
+
 <div
 id="previewModal"
 onclick="closePreview()"
