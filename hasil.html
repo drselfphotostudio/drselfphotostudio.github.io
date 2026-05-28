@@ -11,8 +11,8 @@
 <style>
   .photostrip{
   position:relative;
-  width:360px;
-  height:1100px;
+  width:600px;
+  height:1750px;
   margin:auto;
 }
 
@@ -429,6 +429,27 @@ Cari Foto
 
 <div id="status"></div>
   <div class="mode-picker">
+    <div id="photoSelector" style="
+display:none;
+max-width:500px;
+margin:20px auto;
+background:#1a1a1a;
+padding:20px;
+border-radius:20px;
+">
+
+<h3>Pilih Foto Photostrip</h3>
+
+<div style="display:grid;gap:15px;">
+
+<select id="slot1"></select>
+<select id="slot2"></select>
+<select id="slot3"></select>
+<select id="slot4"></select>
+
+</div>
+
+</div>
 
 <button onclick="setMode('original')">
 Original
@@ -586,7 +607,41 @@ async function openAlbum(kodeBooking){
   currentImages = data.map(file =>
 `${supabaseUrl}/storage/v1/object/public/customer-photo/${kodeBooking}/${file.name}`
 );
+const selector =
+document.getElementById('photoSelector');
 
+if(currentMode !== 'original'){
+
+  selector.style.display = 'block';
+
+  for(let i=1;i<=4;i++){
+
+    const select =
+      document.getElementById(`slot${i}`);
+
+    select.innerHTML = '';
+
+    currentImages.forEach((img,index)=>{
+
+      select.innerHTML += `
+<option value="${index}">
+Foto ${index + 1}
+</option>
+      `;
+
+    });
+
+    select.onchange = () => {
+      openAlbum(currentKodeBooking);
+    };
+
+  }
+
+}else{
+
+  selector.style.display = 'none';
+
+}
   data.forEach((file,index) => {
 
     const imageUrl =
@@ -633,35 +688,54 @@ if(currentMode === 'original'){
 <div class="photostrip">
 
 <img
-src="${currentImages[0]}"
+src="${currentImages[
+document.getElementById('slot1')?.value || 0
+]}"
 class="slot"
 style="
-top:170px;
-left:52px;
-width:255px;
-height:255px;
+top:120px;
+left:85px;
+width:420px;
+height:190px;
 "
 >
 
 <img
-src="${currentImages[1]}"
+src="${currentImages[
+document.getElementById('slot2')?.value || 1
+]}"
 class="slot"
 style="
-top:470px;
-left:52px;
-width:255px;
-height:255px;
+top:500px;
+left:85px;
+width:420px;
+height:190px;
 "
 >
 
 <img
-src="${currentImages[2]}"
+src="${currentImages[
+document.getElementById('slot3')?.value || 2
+]}"
 class="slot"
 style="
-top:770px;
-left:52px;
-width:255px;
-height:255px;
+top:880px;
+left:85px;
+width:420px;
+height:190px;
+"
+>
+
+<img
+src="${currentImages[
+document.getElementById('slot4')?.value || 3
+]}"
+class="slot"
+style="
+top:1260px;
+left:85px;
+width:420px;
+height:190px;
 "
 >
 
@@ -673,7 +747,6 @@ currentMode === 'strip1'
 }"
 class="photostrip-template"
 >
-
 </div>
 
   `;
