@@ -57,9 +57,10 @@
 }
 .mode-picker{
   display:flex;
-  gap:15px;
+  gap:20px;
   justify-content:center;
-  margin-bottom:35px;
+  align-items:flex-start;
+  margin:30px 0;
   flex-wrap:wrap;
 }
 
@@ -76,6 +77,34 @@
 
 .mode-picker button:hover{
   background:#25D366;
+}
+  .template-btn{
+  width:120px;
+  background:#1e1e1e;
+  border:2px solid #25D366;
+  border-radius:22px;
+  overflow:hidden;
+  cursor:pointer;
+  transition:0.25s;
+  color:white;
+}
+
+.template-btn:hover{
+  transform:translateY(-5px);
+  background:#25D366;
+}
+
+.template-btn img{
+  width:100%;
+  height:180px;
+  object-fit:cover;
+  display:block;
+}
+
+.template-btn p{
+  margin:10px 0;
+  text-align:center;
+  font-weight:600;
 }
 body{
   margin:0;
@@ -454,8 +483,10 @@ border-radius:20px;
 id="templateContainer"
 class="mode-picker">
 </div>
-    <div class="gallery" id="gallery"></div>
-    </div>
+
+</div>
+
+<div class="gallery" id="gallery"></div>
 <script>
 
 const supabaseUrl =
@@ -983,32 +1014,55 @@ function searchAlbum(){
   // tombol original
   container.innerHTML += `
 
-<button onclick="
+<div
+class="template-btn"
+onclick="
 setMode(
 'original',
 ''
 )
+"
+>
+
+<div style="
+height:180px;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:20px;
+font-weight:bold;
 ">
 Original
-</button>
+</div>
 
-  `;
+<p>Tanpa Frame</p>
+
+</div>
+
+`;
 
   // template dari database
   data.forEach(item => {
 
     container.innerHTML += `
 
-<button onclick="
+<div
+class="template-btn"
+onclick="
 setMode(
 'template',
 '${item.gambar}'
 )
-">
-${item.nama}
-</button>
+"
+>
 
-    `;
+<img src="${item.gambar}">
+
+<p>${item.nama}</p>
+
+</div>
+
+`;
 
   });
 
