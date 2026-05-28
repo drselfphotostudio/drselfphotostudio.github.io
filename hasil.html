@@ -504,6 +504,7 @@ supabase.createClient(
 let selectedPhotos = [];
   let currentMode = 'original';
 let currentTemplate = '';
+  let currentTemplateData = null;
 let currentKodeBooking = '';
 
 const urlParams =
@@ -697,10 +698,10 @@ document.getElementById('slot1')?.value || 0
 ]}"
 class="slot"
 style="
-top:120px;
-left:85px;
-width:420px;
-height:190px;
+top:${currentTemplateData.slot1_top}px;
+left:${currentTemplateData.slot1_left}px;
+width:${currentTemplateData.slot1_width}px;
+height:${currentTemplateData.slot1_height}px;
 "
 >
 
@@ -710,10 +711,10 @@ document.getElementById('slot2')?.value || 1
 ]}"
 class="slot"
 style="
-top:500px;
-left:85px;
-width:420px;
-height:190px;
+top:${currentTemplateData.slot2_top}px;
+left:${currentTemplateData.slot2_left}px;
+width:${currentTemplateData.slot2_width}px;
+height:${currentTemplateData.slot2_height}px;
 "
 >
 
@@ -723,10 +724,10 @@ document.getElementById('slot3')?.value || 2
 ]}"
 class="slot"
 style="
-top:880px;
-left:85px;
-width:420px;
-height:190px;
+top:${currentTemplateData.slot3_top}px;
+left:${currentTemplateData.slot3_left}px;
+width:${currentTemplateData.slot3_width}px;
+height:${currentTemplateData.slot3_height}px;
 "
 >
 
@@ -736,10 +737,10 @@ document.getElementById('slot4')?.value || 3
 ]}"
 class="slot"
 style="
-top:1260px;
-left:85px;
-width:420px;
-height:190px;
+top:${currentTemplateData.slot4_top}px;
+left:${currentTemplateData.slot4_left}px;
+width:${currentTemplateData.slot4_width}px;
+height:${currentTemplateData.slot4_height}px;
 "
 >
 
@@ -1051,7 +1052,8 @@ class="template-btn"
 onclick="
 setMode(
 'template',
-'${item.gambar}'
+'${item.gambar}',
+${JSON.stringify(item)}
 )
 "
 >
@@ -1067,11 +1069,16 @@ setMode(
   });
 
 }
-  function setMode(mode,template=''){
+  function setMode(
+mode,
+template='',
+templateData=null
+){
 
   currentMode = mode;
 
   currentTemplate = template;
+    currentTemplateData = templateData;
 
   if(currentKodeBooking){
 
