@@ -1056,8 +1056,8 @@ ${item.id}
     <select
     id="slot${i}"
     onchange="
-    openAlbum(currentKodeBooking)
-    "
+updatePhotostrip()
+"
     style="
     width:100%;
     margin-bottom:12px;
@@ -1073,6 +1073,48 @@ ${item.id}
     `;
 
   }
+
+}
+  function updatePhotostrip(){
+
+  let slotsHTML = '';
+
+  for(let i=1; i<=currentTemplateData.total_slot; i++){
+
+    const selectedIndex =
+      document.getElementById(`slot${i}`).value;
+
+    slotsHTML += `
+
+    <img
+    src="${currentImages[selectedIndex]}"
+    class="slot"
+    style="
+    top:${currentTemplateData[`slot${i}_top`]}px;
+    left:${currentTemplateData[`slot${i}_left`]}px;
+    width:${currentTemplateData[`slot${i}_width`]}px;
+    height:${currentTemplateData[`slot${i}_height`]}px;
+    "
+    >
+
+    `;
+
+  }
+
+  document.getElementById('gallery').innerHTML = `
+
+  <div class="photostrip">
+
+  ${slotsHTML}
+
+  <img
+  src="${currentTemplate}"
+  class="photostrip-template"
+  >
+
+  </div>
+
+  `;
 
 }
   function setMode(
@@ -1100,13 +1142,16 @@ templateId=null
 
   generateSlotSelector();
 
-  if(currentKodeBooking){
+if(currentKodeBooking){
 
-    openAlbum(currentKodeBooking);
+  openAlbum(currentKodeBooking);
 
+  if(mode !== 'original'){
+    updatePhotostrip();
   }
 
 }
+    }
 </script>
 
 <div
