@@ -505,6 +505,7 @@ let selectedPhotos = [];
   let currentMode = 'original';
 let currentTemplate = '';
   let currentTemplateData = null;
+  let allTemplates = [];
 let currentKodeBooking = '';
 
 const urlParams =
@@ -611,7 +612,7 @@ async function openAlbum(kodeBooking){
       .from('customer-photo')
       .list(kodeBooking);
 
-  if(error){
+    if(error){
 
     console.log(error);
 
@@ -1000,6 +1001,7 @@ function searchAlbum(){
     .select('*')
     .order('id',{ ascending:true });
 
+    allTemplates = data;
   if(error){
 
     console.log(error);
@@ -1053,7 +1055,7 @@ onclick="
 setMode(
 'template',
 '${item.gambar}',
-${JSON.stringify(item)}
+${item.id}
 )
 "
 >
@@ -1072,13 +1074,16 @@ ${JSON.stringify(item)}
   function setMode(
 mode,
 template='',
-templateData=null
+templateId=null
 ){
 
   currentMode = mode;
 
   currentTemplate = template;
-    currentTemplateData = templateData;
+    currentTemplateData =
+allTemplates.find(
+item => item.id == templateId
+);
 
   if(currentKodeBooking){
 
