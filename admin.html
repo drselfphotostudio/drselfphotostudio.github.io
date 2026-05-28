@@ -164,6 +164,46 @@ margin-bottom:30px;
 ">
 
 <h1>Admin Dashboard Booking</h1>
+  <div style="
+background:#1a1a1a;
+padding:20px;
+border-radius:20px;
+margin-bottom:30px;
+">
+
+<h2>Upload Template Photostrip</h2>
+
+<input
+type="text"
+id="templateName"
+placeholder="Nama Template"
+style="
+width:100%;
+padding:12px;
+border:none;
+border-radius:10px;
+margin-bottom:10px;
+"
+>
+
+<input
+type="file"
+id="templateFile"
+accept="image/png,image/jpeg"
+style="
+margin-bottom:15px;
+"
+>
+
+<button onclick="uploadTemplate()">
+Upload Template
+</button>
+
+<div id="templateStatus"
+style="margin-top:10px;">
+</div>
+
+</div>
 
 <button onclick="logoutAdmin()">
   Logout
@@ -571,6 +611,87 @@ function handleEnter(event){
     loginAdmin();
 
   }
+
+}
+  async function uploadTemplate(){
+
+  const nama =
+    document.getElementById('templateName').value;
+
+  const file =
+    document.getElementById('templateFile').files[0];
+
+  const status =
+    document.getElementById('templateStatus');
+
+  if(!nama){
+
+    alert('Masukkan nama template');
+
+    return;
+  }
+
+  if(!file){
+
+    alert('Pilih file');
+
+    return;
+  }
+
+  status.innerHTML = 'Uploading...';
+
+  const fileName =
+    Date.now() + '-' + file.name;
+
+  // upload ke storage
+  const { error } = await supabaseClient
+    .storage
+    .from('template')
+    .upload(fileName, file);
+
+  if(error){
+
+    console.log(error);
+
+    status.innerHTML =
+      '❌ Upload gagal';
+
+    return;
+  }
+
+  // ambil public url
+  const { data } = supabaseClient
+    .storage
+    .from('template')
+    .getPublicUrl(fileName);
+
+  const imageUrl =
+    data.publicUrl;
+
+  // simpan database
+  const { error: dbError } =
+    await supabaseClient
+    .from('template')
+    .insert({
+      nama:nama,
+      gambar:imageUrl
+    });
+
+  if(dbError){
+
+    console.log(dbError);
+
+    status.innerHTML =
+      '❌ Database error';
+
+    return;
+  }
+
+  status.innerHTML =
+    '✅ Template berhasil diupload';
+
+  document.getElementById('templateName').value = '';
+  document.getElementById('templateFile').value = '';
 
 }
 </script>
