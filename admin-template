@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Admin Template</title>
+
+<style>
+
+body{
+background:#0f0f0f;
+font-family:Arial;
+color:white;
+padding:30px;
+}
+
+.card{
+max-width:450px;
+margin:auto;
+background:#1e1e1e;
+padding:25px;
+border-radius:20px;
+}
+
+h2{
+text-align:center;
+margin-bottom:20px;
+}
+
+input{
+width:100%;
+padding:12px;
+margin-top:10px;
+border:none;
+border-radius:10px;
+background:#2a2a2a;
+color:white;
+}
+
+button{
+width:100%;
+padding:12px;
+margin-top:15px;
+border:none;
+border-radius:10px;
+background:#00d26a;
+color:white;
+font-size:16px;
+font-weight:bold;
+cursor:pointer;
+}
+
+button:hover{
+opacity:0.9;
+}
+
+#status{
+margin-top:15px;
+text-align:center;
+}
+
+.preview{
+margin-top:20px;
+text-align:center;
+}
+
+.preview img{
+max-width:200px;
+border-radius:10px;
+border:2px solid #00d26a;
+}
+
+</style>
+</head>
+<body>
+
+<div class="card">
+
+<h2>Upload Template Photostrip</h2>
+
+<input
+type="text"
+id="nama"
+placeholder="Nama Template">
+
+<input
+type="file"
+id="file"
+accept="image/png,image/jpeg">
+
+<div class="preview">
+<img id="preview" style="display:none;">
+</div>
+
+<button onclick="uploadTemplate()">
+Upload Template
+</button>
+
+<div id="status"></div>
+
+</div>
+
+<script type="module">
+
+import { createClient }
+from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
+
+// GANTI DENGAN PUNYA ANDA
+const supabase = createClient(
+'https://dokayeukqfzbkktnmcoy.supabase.co/rest/v1/',
+'sb_publishable_iUb2y0mBwhZN_Lkqq-PH_A_JCozJTxT'
+)
+
+// preview gambar
+const fileInput =
+document.getElementById('file')
+
+fileInput.addEventListener('change', () => {
+
+const file = fileInput.files[0]
+
+if(file){
+
+const reader = new FileReader()
+
+reader.onload = function(e){
+
+const preview =
+document.getElementById('preview')
+
+preview.src = e.target.result
+preview.style.display = 'block'
+
+}
+
+reader.readAsDataURL(file)
+
+}
+
+})
+
+// upload template
+window.uploadTemplate = async () => {
+
+const nama =
+document.getElementById('nama').value
+
+const file =
+document.getElementById('file').files[0]
+
+const status =
+document.getElementById('status')
+
+if(!nama){
+alert('Masukkan nama template')
+return
+}
+
+if(!file){
+alert('Pilih file')
+return
+}
+
+status.innerHTML = 'Uploading...'
+
+const fileName =
+Date.now() + '-' + file.name
+
+// upload ke storage
+const { error } = await supabase
+.storage
+.from('template')
+.upload(fileName, file)
+
+if(error){
+
+status.innerHTML =
+'Error: ' + error.message
+
+return
+
+}
+
+// ambil public url
+const { data } = supabase
+.storage
+.from('template')
+.getPublicUrl(fileName)
+
+const imageUrl =
+data.publicUrl
+
+// simpan ke database
+const { error: dbError } =
+await supabase
+.from('template')
+.insert({
+nama: nama,
+gambar: imageUrl
+})
+
+if(dbError){
+
+status.innerHTML =
+'Database error'
+
+return
+
+}
+
+status.innerHTML =
+'✅ Template berhasil diupload'
+
+// reset form
+document.getElementById('nama').value = ''
+document.getElementById('file').value = ''
+document.getElementById('preview').style.display = 'none'
+
+}
+
+</script>
+
+</body>
+</html>
