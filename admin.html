@@ -71,6 +71,19 @@ button{
   border-radius:10px;
   cursor:pointer;
 }
+  .btn-lihat{
+  display:inline-block;
+  padding:10px 15px;
+  background:#25D366;
+  color:white;
+  border-radius:10px;
+  text-decoration:none;
+  font-weight:600;
+}
+
+.btn-lihat:hover{
+  opacity:0.8;
+}
   .login-box{
   max-width:400px;
   margin:100px auto;
@@ -173,6 +186,7 @@ margin-bottom:30px;
 <th>Harga</th>
 <th>Status</th>
 <th>Upload Foto</th>
+<th>Lihat Hasil</th>
 <th>Kirim WA</th>
 </tr>
 </thead>
@@ -281,6 +295,18 @@ ${item.payment_status !== 'paid' ? `
   </div>
 
 `}
+
+</td>
+
+<td>
+
+  <a
+    href="hasil.html?kode=${item.kode_booking}"
+    target="_blank"
+    class="btn-lihat"
+  >
+    Lihat
+  </a>
 
 </td>
 
