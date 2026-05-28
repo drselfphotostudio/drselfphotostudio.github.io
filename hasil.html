@@ -471,10 +471,7 @@ border-radius:20px;
 
 <div style="display:grid;gap:15px;">
 
-<select id="slot1"></select>
-<select id="slot2"></select>
-<select id="slot3"></select>
-<select id="slot4"></select>
+<div id="slotSelector"></div>
 
 </div>
 
@@ -633,30 +630,8 @@ document.getElementById('photoSelector');
 if(currentMode !== 'original'){
 
   selector.style.display = 'block';
-
-  for(let i=1;i<=4;i++){
-
-    const select =
-      document.getElementById(`slot${i}`);
-
-    select.innerHTML = '';
-
-    currentImages.forEach((img,index)=>{
-
-      select.innerHTML += `
-<option value="${index}">
-Foto ${index + 1}
-</option>
-      `;
-
-    });
-
-    select.onchange = () => {
-      openAlbum(currentKodeBooking);
-    };
-
-  }
-
+generateSlotSelector();
+  
 }else{
 
   selector.style.display = 'none';
@@ -689,70 +664,45 @@ if(currentMode === 'original'){
 
 }else{
 
-  gallery.innerHTML = `
+  let slotsHTML = '';
+
+for(let i=1; i<=currentTemplateData.total_slot; i++){
+
+  slotsHTML += `
+
+  <img
+  src="${
+    currentImages[
+      document.getElementById(`slot${i}`)?.value || 0
+    ]
+  }"
+  class="slot"
+  style="
+  top:${currentTemplateData[`slot${i}_top`]}px;
+  left:${currentTemplateData[`slot${i}_left`]}px;
+  width:${currentTemplateData[`slot${i}_width`]}px;
+  height:${currentTemplateData[`slot${i}_height`]}px;
+  "
+  >
+
+  `;
+
+}
+
+gallery.innerHTML = `
 
 <div class="photostrip">
 
-<img
-src="${currentImages[
-document.getElementById('slot1')?.value || 0
-]}"
-class="slot"
-style="
-top:${currentTemplateData.slot1_top}px;
-left:${currentTemplateData.slot1_left}px;
-width:${currentTemplateData.slot1_width}px;
-height:${currentTemplateData.slot1_height}px;
-"
->
-
-<img
-src="${currentImages[
-document.getElementById('slot2')?.value || 1
-]}"
-class="slot"
-style="
-top:${currentTemplateData.slot2_top}px;
-left:${currentTemplateData.slot2_left}px;
-width:${currentTemplateData.slot2_width}px;
-height:${currentTemplateData.slot2_height}px;
-"
->
-
-<img
-src="${currentImages[
-document.getElementById('slot3')?.value || 2
-]}"
-class="slot"
-style="
-top:${currentTemplateData.slot3_top}px;
-left:${currentTemplateData.slot3_left}px;
-width:${currentTemplateData.slot3_width}px;
-height:${currentTemplateData.slot3_height}px;
-"
->
-
-<img
-src="${currentImages[
-document.getElementById('slot4')?.value || 3
-]}"
-class="slot"
-style="
-top:${currentTemplateData.slot4_top}px;
-left:${currentTemplateData.slot4_left}px;
-width:${currentTemplateData.slot4_width}px;
-height:${currentTemplateData.slot4_height}px;
-"
->
+${slotsHTML}
 
 <img
 src="${currentTemplate}"
 class="photostrip-template"
 >
+
 </div>
 
-  `;
-
+`;
   return;
 
 }
@@ -1071,6 +1021,60 @@ ${item.id}
   });
 
 }
+  function generateSlotSelector(){
+
+  const container =
+    document.getElementById('slotSelector');
+
+  container.innerHTML = '';
+
+  let totalSlot = 4;
+
+  if(currentTemplateData?.total_slot){
+
+    totalSlot =
+      currentTemplateData.total_slot;
+
+  }
+
+  for(let i=1; i<=totalSlot; i++){
+
+    let options = '';
+
+    currentImages.forEach((img,index)=>{
+
+      options += `
+      <option value="${index}">
+        Foto ${index+1}
+      </option>
+      `;
+
+    });
+
+    container.innerHTML += `
+
+    <select
+    id="slot${i}"
+    onchange="
+    openAlbum(currentKodeBooking)
+    "
+    style="
+    width:100%;
+    margin-bottom:12px;
+    padding:8px;
+    border-radius:10px;
+    "
+    >
+
+    ${options}
+
+    </select>
+
+    `;
+
+  }
+
+}
   function setMode(
 mode,
 template='',
@@ -1080,10 +1084,21 @@ templateId=null
   currentMode = mode;
 
   currentTemplate = template;
+
+  if(mode === 'original'){
+
+    currentTemplateData = null;
+
+  }else{
+
     currentTemplateData =
-allTemplates.find(
-item => item.id == templateId
-);
+      allTemplates.find(
+        item => item.id == templateId
+      );
+
+  }
+
+  generateSlotSelector();
 
   if(currentKodeBooking){
 
