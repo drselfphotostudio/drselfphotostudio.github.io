@@ -360,14 +360,6 @@ Cari Foto
 
 <div id="albumList" class="album-grid"></div>
 
-<button
-class="back-btn"
-id="backBtn"
-onclick="backToAlbums()"
->
-  ← Kembali ke Album
-</button>
-
 <div id="status"></div>
 
 <div class="gallery" id="gallery"></div>
@@ -480,10 +472,7 @@ async function openAlbum(kodeBooking){
   document.getElementById('albumList')
     .style.display = 'none';
 
-  document.getElementById('backBtn')
-    .style.display = 'inline-block';
-
-  const gallery =
+    const gallery =
     document.getElementById('gallery');
 
   const status =
@@ -627,24 +616,6 @@ function prevPhoto(){
   }
 
   showPreview();
-
-}
-function backToAlbums(){
-
-  document.getElementById('albumList')
-    .style.display = 'grid';
-
-  document.getElementById('gallery')
-    .innerHTML = '';
-
-  document.getElementById('status')
-    .innerHTML = '';
-
-  document.getElementById('backBtn')
-    .style.display = 'none';
-
-  document.getElementById('printBtn')
-    .style.display = 'none';
 
 }
 
