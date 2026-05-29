@@ -456,7 +456,11 @@ Cari Foto
 
 </div>
 
-<div id="albumList" class="album-grid"></div>
+<div
+id="albumList"
+class="album-grid"
+style="display:none;"
+></div>
 
 <div id="status"></div>
   <div class="mode-picker">
@@ -520,10 +524,6 @@ loadTemplates();
 if(kodeBooking){
 
   openAlbum(kodeBooking);
-
-}else{
-
-  loadAlbums();
 
 }
 
