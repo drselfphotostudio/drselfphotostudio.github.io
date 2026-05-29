@@ -77,7 +77,7 @@ const supabaseUrl =
 'https://dokayeukqfzbkktnmcoy.supabase.co';
 
 const supabaseKey =
-'ISI_API_KAMU';
+'sb_publishable_iUb2y0mBwhZN_Lkqq-PH_A_JCozJTxT';
 
 const supabaseClient =
 supabase.createClient(
@@ -115,7 +115,12 @@ async function loadImages(){
 `${supabaseUrl}/storage/v1/object/public/customer-photo/${kodeBooking}/${file.name}`
 
   );
+if(currentImages.length > 0){
 
+  document.getElementById('preview')
+    .src = currentImages[0];
+
+}
 }
 
 function playStopmotion(){
