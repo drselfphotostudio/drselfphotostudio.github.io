@@ -85,6 +85,10 @@ margin-bottom:20px;
 ⏹️ Stop
 </button>
 
+<button onclick="toggleFullscreen()">
+⛶ Fullscreen
+</button>
+
 </div>
 
   <input
@@ -203,6 +207,22 @@ function stopStopmotion(){
 
   window.location.href =
 `hasil.html?kode=${kodeBooking}`;
+
+}
+  function toggleFullscreen(){
+
+  const elem =
+    document.documentElement;
+
+  if(!document.fullscreenElement){
+
+    elem.requestFullscreen();
+
+  }else{
+
+    document.exitFullscreen();
+
+  }
 
 }
 </script>
