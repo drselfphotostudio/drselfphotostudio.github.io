@@ -303,22 +303,18 @@ margin-bottom:35px;
 
 <div class="header-card">
 
-<h1>Admin Dashboard</h1>
+<h1 id="pageTitle">
+Customer Booking
+</h1>
 
-<p style="
-margin-top:10px;
-opacity:0.7;
-font-size:15px;
-line-height:1.6;
-">
-Kelola booking, upload foto customer,
-approve pembayaran, dan kirim hasil foto.
+<p id="pageDesc">
+Kelola booking customer, upload foto, dan kirim hasil.
 </p>
 
 </div>
   <div
 id="template-section"
-class="section-card"
+class="section-card content-section"
 style="
 display:none;
 "
@@ -362,7 +358,10 @@ style="margin-top:10px;">
 
 </div>
 
-<div id="booking-section">
+<div
+id="booking-section"
+class="content-section"
+>
 <div class="table-wrapper">
 
 <table>
@@ -743,27 +742,59 @@ function checkLogin(){
 
   function showSection(section){
 
-  document.getElementById(
-    'booking-section'
-  ).style.display = 'none';
+  document
+    .querySelectorAll('.content-section')
+    .forEach(item=>{
+      item.style.display = 'none';
+    });
 
   document.getElementById(
-    'template-section'
-  ).style.display = 'none';
+    section + '-section'
+  ).style.display = 'block';
+
+  const title =
+    document.getElementById('pageTitle');
+
+  const desc =
+    document.getElementById('pageDesc');
 
   if(section === 'booking'){
 
-    document.getElementById(
-      'booking-section'
-    ).style.display = 'block';
+    title.innerText =
+      'Customer Booking';
+
+    desc.innerText =
+      'Kelola booking customer, upload foto, dan kirim hasil.';
+
+  }
+
+  if(section === 'gallery'){
+
+    title.innerText =
+      'Galeri Website';
+
+    desc.innerText =
+      'Kelola galeri foto yang tampil di website.';
+
+  }
+
+  if(section === 'paket'){
+
+    title.innerText =
+      'Paket Harga';
+
+    desc.innerText =
+      'Kelola paket dan harga studio foto.';
 
   }
 
   if(section === 'template'){
 
-    document.getElementById(
-      'template-section'
-    ).style.display = 'block';
+    title.innerText =
+      'Template Photostrip';
+
+    desc.innerText =
+      'Upload dan kelola template photostrip customer.';
 
   }
 
@@ -884,6 +915,34 @@ function handleEnter(event){
 
 }
 </script>
+  
+  <div
+id="gallery-section"
+class="section-card content-section"
+style="display:none;"
+>
+
+<h2>Galeri Website</h2>
+
+<p>
+Menu galeri website.
+</p>
+
+</div>
+
+<div
+id="paket-section"
+class="section-card content-section"
+style="display:none;"
+>
+
+<h2>Paket Harga</h2>
+
+<p>
+Menu paket harga.
+</p>
+
+</div>
 
 </div>
 
