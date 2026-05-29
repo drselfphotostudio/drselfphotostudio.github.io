@@ -129,16 +129,11 @@ onclick="backToGallery()"
 
 <button
 class="ui-control"
-onclick="playStopmotion()">
+id="playBtn"
+onclick="togglePlay()">
 ▶️ Play
 </button>
-
-<button
-class="ui-control"
-onclick="stopStopmotion()">
-⏹️ Stop
-</button>
-
+  
 <button
 class="ui-control"
 onclick="toggleFullscreen()">
@@ -192,6 +187,10 @@ let currentImages = [];
 
 let interval;
 
+let isPlaying = false;
+
+let currentIndex = 0;
+
   document
 .getElementById('speed')
 .addEventListener('input', function(){
@@ -230,33 +229,42 @@ if(currentImages.length > 0){
 }
 }
 
-function playStopmotion(){
+function togglePlay(){
 
-  let index = 0;
+  const btn =
+    document.getElementById('playBtn');
+
+  if(isPlaying){
+
+    clearInterval(interval);
+
+    isPlaying = false;
+
+    btn.innerHTML = '▶️ Play';
+
+    return;
+  }
+
+  isPlaying = true;
+
+  btn.innerHTML = '⏸️ Pause';
 
   clearInterval(interval);
 
   interval = setInterval(()=>{
 
     document.getElementById('preview')
-      .src = currentImages[index];
+      .src = currentImages[currentIndex];
 
-    index++;
+    currentIndex++;
 
-    if(index >= currentImages.length){
-      index = 0;
-    }
+    if(currentIndex >= currentImages.length){
+  currentIndex = 0;
+}
 
   }, document.getElementById('speed').value);
 
 }
-
-function stopStopmotion(){
-
-  clearInterval(interval);
-
-}
-
   function backToGallery(){
 
   window.location.href =
