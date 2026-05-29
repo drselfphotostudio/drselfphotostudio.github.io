@@ -56,6 +56,7 @@ button{
 <body>
 
 <button
+class="ui-control"
 onclick="backToGallery()"
 style="
 background:#25D366;
@@ -77,21 +78,28 @@ margin-bottom:20px;
 
 <div class="controls">
 
-<button onclick="playStopmotion()">
+<button
+class="ui-control"
+onclick="playStopmotion()">
 ▶️ Play
 </button>
 
-<button onclick="stopStopmotion()">
+<button
+class="ui-control"
+onclick="stopStopmotion()">
 ⏹️ Stop
 </button>
 
-<button onclick="toggleFullscreen()">
+<button
+class="ui-control"
+onclick="toggleFullscreen()">
 ⛶ Fullscreen
 </button>
 
 </div>
 
   <input
+class="ui-control"
 type="range"
 id="speed"
 min="50"
@@ -108,6 +116,7 @@ margin:auto;
 >
 
 <p
+class="ui-control"
 id="speedText"
 style="text-align:center;"
 >
@@ -209,18 +218,30 @@ function stopStopmotion(){
 `hasil.html?kode=${kodeBooking}`;
 
 }
+  
   function toggleFullscreen(){
 
   const elem =
     document.documentElement;
 
+  const controls =
+    document.querySelectorAll('.ui-control');
+
   if(!document.fullscreenElement){
 
     elem.requestFullscreen();
 
+    controls.forEach(item=>{
+      item.style.display = 'none';
+    });
+
   }else{
 
     document.exitFullscreen();
+
+    controls.forEach(item=>{
+      item.style.display = '';
+    });
 
   }
 
