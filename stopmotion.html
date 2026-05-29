@@ -246,6 +246,22 @@ function stopStopmotion(){
   }
 
 }
+  document.addEventListener(
+'fullscreenchange',
+()=>{
+
+  const controls =
+    document.querySelectorAll('.ui-control');
+
+  if(!document.fullscreenElement){
+
+    controls.forEach(item=>{
+      item.style.display = '';
+    });
+
+  }
+
+});
 </script>
 
 </body>
