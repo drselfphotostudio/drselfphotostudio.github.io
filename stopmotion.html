@@ -71,6 +71,29 @@ button{
 
 </div>
 
+  <input
+type="range"
+id="speed"
+min="50"
+max="1000"
+value="200"
+step="50"
+style="
+width:250px;
+margin-top:20px;
+text-align:center;
+display:block;
+margin:auto;
+"
+>
+
+<p
+id="speedText"
+style="text-align:center;"
+>
+Kecepatan: 200ms
+</p>
+  
 <script>
 
 const supabaseUrl =
@@ -94,6 +117,16 @@ urlParams.get('kode');
 let currentImages = [];
 
 let interval;
+
+  document
+.getElementById('speed')
+.addEventListener('input', function(){
+
+  document.getElementById('speedText')
+    .innerText =
+    'Kecepatan: ' + this.value + 'ms';
+
+});
 
 loadImages();
 
@@ -140,7 +173,7 @@ function playStopmotion(){
       index = 0;
     }
 
-  }, 200);
+  }, document.getElementById('speed').value);
 
 }
 
