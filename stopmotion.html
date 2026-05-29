@@ -55,6 +55,22 @@ button{
 
 <body>
 
+<button
+onclick="backToGallery()"
+style="
+background:#25D366;
+border:none;
+color:white;
+padding:12px 18px;
+border-radius:12px;
+cursor:pointer;
+font-size:15px;
+margin-bottom:20px;
+"
+>
+← Kembali
+</button>
+
 <h1>🎞️ Stop Motion</h1>
 
 <img id="preview">
@@ -183,6 +199,12 @@ function stopStopmotion(){
 
 }
 
+  function backToGallery(){
+
+  window.location.href =
+`hasil.html?kode=${kodeBooking}`;
+
+}
 </script>
 
 </body>
