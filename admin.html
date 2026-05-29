@@ -155,6 +155,51 @@ button:hover{
   box-sizing:border-box;
   font-size:16px;
 }
+
+  .sidebar{
+  position:fixed;
+  top:0;
+  left:0;
+  width:260px;
+  height:100vh;
+  background:#151515;
+  border-right:1px solid rgba(255,255,255,0.06);
+  padding:30px 20px;
+  box-sizing:border-box;
+  z-index:999;
+}
+
+.sidebar h2{
+  margin:0 0 35px;
+  font-size:32px;
+}
+
+.sidebar button{
+  width:100%;
+  margin-bottom:14px;
+  background:#1f1f1f;
+  padding:16px;
+  border-radius:14px;
+  text-align:left;
+  font-size:16px;
+}
+
+.sidebar button:hover{
+  background:#25D366;
+}
+
+.main-content{
+  margin-left:280px;
+}
+
+.section-card{
+  background:#1a1a1a;
+  padding:25px;
+  border-radius:24px;
+  border:1px solid rgba(255,255,255,0.05);
+  box-shadow:0 10px 30px rgba(0,0,0,0.25);
+}
+  
 @media(max-width:900px){
 
   body{
@@ -178,6 +223,38 @@ button:hover{
 </head>
 
 <body onload="checkLogin()">
+
+<div
+class="sidebar"
+id="sidebar"
+style="display:none;"
+>
+
+<h2>📸 Admin</h2>
+
+<button onclick="showSection('booking')">
+📋 Customer Booking
+</button>
+
+<button onclick="showSection('gallery')">
+🖼️ Galeri Website
+</button>
+
+<button onclick="showSection('paket')">
+💰 Paket Harga
+</button>
+
+<button onclick="showSection('template')">
+🎞️ Template Photostrip
+</button>
+
+<button onclick="logoutAdmin()">
+🚪 Logout
+</button>
+
+</div>
+
+<div class="main-content">
 <div id="loginPage">
 
   <div class="login-box">
@@ -239,13 +316,13 @@ approve pembayaran, dan kirim hasil foto.
 </p>
 
 </div>
-  <div style="
-background:#1a1a1a;
-padding:25px;
-border-radius:24px;
-box-shadow:0 10px 30px rgba(0,0,0,0.25);
-border:1px solid rgba(255,255,255,0.05);
-">
+  <div
+id="template-section"
+class="section-card"
+style="
+display:none;
+"
+>
 
 <h2>Upload Template Photostrip</h2>
 
@@ -296,6 +373,7 @@ Logout
 
 </div>
 
+<div id="booking-section">
 <div class="table-wrapper">
 
 <table>
@@ -322,7 +400,9 @@ Logout
 </table>
 
 </div>
+
 </div>
+
 <script>
 
 const supabaseUrl = 'https://dokayeukqfzbkktnmcoy.supabase.co';
@@ -646,24 +726,60 @@ function checkLogin(){
 
   if(isLogin === 'true'){
 
-    document.getElementById('loginPage')
-      .style.display = 'none';
+  document.getElementById('loginPage')
+    .style.display = 'none';
 
-    document.getElementById('adminContent')
-      .style.display = 'block';
+  document.getElementById('adminContent')
+    .style.display = 'block';
 
+  document.getElementById('sidebar')
+    .style.display = 'block';
+
+  showSection('booking');
+    
   }else{
 
-    document.getElementById('loginPage')
-      .style.display = 'block';
+  document.getElementById('loginPage')
+    .style.display = 'block';
 
-    document.getElementById('adminContent')
-      .style.display = 'none';
+  document.getElementById('adminContent')
+    .style.display = 'none';
+
+  document.getElementById('sidebar')
+    .style.display = 'none';
+
+}
+
+}
+
+  function showSection(section){
+
+  document.getElementById(
+    'booking-section'
+  ).style.display = 'none';
+
+  document.getElementById(
+    'template-section'
+  ).style.display = 'none';
+
+  if(section === 'booking'){
+
+    document.getElementById(
+      'booking-section'
+    ).style.display = 'block';
+
+  }
+
+  if(section === 'template'){
+
+    document.getElementById(
+      'template-section'
+    ).style.display = 'block';
 
   }
 
 }
-
+  
 function logoutAdmin(){
 
   localStorage.removeItem('admin_login');
@@ -779,6 +895,10 @@ function handleEnter(event){
 
 }
 </script>
+
+</div>
+
+</div>
 
 </body>
 </html>
