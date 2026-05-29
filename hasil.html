@@ -1150,14 +1150,20 @@ updatePhotostrip()
 
   function openStopmotion(){
 
+  const urlParams =
+    new URLSearchParams(
+      window.location.search
+    );
+
   const kode =
+    urlParams.get('kode') ||
     document.getElementById('searchKode')
     .value
     .trim();
 
   if(!kode){
 
-    alert('Masukkan kode booking');
+    alert('Kode booking tidak ditemukan');
 
     return;
   }
