@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>Stop Motion Studio</title>
+
+<script src="
+https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2
+"></script>
+
+<style>
+
+body{
+  margin:0;
+  background:#111;
+  color:white;
+  font-family:Arial,sans-serif;
+  padding:20px;
+}
+
+h1{
+  text-align:center;
+}
+
+#preview{
+  width:100%;
+  max-width:500px;
+  display:block;
+  margin:auto;
+  border-radius:20px;
+}
+
+.controls{
+  display:flex;
+  justify-content:center;
+  gap:15px;
+  margin-top:20px;
+}
+
+button{
+  background:#25D366;
+  border:none;
+  color:white;
+  padding:14px 20px;
+  border-radius:12px;
+  cursor:pointer;
+  font-size:16px;
+}
+
+</style>
+</head>
+
+<body>
+
+<h1>🎞️ Stop Motion</h1>
+
+<img id="preview">
+
+<div class="controls">
+
+<button onclick="playStopmotion()">
+▶️ Play
+</button>
+
+<button onclick="stopStopmotion()">
+⏹️ Stop
+</button>
+
+</div>
+
+<script>
+
+const supabaseUrl =
+'https://dokayeukqfzbkktnmcoy.supabase.co';
+
+const supabaseKey =
+'ISI_API_KAMU';
+
+const supabaseClient =
+supabase.createClient(
+  supabaseUrl,
+  supabaseKey
+);
+
+const urlParams =
+new URLSearchParams(window.location.search);
+
+const kodeBooking =
+urlParams.get('kode');
+
+let currentImages = [];
+
+let interval;
+
+loadImages();
+
+async function loadImages(){
+
+  const { data, error } =
+    await supabaseClient
+    .storage
+    .from('customer-photo')
+    .list(kodeBooking);
+
+  if(error){
+    console.log(error);
+    return;
+  }
+
+  currentImages = data.map(file =>
+
+`${supabaseUrl}/storage/v1/object/public/customer-photo/${kodeBooking}/${file.name}`
+
+  );
+
+}
+
+function playStopmotion(){
+
+  let index = 0;
+
+  clearInterval(interval);
+
+  interval = setInterval(()=>{
+
+    document.getElementById('preview')
+      .src = currentImages[index];
+
+    index++;
+
+    if(index >= currentImages.length){
+      index = 0;
+    }
+
+  }, 200);
+
+}
+
+function stopStopmotion(){
+
+  clearInterval(interval);
+
+}
+
+</script>
+
+</body>
+</html>
