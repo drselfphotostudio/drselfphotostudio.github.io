@@ -238,5 +238,132 @@
 
   </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+<script>
+
+const supabaseUrl = "URL_SUPABASE_KAMU"
+const supabaseKey = "ANON_KEY_KAMU"
+
+const supabaseClient = supabase.createClient(
+  supabaseUrl,
+  supabaseKey
+)
+
+const packageForm = document.getElementById("packageForm")
+const packageList = document.getElementById("packageList")
+
+async function loadPackages(){
+
+  const { data, error } = await supabaseClient
+    .from("packages")
+    .select("*")
+    .order("id", { ascending:true })
+
+  if(error){
+    console.log(error)
+    return
+  }
+
+  packageList.innerHTML = data.map(pkg => `
+  
+    <div class="package-card">
+
+      <h3>${pkg.name}</h3>
+      <h4>${pkg.price}</h4>
+
+      <p>${pkg.duration}</p>
+      <p>${pkg.files}</p>
+      <p>${pkg.people}</p>
+      <p>${pkg.bonus}</p>
+
+      <div class="btn-group">
+
+        <button
+          class="edit-btn"
+          onclick="editPackage(${pkg.id})"
+        >
+          Edit
+        </button>
+
+        <button
+          class="delete-btn"
+          onclick="deletePackage(${pkg.id})"
+        >
+          Hapus
+        </button>
+
+      </div>
+
+    </div>
+
+  `).join("")
+}
+
+loadPackages()
+
+packageForm.addEventListener("submit", async(e)=>{
+
+  e.preventDefault()
+
+  const id = document.getElementById("packageId").value
+
+  const payload = {
+    name: document.getElementById("name").value,
+    price: document.getElementById("price").value,
+    duration: document.getElementById("duration").value,
+    files: document.getElementById("files").value,
+    people: document.getElementById("people").value,
+    bonus: document.getElementById("bonus").value,
+    active: true
+  }
+
+  if(id){
+
+    await supabaseClient
+      .from("packages")
+      .update(payload)
+      .eq("id", id)
+
+  }else{
+
+    await supabaseClient
+      .from("packages")
+      .insert([payload])
+
+  }
+
+  packageForm.reset()
+
+  loadPackages()
+})
+
+async function deletePackage(id){
+
+  await supabaseClient
+    .from("packages")
+    .delete()
+    .eq("id", id)
+
+  loadPackages()
+}
+
+async function editPackage(id){
+
+  const { data } = await supabaseClient
+    .from("packages")
+    .select("*")
+    .eq("id", id)
+    .single()
+
+  document.getElementById("packageId").value = data.id
+  document.getElementById("name").value = data.name
+  document.getElementById("price").value = data.price
+  document.getElementById("duration").value = data.duration
+  document.getElementById("files").value = data.files
+  document.getElementById("people").value = data.people
+  document.getElementById("bonus").value = data.bonus
+}
+
+</script>
 </body>
 </html>
