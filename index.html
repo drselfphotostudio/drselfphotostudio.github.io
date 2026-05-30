@@ -506,7 +506,7 @@ async function loadGallery(){
 
   const { data, error } =
   await supabaseClient
-    .from('gallery')
+    .from('galeri')
     .select('*')
     .eq('active', true)
     .order('id',{ascending:false})
