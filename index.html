@@ -278,17 +278,16 @@
 </div>
 
 <div class="section" id="gallery">
-  <h2 style="text-align:center;">Galeri</h2>
-  <div class="grid gallery">
-    <img src="images/self-photo-studio-tuban-1.png" alt="Self Photo Studio Tuban 1" loading="lazy">
-    <img src="images/self-photo-studio-tuban-2.png" alt="Self Photo Studio Tuban 2" loading="lazy">
-    <img src="images/self-photo-studio-tuban-3.png" alt="Self Photo Studio Tuban 3" loading="lazy">
-    <img src="images/self-photo-studio-tuban-4.png" alt="Self Photo Studio Tuban 4" loading="lazy">
-    <img src="images/self-photo-studio-tuban-5.png" alt="Self Photo Studio Tuban 5" loading="lazy">
-    <img src="images/self-photo-studio-tuban-6.png" alt="Self Photo Studio Tuban 6" loading="lazy">
-    <img src="images/self-photo-studio-tuban-7.png" alt="Self Photo Studio Tuban 7" loading="lazy">
-    <img src="images/self-photo-studio-tuban-8.png" alt="Self Photo Studio Tuban 8" loading="lazy">
-  </div>
+
+  <h2 style="text-align:center;">
+    Galeri
+  </h2>
+
+  <div
+    class="grid gallery"
+    id="galleryList"
+  ></div>
+
 </div>
 
 <div class="section" id="testi">
@@ -503,7 +502,39 @@ Silakan screenshot / simpan kode booking ini untuk pembayaran dan pengambilan fo
 form.reset();
 
 });
+async function loadGallery(){
 
+  const { data, error } =
+  await supabaseClient
+    .from('gallery')
+    .select('*')
+    .eq('active', true)
+    .order('id',{ascending:false})
+
+  if(error){
+
+    console.log(error)
+
+    return
+  }
+
+  const galleryList =
+    document.getElementById('galleryList')
+
+  galleryList.innerHTML =
+    data.map(item => `
+
+      <img
+        src="${item.image_url}"
+        alt="${item.title}"
+        loading="lazy"
+      >
+
+    `).join('')
+
+}
+
+loadGallery()
 </script>
 </body>
 </html>
