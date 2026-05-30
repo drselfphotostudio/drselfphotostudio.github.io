@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+  <title>Admin Paket Harga</title>
+
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family: Poppins, sans-serif;
+    }
+
+    body{
+      background:#000;
+      color:white;
+      padding:40px;
+    }
+
+    .container{
+      max-width:1200px;
+      margin:auto;
+    }
+
+    .header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:30px;
+    }
+
+    .header h1{
+      font-size:40px;
+      font-weight:700;
+    }
+
+    .back-btn{
+      padding:12px 20px;
+      border:none;
+      border-radius:12px;
+      background:#1e1e1e;
+      color:white;
+      cursor:pointer;
+      text-decoration:none;
+    }
+
+    .card{
+      background:#111;
+      border-radius:24px;
+      padding:30px;
+      margin-bottom:30px;
+    }
+
+    .card h2{
+      margin-bottom:20px;
+      font-size:28px;
+    }
+
+    .form-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:20px;
+    }
+
+    input{
+      width:100%;
+      padding:15px;
+      border:none;
+      border-radius:14px;
+      background:#1d1d1d;
+      color:white;
+      font-size:16px;
+    }
+
+    .submit-btn{
+      margin-top:20px;
+      width:100%;
+      padding:15px;
+      border:none;
+      border-radius:14px;
+      background:white;
+      color:black;
+      font-size:16px;
+      font-weight:600;
+      cursor:pointer;
+    }
+
+    .packages{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+      gap:20px;
+    }
+
+    .package-card{
+      background:#1a1a1a;
+      border-radius:20px;
+      padding:25px;
+    }
+
+    .package-card h3{
+      font-size:28px;
+      margin-bottom:10px;
+    }
+
+    .package-card h4{
+      font-size:24px;
+      margin-bottom:20px;
+    }
+
+    .package-card p{
+      margin-bottom:10px;
+      color:#ccc;
+    }
+
+    .btn-group{
+      display:flex;
+      gap:10px;
+      margin-top:20px;
+    }
+
+    .edit-btn,
+    .delete-btn{
+      flex:1;
+      padding:12px;
+      border:none;
+      border-radius:12px;
+      cursor:pointer;
+      font-weight:600;
+    }
+
+    .edit-btn{
+      background:white;
+      color:black;
+    }
+
+    .delete-btn{
+      background:#ff3b3b;
+      color:white;
+    }
+
+    @media(max-width:768px){
+
+      body{
+        padding:20px;
+      }
+
+      .form-grid{
+        grid-template-columns:1fr;
+      }
+
+      .header{
+        flex-direction:column;
+        align-items:flex-start;
+        gap:15px;
+      }
+
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+
+    <div class="header">
+      <h1>Paket Harga</h1>
+
+      <a href="admin.html" class="back-btn">
+        ← Kembali Dashboard
+      </a>
+    </div>
+
+    <div class="card">
+
+      <h2>Tambah / Edit Paket</h2>
+
+      <form id="packageForm">
+
+        <input type="hidden" id="packageId">
+
+        <div class="form-grid">
+
+          <input
+            type="text"
+            id="name"
+            placeholder="Nama Paket"
+            required
+          >
+
+          <input
+            type="text"
+            id="price"
+            placeholder="Harga"
+            required
+          >
+
+          <input
+            type="text"
+            id="duration"
+            placeholder="Durasi"
+            required
+          >
+
+          <input
+            type="text"
+            id="files"
+            placeholder="File"
+            required
+          >
+
+          <input
+            type="text"
+            id="people"
+            placeholder="Jumlah Orang"
+            required
+          >
+
+          <input
+            type="text"
+            id="bonus"
+            placeholder="Bonus"
+            required
+          >
+
+        </div>
+
+        <button class="submit-btn" type="submit">
+          Simpan Paket
+        </button>
+
+      </form>
+
+    </div>
+
+    <div class="packages" id="packageList"></div>
+
+  </div>
+
+</body>
+</html>
