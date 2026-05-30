@@ -76,40 +76,30 @@
 
     .testimonial { font-style:italic; }
 
-    footer { text-align:center; padding:30px; background:#000; }
-    @keyframes slideBg {
-  0%   { background-image: url('images/self-photo-studio-tuban-1.png'); }
-  25%  { background-image: url('images/self-photo-studio-tuban-2.png'); }
-  50%  { background-image: url('images/self-photo-studio-tuban-3.png'); }
-  75%  { background-image: url('images/self-photo-studio-tuban-4.png'); }
-  100% { background-image: url('images/self-photo-studio-tuban-5.png'); }
-}
-    .hero { 
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-color: black;
-  background-position: center;
-  height: 100vh;
-
-  animation: slideBg 20s infinite ease-in-out;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-
-  color: white;
-  text-align: center;
-  position: relative;
+    footer {
+  text-align:center;
+  padding:30px;
+  background:#000;
 }
 
-.hero::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: rgba(0,0,0,0.4);
-}
+    .hero{
+  background-size:cover;
+  background-position:center;
+  background-repeat:no-repeat;
+  background-color:black;
+  height:100vh;
 
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+
+  color:white;
+  text-align:center;
+  position:relative;
+
+  transition:1s;
+}
 .hero * {
   position: relative;
   z-index: 1;
@@ -535,6 +525,52 @@ async function loadGallery(){
 }
 
 loadGallery()
+
+    async function loadHeroGallery(){
+
+  const { data, error } =
+  await supabaseClient
+    .from('galeri')
+    .select('*')
+    .eq('active', true)
+    .order('id',{ascending:false})
+
+  if(error || !data || data.length === 0){
+    return
+  }
+
+  let current = 0
+
+  const hero =
+  document.querySelector('.hero')
+
+  function changeBg(){
+
+    hero.style.backgroundImage =
+    `
+    linear-gradient(
+      rgba(0,0,0,0.45),
+      rgba(0,0,0,0.45)
+    ),
+    url('${data[current].image_url}')
+    `
+
+    current++
+
+    if(current >= data.length){
+      current = 0
+    }
+
+  }
+
+  changeBg()
+
+  setInterval(changeBg, 4000)
+
+}
+
+loadHeroGallery()
+    
 </script>
 </body>
 </html>
