@@ -264,59 +264,10 @@
     Paket Harga
   </h2>
 
-  <div class="grid">
-
-    <div class="card">
-
-      <h3>Basic</h3>
-
-      <div class="price">
-        Rp 10K
-      </div>
-
-      <p>
-        • Durasi sesi 8 menit<br>
-        • Semua file digital HD<br>
-        • Maksimal 2 orang<br>
-        • Tambah cetak foto +Rp3K
-      </p>
-
-    </div>
-
-    <div class="card">
-
-      <h3>Standard</h3>
-
-      <div class="price">
-        Rp 20K
-      </div>
-
-      <p>
-        • Durasi sesi 10 menit<br>
-        • Semua file digital HD<br>
-        • Maksimal 4 orang<br>
-        • Gratis 1 cetak foto
-      </p>
-
-    </div>
-
-    <div class="card">
-
-      <h3>Premium</h3>
-
-      <div class="price">
-        Rp 30K
-      </div>
-
-      <p>
-        • Durasi sesi 13 menit<br>
-        • Semua file digital HD<br>
-        • Maksimal 6 orang<br>
-        • Gratis 2 cetak foto
-      </p>
-
-    </div>
-
+  <div
+    class="grid"
+    id="pricingList"
+  >
   </div>
 
 </div>
@@ -452,6 +403,50 @@ const supabaseClient = supabase.createClient(
   supabaseKey
 );
 
+    async function loadPackages(){
+
+  const { data, error } = await supabaseClient
+    .from('packages')
+    .select('*')
+    .eq('active', true)
+    .order('id', { ascending:true });
+
+  if(error){
+
+    console.log(error);
+
+    return;
+  }
+
+  const pricingList =
+    document.getElementById('pricingList');
+
+  pricingList.innerHTML =
+    data.map(pkg => `
+
+      <div class="card">
+
+        <h3>${pkg.name}</h3>
+
+        <div class="price">
+          ${pkg.price}
+        </div>
+
+        <p>
+          • ${pkg.duration}<br>
+          • ${pkg.files}<br>
+          • ${pkg.people}<br>
+          • ${pkg.bonus}
+        </p>
+
+      </div>
+
+    `).join('');
+
+}
+
+loadPackages();
+    
 const form = document.getElementById('bookingForm');
 
 form.addEventListener('submit', async (e) => {
