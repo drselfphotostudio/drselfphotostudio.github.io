@@ -189,7 +189,7 @@ async function loadGallery(){
 
   const { data, error } =
   await supabaseClient
-    .from('gallery')
+    .from('galeri')
     .select('*')
     .order('id',{ascending:false})
 
@@ -257,7 +257,7 @@ async(e)=>{
   publicUrlData.publicUrl
 
   await supabaseClient
-    .from('gallery')
+    .from('galeri')
     .insert([
       {
         title:title,
@@ -277,7 +277,7 @@ loadGallery()
 async function deleteImage(id){
 
   await supabaseClient
-    .from('gallery')
+    .from('galeri')
     .delete()
     .eq('id', id)
 
