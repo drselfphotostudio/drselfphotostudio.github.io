@@ -436,7 +436,12 @@ const supabaseClient = supabase.createClient(
           • ${pkg.duration}<br>
           • ${pkg.files}<br>
           • ${pkg.people}<br>
-          • ${pkg.bonus}
+          ${
+  pkg.bonus
+    .split('\n')
+    .map(item => `• ${item}`)
+    .join('<br>')
+}
         </p>
 
       </div>
