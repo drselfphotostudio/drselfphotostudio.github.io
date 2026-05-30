@@ -65,15 +65,16 @@
       gap:20px;
     }
 
-    input{
-      width:100%;
-      padding:15px;
-      border:none;
-      border-radius:14px;
-      background:#1d1d1d;
-      color:white;
-      font-size:16px;
-    }
+    input,
+textarea{
+  width:100%;
+  padding:15px;
+  border:none;
+  border-radius:14px;
+  background:#1d1d1d;
+  color:white;
+  font-size:16px;
+}
 
     .submit-btn{
       margin-top:20px;
@@ -217,12 +218,12 @@
             required
           >
 
-          <input
-            type="text"
-            id="bonus"
-            placeholder="Bonus"
-            required
-          >
+          <textarea
+  id="bonus"
+  placeholder="Bonus"
+  rows="4"
+  required
+></textarea>
 
         </div>
 
