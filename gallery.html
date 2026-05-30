@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Gallery Admin</title>
+
+  <style>
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:Poppins,sans-serif;
+    }
+
+    body{
+      background:#000;
+      color:white;
+      padding:40px;
+    }
+
+    .container{
+      max-width:1200px;
+      margin:auto;
+    }
+
+    .header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:30px;
+    }
+
+    .header h1{
+      font-size:42px;
+    }
+
+    .back-btn{
+      background:#1d1d1d;
+      color:white;
+      padding:14px 20px;
+      border-radius:14px;
+      text-decoration:none;
+    }
+
+    .card{
+      background:#111;
+      padding:30px;
+      border-radius:24px;
+      margin-bottom:30px;
+    }
+
+    input{
+      width:100%;
+      padding:15px;
+      border:none;
+      border-radius:14px;
+      background:#1d1d1d;
+      color:white;
+      margin-bottom:20px;
+    }
+
+    .submit-btn{
+      width:100%;
+      padding:15px;
+      border:none;
+      border-radius:14px;
+      background:white;
+      color:black;
+      font-weight:600;
+      cursor:pointer;
+    }
+
+    .gallery-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+      gap:20px;
+    }
+
+    .gallery-item{
+      background:#111;
+      border-radius:20px;
+      overflow:hidden;
+      padding:15px;
+    }
+
+    .gallery-item img{
+      width:100%;
+      height:220px;
+      object-fit:cover;
+      border-radius:14px;
+    }
+
+    .gallery-item h3{
+      margin-top:15px;
+      margin-bottom:15px;
+    }
+
+    .delete-btn{
+      width:100%;
+      padding:12px;
+      border:none;
+      border-radius:12px;
+      background:#ff3b3b;
+      color:white;
+      cursor:pointer;
+    }
+
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <div class="header">
+
+    <h1>Galeri Website</h1>
+
+    <a
+      href="admin.html"
+      class="back-btn"
+    >
+      ← Kembali Dashboard
+    </a>
+
+  </div>
+
+  <div class="card">
+
+    <form id="galleryForm">
+
+      <input
+        type="text"
+        id="title"
+        placeholder="Judul Foto"
+        required
+      >
+
+      <input
+        type="file"
+        id="image"
+        accept="image/*"
+        required
+      >
+
+      <button
+        class="submit-btn"
+        type="submit"
+      >
+        Upload Foto
+      </button>
+
+    </form>
+
+  </div>
+
+  <div
+    class="gallery-grid"
+    id="galleryList"
+  ></div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+
+<script>
+
+const supabaseUrl =
+'https://dokayeukqfzbkktnmcoy.supabase.co'
+
+const supabaseKey =
+'PASTE_PUBLISHABLE_KEY_KAMU'
+
+const supabaseClient =
+supabase.createClient(
+  supabaseUrl,
+  supabaseKey
+)
+
+const galleryForm =
+document.getElementById('galleryForm')
+
+const galleryList =
+document.getElementById('galleryList')
+
+async function loadGallery(){
+
+  const { data, error } =
+  await supabaseClient
+    .from('gallery')
+    .select('*')
+    .order('id',{ascending:false})
+
+  if(error){
+    console.log(error)
+    return
+  }
+
+  galleryList.innerHTML =
+  data.map(item => `
+
+    <div class="gallery-item">
+
+      <img src="${item.image_url}">
+
+      <h3>${item.title}</h3>
+
+      <button
+        class="delete-btn"
+        onclick="deleteImage(${item.id})"
+      >
+        Hapus
+      </button>
+
+    </div>
+
+  `).join('')
+
+}
+
+loadGallery()
+
+galleryForm.addEventListener(
+'submit',
+async(e)=>{
+
+  e.preventDefault()
+
+  const title =
+  document.getElementById('title').value
+
+  const imageFile =
+  document.getElementById('image').files[0]
+
+  const fileName =
+  Date.now() + '-' + imageFile.name
+
+  const { error: uploadError } =
+  await supabaseClient.storage
+    .from('galeri')
+    .upload(fileName, imageFile)
+
+  if(uploadError){
+    console.log(uploadError)
+    return
+  }
+
+  const {
+    data: publicUrlData
+  } = supabaseClient.storage
+    .from('galeri')
+    .getPublicUrl(fileName)
+
+  const imageUrl =
+  publicUrlData.publicUrl
+
+  await supabaseClient
+    .from('gallery')
+    .insert([
+      {
+        title:title,
+        image_url:imageUrl,
+        active:true
+      }
+    ])
+
+  galleryForm.reset()
+
+  loadGallery()
+
+})
+
+async function deleteImage(id){
+
+  await supabaseClient
+    .from('gallery')
+    .delete()
+    .eq('id', id)
+
+  loadGallery()
+
+}
+
+</script>
+
+</body>
+</html>
