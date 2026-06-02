@@ -137,5 +137,101 @@ class="content-section"
 </div>
 
 </div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+
+const supabaseUrl =
+'https://dokayeukqfzbkktnmcoy.supabase.co';
+
+const supabaseKey =
+'sb_publishable_iUb2y0mBwhZN_Lkqq-PH_A_JCozJTxT';
+
+const supabaseClient =
+supabase.createClient(
+  supabaseUrl,
+  supabaseKey
+);
+
+async function loadBookings(){
+
+  const { data, error } =
+  await supabaseClient
+    .from('bookings')
+    .select('*')
+    .order('created_at', {
+      ascending:false
+    });
+
+  if(error){
+
+    console.log(error);
+
+    alert('Gagal load booking');
+
+    return;
+
+  }
+
+  const bookingTable =
+  document.getElementById('bookingTable');
+
+  bookingTable.innerHTML =
+  data.map(item => `
+
+    <tr>
+
+      <td>${item.booking_code || '-'}</td>
+
+      <td>${item.name || '-'}</td>
+
+      <td>${item.whatsapp || '-'}</td>
+
+      <td>${item.date || '-'}</td>
+
+      <td>${item.time || '-'}</td>
+
+      <td>${item.package_name || '-'}</td>
+
+      <td>
+        Rp ${item.price || 0}
+      </td>
+
+      <td>
+
+        <span class="
+          status
+          ${item.payment_status === 'paid'
+            ? 'paid'
+            : 'unpaid'}
+        ">
+
+          ${item.payment_status || 'unpaid'}
+
+        </span>
+
+      </td>
+
+      <td>
+        Upload Foto
+      </td>
+
+      <td>
+        -
+      </td>
+
+      <td>
+        -
+      </td>
+
+    </tr>
+
+  `).join('');
+
+}
+
+loadBookings();
+
+</script>
 </body>
 </html>
