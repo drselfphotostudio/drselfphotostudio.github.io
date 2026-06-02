@@ -232,9 +232,25 @@ style="display:none;"
 
 <h2>📸 Admin</h2>
 
-<button onclick="showSection('booking')">
+<a
+  href="booking.html"
+  style="
+    display:block;
+    width:100%;
+    margin-bottom:14px;
+    background:#1f1f1f;
+    padding:16px;
+    border-radius:14px;
+    text-align:left;
+    font-size:16px;
+    color:white;
+    text-decoration:none;
+    font-weight:600;
+    box-sizing:border-box;
+  "
+>
 📋 Customer Booking
-</button>
+</a>
 
 <a
   href="gallery.html"
@@ -350,12 +366,12 @@ margin-bottom:35px;
 
 <div class="header-card">
 
-<h1 id="pageTitle">
-Customer Booking
+<h1>
+Dashboard Admin
 </h1>
 
-<p id="pageDesc">
-Kelola booking customer, upload foto, dan kirim hasil.
+<p>
+Pilih menu admin yang ingin dikelola.
 </p>
 
 </div>
@@ -370,290 +386,7 @@ const supabaseClient = supabase.createClient(
   supabaseUrl,
   supabaseKey
 );
-const paketHarga = {
-  Basic: 'Rp 10.000',
-  Standard: 'Rp 20.000',
-  Premium: 'Rp 30.000'
-};
-async function loadBookings(){
 
-  const { data, error } = await supabaseClient
-    .from('bookings')
-    .select('*')
-    .order('id', { ascending:false });
-
-  console.log(data);
-
-  const table = document.getElementById('bookingTable');
-
-  table.innerHTML = '';
-
-  data.forEach(item => {
-
-    table.innerHTML += `
-
-      <tr>
-
-        <td>${item.kode_booking}</td>
-
-        <td>${item.nama}</td>
-
-        <td>${item.no_wa}</td>
-
-        <td>${item.tanggal}</td>
-
-        <td>${item.jam}</td>
-
-        <td>${item.paket}</td>
-
-<td>
-  ${paketHarga[item.paket] || '-'}
-</td>
-<td>
-
-  <span class="status ${item.payment_status}">
-    ${item.payment_status}
-  </span>
-
-  <br><br>
-
-  ${item.payment_status !== 'paid' ? `
-
-<button onclick="approvePayment(${item.id})">
-  Approve
-</button>
-
-` : `
-
-<span style="color:#25D366;font-size:14px;">
-  Pembayaran sudah diapprove
-</span>
-
-`}
-
-</td>
-
-<td>
-
-${item.payment_status !== 'paid' ? `
-  
-  <span style="color:orange;">
-    Menunggu approve pembayaran
-  </span>
-
-` : `
-
-  <input
-  type="file"
-  id="file-${item.id}"
-  accept="image/*"
-  multiple
-  onchange="uploadPhoto('${item.kode_booking}', ${item.id})"
->
-
-    <div id="upload-status-${item.id}" style="margin-top:10px;font-size:14px;opacity:0.8;">
-    Mengecek foto...
-  </div>
-
-`}
-
-</td>
-
-<td>
-
-  <a
-    href="hasil.html?kode=${item.kode_booking}"
-    target="_blank"
-    class="btn-lihat"
-  >
-    Lihat
-  </a>
-
-</td>
-
-<td>
-
-  <button onclick="sendWhatsapp('${item.kode_booking}','${item.no_wa}')">
-    Kirim WA
-  </button>
-
-</td>
-
-</tr>
-
-    `;
-if(item.payment_status === 'paid'){
-
-  checkUploadedPhotos(
-    item.kode_booking,
-    item.id
-  );
-
-}
-  });
-
-}
-
-loadBookings();
-  // realtime booking baru / update otomatis
-supabaseClient
-  .channel('booking-realtime')
-
-  .on(
-    'postgres_changes',
-    {
-      event: '*',
-      schema: 'public',
-      table: 'bookings'
-    },
-
-    payload => {
-
-      console.log('Realtime update:', payload);
-
-      loadBookings();
-
-    }
-  )
-
-  .subscribe();
-  async function uploadPhoto(kodeBooking, id){
-
-  const fileInput =
-    document.getElementById(`file-${id}`);
-
-  const files = fileInput.files;
-
-  if(files.length === 0){
-
-    alert('Pilih foto dulu');
-
-    return;
-  }
-
-  const { data: existingFiles } =
-    await supabaseClient
-      .storage
-      .from('customer-photo')
-      .list(kodeBooking);
-
-  const existingNames =
-    existingFiles?.map(file => file.name) || [];
-
-  for(let file of files){
-
-    if(existingNames.includes(file.name)){
-
-      alert(`Foto ${file.name} sudah pernah diupload`);
-
-      continue;
-    }
-
-    const { error } = await supabaseClient
-      .storage
-      .from('customer-photo')
-      .upload(
-        `${kodeBooking}/${file.name}`,
-        file
-      );
-
-    if(error){
-
-      console.log(error);
-
-      alert('Upload gagal');
-
-      return;
-    }
-
-  }
-
-  alert('Foto berhasil diupload');
-
-  checkUploadedPhotos(kodeBooking, id);
-
-}
-  async function approvePayment(id){
-
-  const confirmApprove =
-    confirm('Approve pembayaran customer ini?');
-
-  if(!confirmApprove) return;
-
-  const { error } = await supabaseClient
-    .from('bookings')
-    .update({
-      payment_status:'paid'
-    })
-    .eq('id', id);
-
-  if(error){
-
-    alert('Gagal approve');
-
-    console.log(error);
-
-    return;
-  }
-
-  alert('Pembayaran berhasil diapprove');
-
-}
-
-function sendWhatsapp(kodeBooking, nomor){
-
-  nomor = nomor.replace(/^0/, '62');
-
-  const pesan =
-`Halo Kak 👋
-
-Foto self photo studio sudah selesai 😊
-
-Silakan download melalui link berikut:
-
-https://drselfphotostudio.github.io/download.html?id=${kodeBooking}
-
-Terima kasih 🙏`;
-
-  const url =
-`https://wa.me/${nomor}?text=${encodeURIComponent(pesan)}`;
-
-  window.open(url, '_blank');
-
-}
-async function checkUploadedPhotos(kodeBooking, id){
-
-  const { data, error } = await supabaseClient
-    .storage
-    .from('customer-photo')
-    .list(kodeBooking);
-
-  const statusDiv =
-    document.getElementById(`upload-status-${id}`);
-
-  if(!statusDiv) return;
-
-  if(error || !data){
-
-    statusDiv.innerHTML =
-      'Belum ada foto';
-
-    return;
-  }
-
-  if(data.length > 0){
-
-    statusDiv.innerHTML =
-      `✅ ${data.length} foto sudah diupload`;
-
-  }else{
-
-    statusDiv.innerHTML =
-      'Belum ada foto';
-
-  }
-
-}
   function loginAdmin(){
 
   const password =
@@ -683,77 +416,25 @@ function checkLogin(){
 
   if(isLogin === 'true'){
 
-  document.getElementById('loginPage')
-    .style.display = 'none';
+    document.getElementById('loginPage')
+      .style.display = 'none';
 
-  document.getElementById('adminContent')
-    .style.display = 'block';
+    document.getElementById('adminContent')
+      .style.display = 'block';
 
-  document.getElementById('sidebar')
-    .style.display = 'block';
+    document.getElementById('sidebar')
+      .style.display = 'block';
 
-  showSection('booking');
-    
   }else{
 
-  document.getElementById('loginPage')
-    .style.display = 'block';
+    document.getElementById('loginPage')
+      .style.display = 'block';
 
-  document.getElementById('adminContent')
-    .style.display = 'none';
+    document.getElementById('adminContent')
+      .style.display = 'none';
 
-  document.getElementById('sidebar')
-    .style.display = 'none';
-
-}
-
-}
-
-  function showSection(section){
-
-  document
-    .querySelectorAll('.content-section')
-    .forEach(item=>{
-      item.style.display = 'none';
-    });
-
-  document.getElementById(
-    section + '-section'
-  ).style.display = 'block';
-
-  const title =
-    document.getElementById('pageTitle');
-
-  const desc =
-    document.getElementById('pageDesc');
-
-  if(section === 'booking'){
-
-    title.innerText =
-      'Customer Booking';
-
-    desc.innerText =
-      'Kelola booking customer, upload foto, dan kirim hasil.';
-
-  }
-
-  if(section === 'gallery'){
-
-    title.innerText =
-      'Galeri Website';
-
-    desc.innerText =
-      'Kelola galeri foto yang tampil di website.';
-
-  }
-
-  if(section === 'paket'){
-
-    title.innerText =
-      'Paket Harga';
-
-    desc.innerText =
-      'Kelola paket dan harga studio foto.';
+    document.getElementById('sidebar')
+      .style.display = 'none';
 
   }
 
