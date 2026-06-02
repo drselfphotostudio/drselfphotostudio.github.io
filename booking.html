@@ -161,7 +161,7 @@ await supabaseClient
   .select(`
   *,
   packages (
-    harga
+    price
   )
 `)
     .order('created_at', {
@@ -198,7 +198,7 @@ await supabaseClient
 
 <td>${item.paket || '-'}</td>
       <td>
-        Rp ${item.packages?.harga || 0}
+        ${item.packages?.price || 'Rp 0'}
       </td>
 
       <td>
