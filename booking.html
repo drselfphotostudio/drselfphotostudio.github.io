@@ -253,6 +253,7 @@ ${
     <input
   type="file"
   accept="image/*"
+  multiple
   onchange="uploadPhoto(event, ${item.id})"
 >
   `
@@ -276,7 +277,7 @@ ${
 
   `
     <a
-      href="${item.result_url}"
+      href="${item.result_url.split(',')[0]}"
       target="_blank"
       style="
         color:#25D366;
@@ -344,43 +345,51 @@ ${
 loadBookings();
   async function uploadPhoto(event, bookingId){
 
-  const file =
-  event.target.files[0];
+  const files =
+  event.target.files;
 
-  if(!file) return;
+  if(!files.length) return;
 
-  const fileName =
-  Date.now() + '-' + file.name;
+  let uploadedUrls = [];
 
-  const { error: uploadError } =
-  await supabaseClient.storage
-    .from('customer-photo')
-    .upload(fileName, file);
+  for(const file of files){
 
-  if(uploadError){
+    const fileName =
+    Date.now() + '-' + file.name;
 
-    alert('Upload gagal');
-    return;
+    const { error: uploadError } =
+    await supabaseClient.storage
+      .from('customer-photo')
+      .upload(fileName, file);
+
+    if(uploadError){
+
+      alert('Upload gagal');
+      return;
+
+    }
+
+    const {
+      data: publicUrlData
+    } = supabaseClient.storage
+      .from('customer-photo')
+      .getPublicUrl(fileName);
+
+    uploadedUrls.push(
+      publicUrlData.publicUrl
+    );
 
   }
-
-  const {
-    data: publicUrlData
-  } = supabaseClient.storage
-    .from('customer-photo')
-    .getPublicUrl(fileName);
-
-  const photoUrl =
-  publicUrlData.publicUrl;
 
   await supabaseClient
     .from('bookings')
     .update({
-      result_url: photoUrl
+      result_url:
+      uploadedUrls.join(',')
     })
     .eq('id', bookingId);
 
-  alert('Foto berhasil upload');
+  alert('Semua foto berhasil upload');
 
   loadBookings();
 
