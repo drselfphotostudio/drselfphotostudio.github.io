@@ -64,12 +64,17 @@
     }
 
     td{
-      padding:18px;
-      border-bottom:1px solid #222;
-    }
+  padding:18px;
+  border-bottom:1px solid #222;
+}
+
+th,
+td{
+  white-space:nowrap;
+}
 
     .status{
-      padding:8px 14px;
+  padding:6px 12px;
       border-radius:999px;
       font-size:14px;
       font-weight:600;
@@ -85,6 +90,9 @@
       background:#ffb800;
       color:black;
     }
+    .table-wrapper{
+  overflow-x:auto;
+}
 
   </style>
 </head>
@@ -203,66 +211,127 @@ await supabaseClient
 
       <td>
 
-        <span class="
-          status
-          ${item.payment_status === 'paid'
-            ? 'paid'
-            : 'unpaid'}
-        ">
+  ${
+    item.payment_status === 'paid'
+    ?
 
-          ${item.payment_status || 'unpaid'}
+    `
+      <span class="status paid">
+        paid
+      </span>
+    `
 
-        </span>
+    :
 
-      </td>
+    `
+      <button
+        onclick="approvePayment(${item.id})"
+        style="
+          background:#25D366;
+          color:white;
+          border:none;
+          padding:10px 16px;
+          border-radius:999px;
+          cursor:pointer;
+          font-weight:600;
+        "
+      >
+        Approve
+      </button>
+    `
+  }
+
+</td>
 
       <td>
 
-<input
+${
+  item.payment_status === 'paid'
+  ?
+
+  `
+    <input
   type="file"
+  accept="image/*"
   onchange="uploadPhoto(event, ${item.id})"
 >
+  `
+
+  :
+
+  `
+    <span style="color:#ffb800;">
+      Menunggu approve
+    </span>
+  `
+}
 
 </td>
 
       <td>
 
-<a
-  href="${item.result_url || '#'}"
-  target="_blank"
-  style="
+${
+  item.result_url
+  ?
+
+  `
+    <a
+      href="${item.result_url}"
+      target="_blank"
+      style="
+        color:#25D366;
+        text-decoration:none;
+        font-weight:600;
+      "
+    >
+      Lihat
+    </a>
+  `
+
+  :
+
+  `
+    <span style="color:#666;">
+      Belum ada
+    </span>
+  `
+}
+
+</td>
+
+      <td>
+
+${
+  item.result_url
+  ?
+
+  `
+    <a
+    href="
+    https://wa.me/62${item.no_wa.substring(1)}
+    ?text=Halo%20${item.nama},
+    %20hasil%20foto%20Anda%20sudah%20siap:
+    %20${item.result_url}
+    "
+    target="_blank"
+    style="
     color:#25D366;
     text-decoration:none;
-  "
->
+    font-weight:600;
+    "
+    >
+    Kirim WA
+    </a>
+  `
 
-Lihat
+  :
 
-</a>
-
-</td>
-
-      <td>
-
-<a
-href="
-https://wa.me/62${item.no_wa.substring(1)}
-?text=Halo%20${item.nama},
-%20hasil%20foto%20Anda%20sudah%20siap
-"
-
-target="_blank"
-
-style="
-color:#25D366;
-text-decoration:none;
-font-weight:600;
-"
->
-
-Kirim WA
-
-</a>
+  `
+    <span style="color:#666;">
+      Belum ada
+    </span>
+  `
+}
 
 </td>
 
@@ -316,7 +385,18 @@ loadBookings();
   loadBookings();
 
 }
+async function approvePayment(id){
 
+  await supabaseClient
+    .from('bookings')
+    .update({
+      payment_status:'paid'
+    })
+    .eq('id', id);
+
+  loadBookings();
+
+}
 </script>
 </body>
 </html>
