@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Customer Booking</title>
+
+  <style>
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:Poppins,sans-serif;
+    }
+
+    body{
+      background:#000;
+      color:white;
+      padding:40px;
+    }
+
+    .container{
+      max-width:1400px;
+      margin:auto;
+    }
+
+    .header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:30px;
+    }
+
+    .header h1{
+      font-size:42px;
+    }
+
+    .back-btn{
+      background:#1d1d1d;
+      color:white;
+      padding:14px 20px;
+      border-radius:14px;
+      text-decoration:none;
+    }
+
+    .card{
+      background:#111;
+      padding:30px;
+      border-radius:24px;
+    }
+
+    table{
+      width:100%;
+      border-collapse:collapse;
+    }
+
+    th{
+      background:#25D366;
+      color:white;
+      padding:18px;
+      text-align:left;
+    }
+
+    td{
+      padding:18px;
+      border-bottom:1px solid #222;
+    }
+
+    .status{
+      padding:8px 14px;
+      border-radius:999px;
+      font-size:14px;
+      font-weight:600;
+      display:inline-block;
+    }
+
+    .paid{
+      background:#25D366;
+      color:white;
+    }
+
+    .unpaid{
+      background:#ffb800;
+      color:black;
+    }
+
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <div class="header">
+
+    <h1>Customer Booking</h1>
+
+    <a
+      href="admin.html"
+      class="back-btn"
+    >
+      ← Kembali Dashboard
+    </a>
+
+  </div>
+
+  <div class="card">
+
+    <table>
+
+      <thead>
+
+        <tr>
+
+          <th>Kode</th>
+          <th>Nama</th>
+          <th>WhatsApp</th>
+          <th>Tanggal</th>
+          <th>Jam</th>
+          <th>Paket</th>
+          <th>Status</th>
+
+        </tr>
+
+      </thead>
+
+      <tbody id="bookingList">
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+</div>
+
+</body>
+</html>
