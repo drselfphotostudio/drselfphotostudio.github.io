@@ -262,7 +262,7 @@ ${
         type="file"
         accept="image/*"
         multiple
-        onchange="uploadPhoto(event, ${item.id})"
+        onchange="uploadPhoto(event, ${item.id}, '${item.kode_booking}')"
       >
 
       ${
@@ -376,19 +376,22 @@ ${
 }
 
 loadBookings();
-  async function uploadPhoto(event, bookingId){
-
+  async function uploadPhoto(
+  event,
+  bookingId,
+  kodeBooking
+){
   const files =
   event.target.files;
 
   if(!files.length) return;
 
-  let uploadedUrls = [];
+let uploadedUrls = [];
 
   for(const file of files){
 
     const fileName =
-    Date.now() + '-' + file.name;
+`${kodeBooking}/${Date.now()}-${file.name}`;
 
     const { error: uploadError } =
     await supabaseClient.storage
@@ -414,11 +417,28 @@ loadBookings();
 
   }
 
-  const { data: updateData, error: updateError } =
+  const {
+  data: filesInFolder
+} = await supabaseClient.storage
+  .from('customer-photo')
+  .list(kodeBooking);
+
+const allUrls = filesInFolder.map(file => {
+
+  return supabaseClient.storage
+    .from('customer-photo')
+    .getPublicUrl(
+      `${kodeBooking}/${file.name}`
+    )
+    .data.publicUrl;
+
+});
+
+const { data: updateData, error: updateError } =
 await supabaseClient
   .from('bookings')
   .update({
-    result_url: uploadedUrls.join(',')
+    result_url: allUrls.join(',')
   })
   .eq('id', bookingId)
   .select();
