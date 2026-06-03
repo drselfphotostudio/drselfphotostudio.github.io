@@ -211,19 +211,24 @@ await supabaseClient
 
       <td>
 
-  ${
-    item.payment_status === 'paid'
-    ?
+${
+  item.payment_status === 'paid'
+  ?
 
-    `
-      <span class="status paid">
-        paid
+  `
+    <span class="status paid">
+      Paid
+    </span>
+  `
+
+  :
+
+  `
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      <span class="status unpaid">
+        Menunggu Pembayaran
       </span>
-    `
 
-    :
-
-    `
       <button
         onclick="approvePayment(${item.id})"
         style="
@@ -238,8 +243,9 @@ await supabaseClient
       >
         Approve
       </button>
-    `
-  }
+    </div>
+  `
+}
 
 </td>
 
