@@ -200,7 +200,12 @@ h1{
 }
 
   .photo-card{
-  background:#181818;
+  background:#161616;
+  border-radius:24px;
+  overflow:hidden;
+  box-shadow:
+    0 10px 30px rgba(0,0,0,.35);
+}
   border-radius:22px;
   overflow:hidden;
   position:relative;
@@ -409,6 +414,34 @@ h1{
 .right{
   right:20px;
 }
+  .hero-section{
+  text-align:center;
+  margin-bottom:50px;
+}
+
+.hero-icon{
+  font-size:50px;
+  color:#25D366;
+  margin-bottom:15px;
+}
+
+.hero-subtitle{
+  color:#aaa;
+  font-size:18px;
+  margin-top:-10px;
+  margin-bottom:30px;
+}
+
+.hero-back-btn{
+  background:#25D366;
+  color:white;
+  border:none;
+  padding:16px 35px;
+  border-radius:16px;
+  font-weight:700;
+  cursor:pointer;
+  font-size:16px;
+}
 </style>
 </head>
 
@@ -416,21 +449,38 @@ h1{
 
 <div class="container">
 
-<h1>Hasil Foto Studio</h1>
+<div class="hero-section">
+
+  <div class="hero-icon">
+    📷
+  </div>
+
+  <h1>Hasil Foto Studio</h1>
+
+  <p class="hero-subtitle">
+    Cari dan lihat hasil foto berdasarkan kode booking
+  </p>
+
   <button
-onclick="history.back()"
-class="back-btn"
-style="display:block;margin:0 auto 20px auto;"
->
-← Kembali Customer Booking
-</button>
-  <div style="
-display:flex;
-gap:10px;
-justify-content:center;
-margin-bottom:30px;
-flex-wrap:wrap;
-">
+  onclick="history.back()"
+  class="hero-back-btn"
+  >
+  ← Kembali Customer Booking
+  </button>
+
+</div>
+  
+  <div class="search-card">
+    .search-card{
+  max-width:1100px;
+  margin:auto;
+  margin-bottom:40px;
+  padding:30px;
+  background:#1a1a1a;
+  border-radius:24px;
+  box-shadow:
+    0 10px 40px rgba(0,0,0,.3);
+}
 
 <input
 type="text"
@@ -469,7 +519,29 @@ class="album-grid"
 style="display:none;"
 ></div>
 
-<div id="status"></div>
+<div id="statusCard" class="status-card">
+
+<div class="status-left">
+
+<div class="status-icon">
+🖼️
+</div>
+
+<div>
+
+<h2 id="statusTitle">
+Belum ada foto
+</h2>
+
+<p id="statusKode">
+Masukkan kode booking
+</p>
+
+</div>
+
+</div>
+
+</div>
   <div class="mode-picker">
     <div id="photoSelector" style="
 display:none;
