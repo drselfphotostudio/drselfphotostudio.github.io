@@ -447,8 +447,14 @@ console.log('UPDATE RESULT:', updateData);
 console.log('UPDATE ERROR:', updateError);
 
 if(updateError){
-  alert('Gagal simpan URL foto ke database');
+
   console.log(updateError);
+
+  alert(
+    'Gagal simpan URL foto ke database:\n\n' +
+    updateError.message
+  );
+
   return;
 }
 
