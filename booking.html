@@ -259,11 +259,24 @@ ${
     <div style="display:flex;flex-direction:column;gap:8px;">
 
       <input
-        type="file"
-        accept="image/*"
-        multiple
-        onchange="uploadPhoto(event, ${item.id}, '${item.kode_booking}')"
-      >
+  id="upload-${item.id}"
+  type="file"
+  style="cursor:pointer;"
+  accept="image/*"
+  multiple
+  onchange="uploadPhoto(event, ${item.id}, '${item.kode_booking}')"
+>
+
+<div
+  id="upload-status-${item.id}"
+  style="
+    color:#ffb800;
+    font-size:14px;
+    display:none;
+  "
+>
+  ⏳ Sedang upload...
+</div>
 
       ${
         item.result_url
@@ -381,10 +394,36 @@ loadBookings();
   bookingId,
   kodeBooking
 ){
-  const files =
-  event.target.files;
+    const input =
+document.getElementById(
+  `upload-${bookingId}`
+);
 
-  if(!files.length) return;
+const status =
+document.getElementById(
+  `upload-status-${bookingId}`
+);
+
+const files =
+event.target.files;
+
+if(!files.length){
+
+  input.disabled = false;
+
+  status.style.display = 'none';
+
+  return;
+
+}
+
+input.disabled = true;
+    input.style.opacity = '0.5';
+
+status.style.display = 'block';
+
+status.innerHTML =
+`⏳ Sedang upload ${files.length} foto...`;
 
 let uploadedUrls = [];
 
@@ -400,10 +439,17 @@ let uploadedUrls = [];
 
     if(uploadError){
 
-      alert('Upload gagal');
-      return;
+  input.disabled = false;
+  input.style.opacity = '1';
 
-    }
+  status.innerHTML =
+  '❌ Upload gagal';
+
+  alert('Upload gagal');
+
+  return;
+
+}
 
     const {
       data: publicUrlData
@@ -423,7 +469,9 @@ let uploadedUrls = [];
   .from('customer-photo')
   .list(kodeBooking);
 
-const allUrls = filesInFolder.map(file => {
+const allUrls = filesInFolder
+  .filter(file => file.name !== '.keep')
+  .map(file => {
 
   return supabaseClient.storage
     .from('customer-photo')
@@ -448,6 +496,9 @@ console.log('UPDATE ERROR:', updateError);
 
 if(updateError){
 
+  input.disabled = false;
+  input.style.opacity = '1';
+
   console.log(updateError);
 
   alert(
@@ -458,9 +509,17 @@ if(updateError){
   return;
 }
 
-alert('Semua foto berhasil upload');
+status.innerHTML =
+'✅ Upload berhasil';
+    event.target.value = '';
+    input.style.opacity = '1';
+input.disabled = false;
 
-loadBookings();
+setTimeout(() => {
+
+  loadBookings();
+
+}, 1000);
 
 }
 async function approvePayment(id){
