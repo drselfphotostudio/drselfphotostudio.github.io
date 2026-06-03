@@ -22,9 +22,9 @@
     }
 
     .container{
-      max-width:1400px;
-      margin:auto;
-    }
+  width:100%;
+  max-width:none;
+}
 
     .header{
       display:flex;
@@ -70,7 +70,11 @@
 
 th,
 td{
-  white-space:nowrap;
+  white-space:normal;
+}
+    table{
+  width:100%;
+  table-layout:fixed;
 }
 
     .status{
@@ -125,15 +129,13 @@ class="content-section"
 <tr>
   <th>Kode</th>
   <th>Nama</th>
-  <th>WhatsApp</th>
   <th>Tanggal</th>
   <th>Jam</th>
   <th>Paket</th>
 <th>Harga</th>
 <th>Status</th>
 <th>Upload Foto</th>
-<th>Lihat Hasil</th>
-<th>Kirim WA</th>
+<th>Aksi</th>
 </tr>
 </thead>
 
@@ -197,8 +199,6 @@ await supabaseClient
       <td>${item.kode_booking || '-'}</td>
 
 <td>${item.nama || '-'}</td>
-
-<td>${item.no_wa || '-'}</td>
 
 <td>${item.tanggal || '-'}</td>
 
@@ -318,66 +318,49 @@ ${
       <td>
 
 ${
-  item.result_url
-  ?
+item.result_url
+?
 
-  `
-    <a
-      href="${item.result_url.split(',')[0]}"
-      target="_blank"
-      style="
-        color:#25D366;
-        text-decoration:none;
-        font-weight:600;
-      "
-    >
-      Lihat
-    </a>
-  `
+`
+<div style="
+display:flex;
+flex-direction:column;
+gap:8px;
+">
 
-  :
+<a
+href="${item.result_url.split(',')[0]}"
+target="_blank"
+style="
+color:#25D366;
+text-decoration:none;
+font-weight:600;
+">
+📷 Lihat
+</a>
 
-  `
-    <span style="color:#666;">
-      Belum ada
-    </span>
-  `
-}
+<a
+href="https://wa.me/62${item.no_wa.substring(1)}?text=Halo%20${item.nama}%20hasil%20foto%20Anda%20sudah%20siap:%20${item.result_url}"
+target="_blank"
+style="
+color:#25D366;
+text-decoration:none;
+font-weight:600;
+">
+📲 Kirim WA
+</a>
 
-</td>
+</div>
+`
 
-      <td>
+:
 
-${
-  item.result_url
-  ?
+`
+<span style="color:#666;">
+Belum ada
+</span>
+`
 
-  `
-    <a
-    href="
-    https://wa.me/62${item.no_wa.substring(1)}
-    ?text=Halo%20${item.nama},
-    %20hasil%20foto%20Anda%20sudah%20siap:
-    %20${item.result_url}
-    "
-    target="_blank"
-    style="
-    color:#25D366;
-    text-decoration:none;
-    font-weight:600;
-    "
-    >
-    Kirim WA
-    </a>
-  `
-
-  :
-
-  `
-    <span style="color:#666;">
-      Belum ada
-    </span>
-  `
 }
 
 </td>
