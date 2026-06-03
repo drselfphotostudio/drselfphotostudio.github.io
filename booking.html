@@ -256,19 +256,46 @@ ${
   ?
 
   `
-    <input
-  type="file"
-  accept="image/*"
-  multiple
-  onchange="uploadPhoto(event, ${item.id})"
->
+    <div style="display:flex;flex-direction:column;gap:8px;">
+
+      <input
+        type="file"
+        accept="image/*"
+        multiple
+        onchange="uploadPhoto(event, ${item.id})"
+      >
+
+      ${
+        item.result_url
+        ?
+        `
+          <span style="
+            color:#25D366;
+            font-size:14px;
+            font-weight:600;
+          ">
+            ✅ ${item.result_url.split(',').length} foto sudah diupload
+          </span>
+        `
+        :
+        `
+          <span style="
+            color:#666;
+            font-size:14px;
+          ">
+            Belum ada foto
+          </span>
+        `
+      }
+
+    </div>
   `
 
   :
 
   `
-    <span style="color:#ffb800;">
-      Menunggu approve
+    <span style="color:#ffb800;font-weight:600;">
+      Menunggu approve pembayaran
     </span>
   `
 }
