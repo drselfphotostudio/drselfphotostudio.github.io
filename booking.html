@@ -414,17 +414,27 @@ loadBookings();
 
   }
 
-  await supabaseClient
-    .from('bookings')
-    .update({
-      result_url:
-      uploadedUrls.join(',')
-    })
-    .eq('id', bookingId);
+  const { data: updateData, error: updateError } =
+await supabaseClient
+  .from('bookings')
+  .update({
+    result_url: uploadedUrls.join(',')
+  })
+  .eq('id', bookingId)
+  .select();
 
-  alert('Semua foto berhasil upload');
+console.log('UPDATE RESULT:', updateData);
+console.log('UPDATE ERROR:', updateError);
 
-  loadBookings();
+if(updateError){
+  alert('Gagal simpan URL foto ke database');
+  console.log(updateError);
+  return;
+}
+
+alert('Semua foto berhasil upload');
+
+loadBookings();
 
 }
 async function approvePayment(id){
