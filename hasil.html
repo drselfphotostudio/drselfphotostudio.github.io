@@ -198,15 +198,9 @@ h1{
   box-shadow:0 5px 20px rgba(0,0,0,0.2);
   will-change:transform;
 }
-
-  .photo-card{
+.photo-card{
   background:#161616;
   border-radius:24px;
-  overflow:hidden;
-  box-shadow:
-    0 10px 30px rgba(0,0,0,.35);
-}
-  border-radius:22px;
   overflow:hidden;
   position:relative;
   transition:0.25s;
@@ -214,7 +208,9 @@ h1{
   flex-direction:column;
   border:1px solid rgba(255,255,255,0.04);
   backdrop-filter:blur(10px);
+  box-shadow:0 10px 30px rgba(0,0,0,.35);
 }
+  
   .photo-info{
   padding:18px;
   background:#181818;
@@ -279,11 +275,6 @@ h1{
 .download-btn:active{
   transform:scale(0.98);
 }
-#status{
-  text-align:center;
-  margin-bottom:20px;
-  opacity:0.8;
-}
 
 #printBtn{
   position:fixed;
@@ -304,20 +295,6 @@ h1{
 
 #printBtn:hover{
   transform:translateY(-3px);
-}
-
-.back-btn{
-  margin-bottom:30px;
-  background:#25D366;
-  border:none;
-  color:white;
-  padding:14px 22px;
-  border-radius:12px;
-  cursor:pointer;
-  display:none;
-  font-size:15px;
-  font-weight:600;
-  transition:0.2s;
 }
 
 .back-btn:hover{
@@ -414,6 +391,46 @@ h1{
 .right{
   right:20px;
 }
+  .search-card{
+  max-width:1100px;
+  margin:auto;
+  margin-bottom:40px;
+  padding:30px;
+  background:#1a1a1a;
+  border-radius:24px;
+  box-shadow:0 10px 40px rgba(0,0,0,.3);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:15px;
+  flex-wrap:wrap;
+}
+  .status-card{
+  max-width:1200px;
+  margin:auto;
+  background:#1a1a1a;
+  border-radius:24px;
+  padding:25px;
+  margin-bottom:35px;
+  box-shadow:0 10px 40px rgba(0,0,0,.3);
+}
+
+.status-left{
+  display:flex;
+  align-items:center;
+  gap:20px;
+}
+
+.status-icon{
+  width:70px;
+  height:70px;
+  border-radius:50%;
+  background:rgba(37,211,102,.15);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:30px;
+}
   .hero-section{
   text-align:center;
   margin-bottom:50px;
@@ -471,17 +488,7 @@ h1{
 </div>
   
   <div class="search-card">
-    .search-card{
-  max-width:1100px;
-  margin:auto;
-  margin-bottom:40px;
-  padding:30px;
-  background:#1a1a1a;
-  border-radius:24px;
-  box-shadow:
-    0 10px 40px rgba(0,0,0,.3);
-}
-
+    
 <input
 type="text"
 id="searchKode"
@@ -619,11 +626,7 @@ async function loadAlbums(){
   const albumList =
     document.getElementById('albumList');
 
-  const status =
-    document.getElementById('status');
-
-  status.innerHTML =
-  '📁 Mengambil album...';
+  albumList.innerHTML = '';
 
   const { data, error } =
     await supabaseClient
@@ -637,15 +640,8 @@ async function loadAlbums(){
 
     console.log(error);
 
-    status.innerHTML =
-      'Gagal mengambil album';
-
     return;
   }
-
-  status.innerHTML = '';
-
-  albumList.innerHTML = '';
 
   data.forEach(folder => {
 
@@ -666,7 +662,7 @@ onclick="openAlbum('${folder.name}')"
 
 </div>
 
-      `;
+`;
 
     }
 
@@ -685,15 +681,18 @@ async function openAlbum(kodeBooking){
 
     const gallery =
     document.getElementById('gallery');
+document.getElementById(
+'statusTitle'
+).innerHTML =
+'📸 Mengambil Foto...';
 
-  const status =
-    document.getElementById('status');
+document.getElementById(
+'statusKode'
+).innerHTML =
+'Mohon tunggu';
 
-  gallery.innerHTML = '';
-
-  status.innerHTML =
-  '📸 Mengambil foto...';
-
+gallery.innerHTML = '';
+  
   const { data, error } =
     await supabaseClient
       .storage
@@ -702,16 +701,30 @@ async function openAlbum(kodeBooking){
 
     if(error){
 
-    console.log(error);
+  console.log(error);
 
-    status.innerHTML =
-      'Gagal mengambil foto';
+  document.getElementById(
+  'statusTitle'
+  ).innerHTML =
+  '❌ Gagal Mengambil Foto';
 
-    return;
-  }
+  document.getElementById(
+  'statusKode'
+  ).innerHTML =
+  `Kode Booking: ${kodeBooking}`;
 
-  status.innerHTML =
-    `${data.length} foto ditemukan`;
+  return;
+}
+
+  document.getElementById(
+'statusTitle'
+).innerHTML =
+`${data.length} Foto Ditemukan`;
+
+document.getElementById(
+'statusKode'
+).innerHTML =
+`Kode Booking: ${kodeBooking}`;
   currentImages = data.map(file =>
 `${supabaseUrl}/storage/v1/object/public/customer-photo/${kodeBooking}/${file.name}`
 );
