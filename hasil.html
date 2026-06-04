@@ -9,6 +9,42 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
+  .photo-number{
+  position:absolute;
+  top:10px;
+  left:10px;
+  background:#25D366;
+  color:white;
+  padding:5px 10px;
+  border-radius:8px;
+  font-size:12px;
+  font-weight:700;
+  z-index:10;
+}
+
+.photo-name{
+  font-size:11px;
+  color:#ccc;
+  word-break:break-all;
+}
+
+.photo-info{
+  padding:12px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+}
+
+.download-btn{
+  background:none;
+  border:none;
+  color:#25D366;
+  font-size:12px;
+  font-weight:700;
+  cursor:pointer;
+  white-space:nowrap;
+}
   .photostrip{
   position:relative;
   width:600px;
@@ -182,8 +218,8 @@ h1{
 }
 .gallery{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
-  gap:24px;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:18px;
   padding-bottom:120px;
   align-items:start;
 }
@@ -253,27 +289,6 @@ h1{
   align-items:center;
   gap:10px;
   margin-bottom:15px;
-}
-
-.download-btn{
-  width:100%;
-  background:#25D366;
-  border:none;
-  color:white;
-  padding:12px;
-  border-radius:12px;
-  cursor:pointer;
-  font-size:15px;
-  font-weight:600;
-  transition:0.2s;
-}
-
-.download-btn:hover{
-  opacity:0.9;
-  transform:translateY(-2px);
-}
-.download-btn:active{
-  transform:scale(0.98);
 }
 
 #printBtn{
@@ -500,8 +515,16 @@ h1{
 
 </div>
   
-  <div class="search-card">
-    
+ <div class="search-card">
+
+<div style="
+color:#25D366;
+font-weight:700;
+font-size:15px;
+">
+🔖 Kode Booking
+</div>
+
 <input
 type="text"
 id="searchKode"
@@ -522,24 +545,24 @@ style="
 background:#25D366;
 border:none;
 padding:14px 20px;
-border-radius:12px;
+border-radius:8px;
 color:white;
 font-weight:600;
 cursor:pointer;
 "
 >
-Cari Foto
+🔍 Cari Foto
 </button>
 
 </div>
-
+    
 <div
 id="albumList"
 class="album-grid"
 style="display:none;"
 ></div>
 
-<div id="statusCard" class="status-card">
+<div class="status-card">
 
 <div class="status-left">
 
@@ -556,7 +579,8 @@ Belum ada foto
 <p id="statusKode">
 Masukkan kode booking
 </p>
-  <div
+
+<div
 id="statusBadge"
 class="status-badge"
 >
@@ -565,9 +589,28 @@ Menunggu Pencarian
 
 </div>
 
+<div style="margin-left:auto;">
+
+<button
+onclick="selectAllPhotos()"
+style="
+background:#2b2b2b;
+color:white;
+border:none;
+padding:10px 14px;
+border-radius:10px;
+cursor:pointer;
+"
+>
+☑ Pilih Semua
+</button>
+
 </div>
 
 </div>
+
+</div>
+
   <div class="mode-picker">
     <div id="photoSelector" style="
 display:none;
@@ -789,31 +832,35 @@ if(currentMode === 'original'){
 
 <div class="photo-card">
 
-  <div style="
-  position:absolute;
-  top:12px;
-  left:12px;
-  background:rgba(0,0,0,0.7);
-  color:white;
-  padding:8px 12px;
-  border-radius:12px;
-  font-size:14px;
-  font-weight:bold;
-  z-index:10;
-  ">
-  #${index + 1}
-  </div>
+<div class="photo-number">
+${String(index+1).padStart(2,'0')}
+</div>
 
-  <img
-    src="${imageUrl}"
-    loading="lazy"
-    onclick="previewPhoto('${originalUrl}')"
-  >
+<img
+src="${imageUrl}"
+loading="lazy"
+onclick="previewPhoto('${originalUrl}')"
+>
+
+<div class="photo-info">
+
+<div class="photo-name">
+${file.name}
+</div>
+
+<button
+class="download-btn"
+onclick="window.print()"
+>
+🖨️ Print
+</button>
+
+</div>
 
 </div>
 
 `;
-
+    
 }else{
 
   let slotsHTML = '';
@@ -1356,6 +1403,11 @@ if(currentKodeBooking){
 
 }
     }
+  function selectAllPhotos(){
+
+  alert('Fitur Pilih Semua sedang disiapkan');
+
+}
 </script>
 
 <div
