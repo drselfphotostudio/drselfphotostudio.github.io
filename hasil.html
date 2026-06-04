@@ -431,6 +431,19 @@ h1{
   justify-content:center;
   font-size:30px;
 }
+  .status-badge{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  margin-top:12px;
+  padding:10px 16px;
+  border-radius:999px;
+  background:#25D366;
+  color:white;
+  font-size:13px;
+  font-weight:700;
+  box-shadow:0 4px 15px rgba(37,211,102,.3);
+}
   .hero-section{
   text-align:center;
   margin-bottom:50px;
@@ -543,6 +556,12 @@ Belum ada foto
 <p id="statusKode">
 Masukkan kode booking
 </p>
+  <div
+id="statusBadge"
+class="status-badge"
+>
+Menunggu Pencarian
+</div>
 
 </div>
 
@@ -690,6 +709,10 @@ document.getElementById(
 'statusKode'
 ).innerHTML =
 'Mohon tunggu';
+  document.getElementById(
+'statusBadge'
+).innerHTML =
+'⏳ Memuat...';
 
 gallery.innerHTML = '';
   
@@ -712,7 +735,11 @@ gallery.innerHTML = '';
   'statusKode'
   ).innerHTML =
   `Kode Booking: ${kodeBooking}`;
-
+      document.getElementById(
+'statusBadge'
+).innerHTML =
+'🔴 Tidak Ditemukan';
+    
   return;
 }
 
@@ -725,6 +752,12 @@ document.getElementById(
 'statusKode'
 ).innerHTML =
 `Kode Booking: ${kodeBooking}`;
+
+  document.getElementById(
+'statusBadge'
+).innerHTML =
+'🟢 Siap Dilihat';
+  
   currentImages = data.map(file =>
 `${supabaseUrl}/storage/v1/object/public/customer-photo/${kodeBooking}/${file.name}`
 );
