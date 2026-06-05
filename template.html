@@ -270,6 +270,16 @@ await supabaseClient
   ])
 
 if(insertError){
+
+  const { error: storageError } =
+await supabaseClient.storage
+  .from('template')
+  .remove([fileName])
+
+if(storageError){
+  console.log(storageError)
+}
+
   console.log(insertError)
   alert(insertError.message)
   return
@@ -290,12 +300,44 @@ async function deleteTemplate(id){
 
   if(!confirmDelete) return
 
+  // Ambil data template
+  const { data: templateData, error } =
   await supabaseClient
     .from('template')
-    .delete()
+    .select('*')
     .eq('id', id)
+    .single()
 
-  loadTemplate()
+  if(error){
+    alert(error.message)
+    return
+  }
+
+  // Ambil nama file dari URL
+const fileName =
+templateData.image_url.split('/').pop()
+
+// Hapus file di Storage
+const { error: storageError } =
+await supabaseClient.storage
+  .from('template')
+  .remove([fileName])
+
+if(storageError){
+  console.log(storageError)
+  alert(storageError.message)
+  return
+}
+
+// Hapus data di Database
+await supabaseClient
+  .from('template')
+  .delete()
+  .eq('id', id)
+
+alert('Template berhasil dihapus')
+
+loadTemplate()
 
 }
 
