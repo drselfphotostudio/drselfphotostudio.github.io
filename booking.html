@@ -449,15 +449,17 @@ status.innerHTML =
 
 let uploadedUrls = [];
 
-  for(const file of files){
+  for(let i = 0; i < files.length; i++){
 
-    const fileName =
-`${kodeBooking}/${Date.now()}-${file.name}`;
+  const file = files[i];
 
-    const { error: uploadError } =
-    await supabaseClient.storage
-      .from('customer-photo')
-      .upload(fileName, file);
+  const fileName =
+`${kodeBooking}/${kodeBooking}-${String(i + 1).padStart(2,'0')}.jpg`;
+
+  const { error: uploadError } =
+  await supabaseClient.storage
+    .from('customer-photo')
+    .upload(fileName, file);
 
     if(uploadError){
 
