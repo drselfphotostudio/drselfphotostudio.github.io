@@ -14,41 +14,53 @@
 
 body{
   margin:0;
-  background:#0f0f0f;
+  background:
+  radial-gradient(circle at top,#101828,#050505 70%);
   color:white;
   font-family:'Poppins',sans-serif;
+  min-height:100vh;
 }
 
 .header{
   text-align:center;
-  padding:40px 20px;
+  padding:60px 20px 40px;
 }
 
 .header h1{
   margin:0;
-  font-size:42px;
+  font-size:58px;
+  font-weight:800;
+}
+
+.header h1 span{
+  color:#25D366;
 }
 
 .header p{
-  opacity:0.7;
+  opacity:.75;
   margin-top:10px;
+  font-size:18px;
 }
 
 .gallery{
-  max-width:1200px;
+  max-width:1400px;
   margin:auto;
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
-  gap:25px;
-  padding:20px;
+  grid-template-columns:
+  repeat(auto-fit,minmax(260px,1fr));
+  gap:30px;
+  padding:30px;
 }
 
 .card{
-  background:#1a1a1a;
-  border-radius:20px;
+  background:#141414;
+  border-radius:24px;
   overflow:hidden;
-  box-shadow:0 10px 25px rgba(0,0,0,0.3);
-  transition:0.3s;
+  position:relative;
+  border:1px solid rgba(255,255,255,.06);
+  box-shadow:
+  0 15px 40px rgba(0,0,0,.45);
+  transition:.25s;
 }
 
 .card:hover{
@@ -127,15 +139,64 @@ footer{
   padding:40px 20px;
   opacity:0.5;
 }
+.kode-card{
+  display:inline-block;
+  margin-top:20px;
+  background:#181818;
+  padding:14px 24px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.08);
+  font-weight:600;
+}
 
+.kode-card span{
+  color:#25D366;
+}
+
+.photo-number{
+  position:absolute;
+  top:12px;
+  left:12px;
+  background:#25D366;
+  color:white;
+  padding:6px 10px;
+  border-radius:8px;
+  font-size:13px;
+  font-weight:700;
+  z-index:5;
+}
+
+.photo-info{
+  padding:18px;
+}
+
+.file-name{
+  font-size:15px;
+  font-weight:600;
+  margin-bottom:14px;
+}
 </style>
 </head>
 
 <body>
 
 <div class="header">
-  <h1>Download Foto</h1>
-  <p>DR Self Photo Studio</p>
+
+<div style="font-size:60px;">
+📥
+</div>
+
+<h1>
+Download <span>Foto</span>
+</h1>
+
+<p>DR Self Photo Studio</p>
+
+<div class="kode-card">
+🛡️ Kode Booking :
+<span id="kodeBookingText"></span>
+</div>
+
 </div>
 
 <div id="loading" class="loading">
@@ -175,6 +236,20 @@ const supabaseClient = supabase.createClient(
 const params = new URLSearchParams(window.location.search);
 
 const kode = params.get('id');
+  document.addEventListener(
+'DOMContentLoaded',
+() => {
+
+  const el =
+  document.getElementById(
+    'kodeBookingText'
+  );
+
+  if(el){
+    el.textContent = kode || '-';
+  }
+
+});
 
 const gallery = document.getElementById('gallery');
 
@@ -209,22 +284,35 @@ const downloadUrl =
 `${imageUrl}?download=1`;
 
     gallery.innerHTML += `
-    
+
 <div class="card">
 
-  <img 
-    src="${imageUrl}"
-    alt="Foto Customer"
-    loading="lazy"
-    onclick="openPreview('${imageUrl}')"
-  >
+<div class="photo-number">
+${String(index+1).padStart(2,'0')}
+</div>
 
-  <button 
-  class="download-btn"
-  onclick="downloadPhoto('${downloadUrl}','${kode}-${index + 1}.jpg')"
+<img
+src="${imageUrl}"
+alt="Foto Customer"
+loading="lazy"
+onclick="openPreview('${imageUrl}')"
 >
-  Download Foto
+
+<div class="photo-info">
+
+<div class="file-name">
+${kode}-${String(index+1).padStart(2,'0')}.jpg
+</div>
+
+<button
+class="download-btn"
+onclick="downloadPhoto('${downloadUrl}','${kode}-${index+1}.jpg')"
+>
+⬇ Download Foto
 </button>
+
+</div>
+
 </div>
 
 `;
