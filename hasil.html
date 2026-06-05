@@ -667,6 +667,13 @@ new URLSearchParams(window.location.search);
 const kodeBooking =
 urlParams.get('kode');
 
+const isAdmin =
+urlParams.get('admin') === '1';
+
+if(!isAdmin){
+  document.querySelector('.hero-back-btn').style.display = 'none';
+}
+
 loadTemplates();
 
 window.addEventListener('DOMContentLoaded', () => {
