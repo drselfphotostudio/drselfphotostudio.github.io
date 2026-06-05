@@ -267,8 +267,20 @@ function togglePlay(){
 }
   function backToGallery(){
 
-  window.location.href =
-`hasil.html?kode=${kodeBooking}`;
+  const isAdmin =
+  urlParams.get('admin');
+
+  if(isAdmin){
+
+    window.location.href =
+    `hasil.html?kode=${kodeBooking}&admin=1`;
+
+  }else{
+
+    window.location.href =
+    `hasil.html?kode=${kodeBooking}`;
+
+  }
 
 }
   
