@@ -1375,8 +1375,20 @@ updatePhotostrip()
     return;
   }
 
-  window.location.href =
-`stopmotion.html?kode=${kode}`;
+  const isAdmin =
+  urlParams.get('admin') === '1';
+
+  if(isAdmin){
+
+    window.location.href =
+    `stopmotion.html?kode=${kode}&admin=1`;
+
+  }else{
+
+    window.location.href =
+    `stopmotion.html?kode=${kode}`;
+
+  }
 
 }
   
