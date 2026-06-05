@@ -480,16 +480,7 @@ form.addEventListener('submit', async (e) => {
 
   return;
 }
-  await supabaseClient.storage
-  .from('customer-photo')
-  .upload(
-    `${kode}/.keep`,
-    new Blob(['folder']),
-    {
-      upsert:true
-    }
-  );
-
+  
   alert(
 `Booking berhasil!
 
