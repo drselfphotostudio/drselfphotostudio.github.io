@@ -386,6 +386,23 @@ Belum ada
 }
 
 loadBookings();
+
+  // Realtime booking baru
+supabaseClient
+  .channel('bookings-realtime')
+  .on(
+    'postgres_changes',
+    {
+      event: '*',
+      schema: 'public',
+      table: 'bookings'
+    },
+    () => {
+      loadBookings();
+    }
+  )
+  .subscribe();
+  
   async function uploadPhoto(
   event,
   bookingId,
