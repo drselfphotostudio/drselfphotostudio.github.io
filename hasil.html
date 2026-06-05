@@ -507,11 +507,11 @@ h1{
   </p>
 
   <button
-  onclick="history.back()"
-  class="hero-back-btn"
-  >
-  ← Kembali Customer Booking
-  </button>
+onclick="backToCustomerBooking()"
+class="hero-back-btn"
+>
+← Kembali Customer Booking
+</button>
 
 </div>
   
@@ -667,6 +667,12 @@ new URLSearchParams(window.location.search);
 const kodeBooking =
 urlParams.get('kode');
 
+  function backToCustomerBooking(){
+
+  window.location.href =
+  'customer-booking.html';
+
+}
 const isAdmin =
 urlParams.get('admin') === '1';
 
@@ -1376,7 +1382,7 @@ updatePhotostrip()
   }
 
   const isAdmin =
-  urlParams.get('admin') === '1';
+urlParams.get('admin') === '1';
 
   if(isAdmin){
 
