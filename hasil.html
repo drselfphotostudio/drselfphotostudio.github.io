@@ -673,9 +673,9 @@ window.addEventListener('DOMContentLoaded', () => {
 
   if(kodeBooking){
 
-    document.getElementById(
-      'searchKode'
-    ).value = kodeBooking;
+    document.querySelector('.hero-back-btn').style.display = 'none';
+
+    document.getElementById('searchKode').value = kodeBooking;
 
     openAlbum(kodeBooking);
 
