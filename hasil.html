@@ -771,6 +771,8 @@ gallery.innerHTML = '';
       .storage
       .from('customer-photo')
       .list(kodeBooking);
+  const photos =
+  data.filter(file => file.name !== '.keep');
 
     if(error){
 
@@ -796,7 +798,7 @@ gallery.innerHTML = '';
   document.getElementById(
 'statusTitle'
 ).innerHTML =
-`${data.length} Foto Ditemukan`;
+`${photos.length} Foto Ditemukan`
 
 document.getElementById(
 'statusKode'
@@ -808,7 +810,7 @@ document.getElementById(
 ).innerHTML =
 '🟢 Siap Dilihat';
   
-  currentImages = data.map(file =>
+  currentImages = photos.map(file =>
 `${supabaseUrl}/storage/v1/object/public/customer-photo/${kodeBooking}/${file.name}`
 );
 const selector =
@@ -824,7 +826,7 @@ generateSlotSelector();
   selector.style.display = 'none';
 
 }
-  data.forEach((file,index) => {
+  photos.forEach((file,index) => {
 
     const imageUrl =
 `${supabaseUrl}/storage/v1/object/public/customer-photo/${kodeBooking}/${file.name}`;
@@ -1152,19 +1154,22 @@ function searchAlbum(){
   async function loadTemplates(){
 
   const { data, error } =
-    await supabaseClient
-    .from('template')
-    .select('*')
-    .order('id',{ ascending:true });
+  await supabaseClient
+  .from('template')
+  .select('*')
+  .order('id',{ ascending:true });
 
-    allTemplates = data;
-  if(error){
+if(error){
 
-    console.log(error);
+  console.log(error);
 
-    return;
-  }
+  return;
 
+}
+
+allTemplates = data;
+    console.log('TEMPLATE DATA:', data);
+    
   const container =
     document.getElementById('templateContainer');
 
@@ -1236,15 +1241,15 @@ class="template-btn"
 onclick="
 setMode(
 'template',
-'${item.gambar}',
+'${item.image_url}',
 ${item.id}
 )
 "
 >
 
-<img src="${item.gambar}">
+<img src="${item.image_url}">
 
-<p>${item.nama}</p>
+<p>${item.name}</p>
 
 </div>
 
