@@ -339,13 +339,24 @@ font-weight:600;
 </a>
 
 <a
-href="https://wa.me/62${item.no_wa.substring(1)}?text=Halo%20${item.nama}%20hasil%20foto%20Anda%20sudah%20siap:%20${item.result_url}"
+href="https://wa.me/62${item.no_wa.substring(1)}?text=${encodeURIComponent(
+`Halo Kak 👋
+
+Foto self photo studio sudah selesai 📸
+
+Silakan download melalui link berikut:
+
+https://drselfphotostudio.github.io/download.html?id=${item.kode_booking}
+
+Terima kasih 🙏`
+)}"
 target="_blank"
 style="
 color:#25D366;
 text-decoration:none;
 font-weight:600;
-">
+"
+>
 📲 Kirim WA
 </a>
 
