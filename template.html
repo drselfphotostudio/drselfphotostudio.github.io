@@ -192,9 +192,12 @@ async function loadTemplate(){
     .order('id',{ascending:false})
 
   if(error){
-    console.log(error)
-    return
-  }
+  console.log(error)
+  alert(error.message)
+  return
+}
+
+console.log(data)
 
   templateList.innerHTML =
   data.map(item => `
@@ -255,17 +258,24 @@ async(e)=>{
   const imageUrl =
   publicUrlData.publicUrl
 
-  await supabaseClient
-    .from('template')
-    .insert([
-      {
-        name:name,
-        image_url:imageUrl,
-        active:true
-      }
-    ])
+  const { error: insertError } =
+await supabaseClient
+  .from('template')
+  .insert([
+    {
+      name: name,
+      image_url: imageUrl,
+      active: true
+    }
+  ])
 
-  alert('Template berhasil upload 🎉')
+if(insertError){
+  console.log(insertError)
+  alert(insertError.message)
+  return
+}
+
+alert('Template berhasil upload 🎉')
 
   templateForm.reset()
 
