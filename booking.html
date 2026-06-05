@@ -397,11 +397,19 @@ supabaseClient
       schema: 'public',
       table: 'bookings'
     },
-    () => {
+    (payload) => {
+
+      console.log('Realtime Event:', payload);
+
       loadBookings();
+
     }
   )
-  .subscribe();
+  .subscribe((status) => {
+
+    console.log('Realtime Status:', status);
+
+  });
   
   async function uploadPhoto(
   event,
