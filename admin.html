@@ -3,480 +3,824 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Admin Dashboard</title>
-
+<title>Admin Dashboard – DrSelf Photo Studio</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
+*{box-sizing:border-box;margin:0;padding:0;}
 
 body{
-  margin:0;
-  background:#0f0f0f;
-  color:white;
+  background:#0a0a0c;
+  color:#e8e8f0;
   font-family:'Poppins',sans-serif;
-  padding:30px;
+  font-size:14px;
 }
 
-h1{
-  margin:0;
-  font-size:52px;
-  line-height:1.1;
+/* ── LOGIN ── */
+.login-wrap{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#0a0a0c;
 }
 
-.table-wrapper{
-  overflow:auto;
-}
-.header-card{
-  background:#1a1a1a;
-  padding:30px;
-  border-radius:28px;
-  border:1px solid rgba(255,255,255,0.05);
-  box-shadow:0 10px 30px rgba(0,0,0,0.25);
-}
-table{
+.login-box{
   width:100%;
-  border-collapse:separate;
-  border-spacing:0;
-  background:rgba(26,26,26,0.95);
-  border-radius:24px;
-  overflow:hidden;
-  min-width:1200px;
-  border:1px solid rgba(255,255,255,0.05);
-  box-shadow:0 10px 30px rgba(0,0,0,0.25);
-  backdrop-filter:blur(10px);
-}
-
-th,td{
-  padding:20px 16px;
-  border-bottom:1px solid rgba(255,255,255,0.06);
-  text-align:left;
-  vertical-align:middle;
-}
-
-th{
-  background:#25D366;
-}
-tbody tr{
-  transition:0.2s;
-}
-
-tbody tr:hover{
-  background:rgba(255,255,255,0.03);
-}
-  input[type="text"],
-input[type="password"],
-input[type="file"]{
-  background:#111;
-  color:white;
-  border:1px solid rgba(255,255,255,0.08);
-  transition:0.2s;
-}
-
-input[type="text"]:focus,
-input[type="password"]:focus{
-  outline:none;
-  border-color:#25D366;
-  box-shadow:0 0 0 4px rgba(37,211,102,0.15);
-}
-.status{
-  padding:6px 12px;
+  max-width:380px;
+  background:#131318;
+  border:0.5px solid rgba(255,255,255,0.08);
   border-radius:20px;
-  font-size:12px;
-  font-weight:600;
+  padding:40px 36px;
 }
 
-.pending{
-  background:orange;
-  color:black;
+.login-logo{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin-bottom:32px;
 }
 
-.paid{
-  background:#25D366;
-  color:white;
-}
-
-button{
-  background:#25D366;
-  border:none;
-  color:white;
-  padding:10px 15px;
+.login-logo-icon{
+  width:42px;
+  height:42px;
+  background:#7F77DD;
   border-radius:12px;
-  cursor:pointer;
-  font-weight:600;
-  transition:0.2s;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:20px;
 }
 
-button:hover{
-  transform:translateY(-2px);
-  opacity:0.9;
-}
-  .btn-lihat{
-  display:inline-block;
-  padding:10px 15px;
-  background:#25D366;
-  color:white;
-  border-radius:10px;
-  text-decoration:none;
+.login-logo-text{
+  font-size:18px;
   font-weight:600;
-}
-
-.btn-lihat:hover{
-  opacity:0.8;
-}
-  .login-box{
-  max-width:400px;
-  margin:100px auto;
-  background:#1a1a1a;
-  padding:40px;
-  border-radius:25px;
-  box-sizing:border-box;
+  color:#fff;
 }
 
 .login-box h2{
-  text-align:center;
-  margin-bottom:30px;
+  font-size:22px;
+  font-weight:600;
+  color:#fff;
+  margin-bottom:6px;
+}
+
+.login-box p{
+  font-size:13px;
+  color:#666;
+  margin-bottom:28px;
+}
+
+.field-label{
+  font-size:12px;
+  color:#888;
+  margin-bottom:7px;
+  display:block;
 }
 
 .login-input{
   width:100%;
-  padding:15px;
-  border:none;
-  border-radius:12px;
-  box-sizing:border-box;
-  font-size:16px;
+  background:#1e1e26;
+  color:#fff;
+  border:0.5px solid rgba(255,255,255,0.1);
+  border-radius:10px;
+  padding:13px 16px;
+  font-size:14px;
+  font-family:'Poppins',sans-serif;
+  transition:border-color 0.2s,box-shadow 0.2s;
+  margin-bottom:14px;
 }
+
+.login-input:focus{
+  outline:none;
+  border-color:#7F77DD;
+  box-shadow:0 0 0 3px rgba(127,119,221,0.18);
+}
+
+.show-pass{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin-bottom:22px;
+  font-size:12px;
+  color:#666;
+  cursor:pointer;
+}
+
+.show-pass input{accent-color:#7F77DD;}
 
 .login-btn{
   width:100%;
-  margin-top:20px;
-  box-sizing:border-box;
-  font-size:16px;
+  background:#7F77DD;
+  color:#fff;
+  border:none;
+  border-radius:10px;
+  padding:13px;
+  font-size:15px;
+  font-weight:600;
+  font-family:'Poppins',sans-serif;
+  cursor:pointer;
+  transition:background 0.2s,transform 0.15s;
 }
 
-  .sidebar{
+.login-btn:hover{background:#6b63c9;transform:translateY(-1px);}
+
+/* ── SIDEBAR ── */
+.sidebar{
   position:fixed;
-  top:0;
-  left:0;
-  width:260px;
+  top:0;left:0;
+  width:240px;
   height:100vh;
-  background:#151515;
-  border-right:1px solid rgba(255,255,255,0.06);
-  padding:30px 20px;
-  box-sizing:border-box;
+  background:#0f0f13;
+  border-right:0.5px solid rgba(255,255,255,0.06);
+  padding:22px 12px;
+  display:flex;
+  flex-direction:column;
   z-index:999;
+  transition:transform 0.25s;
 }
 
-.sidebar h2{
-  margin:0 0 35px;
-  font-size:32px;
+.sidebar-logo{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:6px 10px 26px;
 }
 
-.sidebar button{
-  width:100%;
-  margin-bottom:14px;
-  background:#1f1f1f;
-  padding:16px;
-  border-radius:14px;
-  text-align:left;
-  font-size:16px;
+.sidebar-logo-icon{
+  width:36px;height:36px;
+  background:#7F77DD;
+  border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:17px;
+  flex-shrink:0;
 }
 
-.sidebar button:hover{
-  background:#25D366;
+.sidebar-logo-text{
+  font-size:15px;
+  font-weight:600;
+  color:#fff;
 }
 
+.nav-label{
+  font-size:10px;
+  color:#444;
+  text-transform:uppercase;
+  letter-spacing:0.08em;
+  padding:0 10px;
+  margin:4px 0 6px;
+}
+
+.nav-item{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:10px 12px;
+  border-radius:9px;
+  color:#888;
+  text-decoration:none;
+  font-size:13.5px;
+  font-weight:500;
+  margin-bottom:2px;
+  transition:background 0.15s,color 0.15s;
+  position:relative;
+}
+
+.nav-item:hover{background:rgba(255,255,255,0.05);color:#ddd;}
+.nav-item.active{background:rgba(127,119,221,0.15);color:#AFA9EC;}
+
+.nav-item .nav-icon{font-size:16px;flex-shrink:0;}
+
+.nav-badge{
+  margin-left:auto;
+  background:#3C3489;
+  color:#CECBF6;
+  font-size:11px;
+  font-weight:600;
+  padding:2px 8px;
+  border-radius:20px;
+}
+
+.sidebar-spacer{flex:1;}
+
+.sidebar-user{
+  border-top:0.5px solid rgba(255,255,255,0.07);
+  padding-top:16px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:14px 10px 0;
+}
+
+.user-avatar{
+  width:32px;height:32px;
+  border-radius:50%;
+  background:#3C3489;
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:600;color:#CECBF6;
+  flex-shrink:0;
+}
+
+.user-info{flex:1;}
+.user-name{font-size:13px;font-weight:500;color:#ddd;}
+.user-role{font-size:11px;color:#555;}
+
+.logout-btn{
+  background:none;
+  border:none;
+  color:#555;
+  font-size:17px;
+  cursor:pointer;
+  padding:4px;
+  border-radius:6px;
+  transition:color 0.15s,background 0.15s;
+}
+
+.logout-btn:hover{color:#E24B4A;background:rgba(226,75,74,0.1);}
+
+/* ── MAIN ── */
 .main-content{
-  margin-left:280px;
+  margin-left:240px;
+  min-height:100vh;
+  background:#0a0a0c;
+  padding:28px 30px;
 }
 
-.section-card{
-  background:#1a1a1a;
-  padding:25px;
-  border-radius:24px;
-  border:1px solid rgba(255,255,255,0.05);
-  box-shadow:0 10px 30px rgba(0,0,0,0.25);
+.topbar{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  margin-bottom:28px;
 }
-  
-@media(max-width:900px){
 
-  body{
-    padding:15px;
-  }
+.topbar-greeting{
+  font-size:11px;
+  color:#555;
+  margin-bottom:3px;
+}
 
-  h1{
-    font-size:34px;
-  }
+.topbar-title{
+  font-size:22px;
+  font-weight:600;
+  color:#fff;
+}
 
-  #adminContent > div:first-child{
-    grid-template-columns:1fr;
-  }
+.topbar-actions{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
 
-  table{
-    min-width:1000px;
-  }
+.icon-btn{
+  width:36px;height:36px;
+  background:#131318;
+  border:0.5px solid rgba(255,255,255,0.08);
+  border-radius:9px;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;
+  font-size:15px;
+  color:#888;
+  position:relative;
+  transition:background 0.15s;
+}
 
+.icon-btn:hover{background:#1e1e26;}
+
+.notif-dot{
+  position:absolute;
+  top:7px;right:7px;
+  width:7px;height:7px;
+  background:#7F77DD;
+  border-radius:50%;
+}
+
+/* ── STAT CARDS ── */
+.stats-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:14px;
+  margin-bottom:26px;
+}
+
+.stat-card{
+  background:#131318;
+  border:0.5px solid rgba(255,255,255,0.07);
+  border-radius:16px;
+  padding:18px;
+}
+
+.stat-card-icon{
+  width:38px;height:38px;
+  border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;
+  margin-bottom:14px;
+}
+
+.stat-card-label{
+  font-size:11.5px;
+  color:#666;
+  margin-bottom:5px;
+}
+
+.stat-card-value{
+  font-size:26px;
+  font-weight:600;
+  color:#fff;
+  line-height:1;
+}
+
+.stat-card-sub{
+  font-size:11px;
+  margin-top:6px;
+  color:#555;
+}
+
+.stat-up{color:#1D9E75 !important;}
+.stat-down{color:#D85A30 !important;}
+
+/* ── PANELS ── */
+.panels-grid{
+  display:grid;
+  grid-template-columns:1.5fr 1fr;
+  gap:16px;
+}
+
+.panel{
+  background:#131318;
+  border:0.5px solid rgba(255,255,255,0.07);
+  border-radius:16px;
+  padding:20px;
+}
+
+.panel-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:16px;
+}
+
+.panel-title{
+  font-size:14px;
+  font-weight:600;
+  color:#ddd;
+}
+
+.panel-link{
+  font-size:12px;
+  color:#7F77DD;
+  cursor:pointer;
+  text-decoration:none;
+  transition:opacity 0.15s;
+}
+
+.panel-link:hover{opacity:0.75;}
+
+/* Booking rows */
+.booking-row{
+  display:flex;
+  align-items:center;
+  gap:11px;
+  padding:10px 0;
+  border-bottom:0.5px solid rgba(255,255,255,0.05);
+}
+
+.booking-row:last-child{border-bottom:none;}
+
+.b-avatar{
+  width:32px;height:32px;
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:600;
+  flex-shrink:0;
+}
+
+.b-info{flex:1;min-width:0;}
+.b-name{font-size:13px;font-weight:500;color:#ddd;}
+.b-pkg{font-size:11px;color:#555;margin-top:1px;}
+
+.b-status{
+  font-size:11px;
+  font-weight:600;
+  padding:4px 10px;
+  border-radius:20px;
+  white-space:nowrap;
+}
+
+.st-confirmed{background:rgba(29,158,117,0.15);color:#1D9E75;}
+.st-pending{background:rgba(186,117,23,0.15);color:#EF9F27;}
+.st-done{background:rgba(127,119,221,0.15);color:#AFA9EC;}
+
+/* Package bars */
+.pkg-item{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:9px 0;
+}
+
+.pkg-dot{
+  width:8px;height:8px;
+  border-radius:50%;
+  flex-shrink:0;
+}
+
+.pkg-label{font-size:13px;color:#ccc;flex:1;}
+
+.pkg-count{
+  font-size:13px;
+  font-weight:500;
+  color:#888;
+  min-width:20px;
+  text-align:right;
+}
+
+.pkg-bar-wrap{
+  width:64px;height:4px;
+  background:rgba(255,255,255,0.07);
+  border-radius:4px;
+  overflow:hidden;
+}
+
+.pkg-bar{height:100%;border-radius:4px;}
+
+/* Today status mini cards */
+.today-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+  margin-top:18px;
+  padding-top:18px;
+  border-top:0.5px solid rgba(255,255,255,0.06);
+}
+
+.today-card{
+  border-radius:10px;
+  padding:11px;
+  text-align:center;
+}
+
+.today-val{font-size:20px;font-weight:600;}
+.today-lbl{font-size:11px;margin-top:2px;}
+
+/* ── RESPONSIVE ── */
+@media(max-width:1024px){
+  .stats-grid{grid-template-columns:repeat(2,1fr);}
+  .panels-grid{grid-template-columns:1fr;}
+}
+
+@media(max-width:768px){
+  .sidebar{transform:translateX(-100%);}
+  .sidebar.open{transform:translateX(0);}
+  .main-content{margin-left:0;padding:16px;}
+  .stats-grid{grid-template-columns:repeat(2,1fr);}
 }
 </style>
 </head>
 
 <body onload="checkLogin()">
 
-<div
-class="sidebar"
-id="sidebar"
-style="display:none;"
->
-
-<h2>📸 Admin</h2>
-
-<a
-  href="booking.html"
-  style="
-    display:block;
-    width:100%;
-    margin-bottom:14px;
-    background:#1f1f1f;
-    padding:16px;
-    border-radius:14px;
-    text-align:left;
-    font-size:16px;
-    color:white;
-    text-decoration:none;
-    font-weight:600;
-    box-sizing:border-box;
-  "
->
-📋 Customer Booking
-</a>
-
-<a
-  href="gallery.html"
-  style="
-    display:block;
-    width:100%;
-    margin-bottom:14px;
-    background:#1f1f1f;
-    padding:16px;
-    border-radius:14px;
-    text-align:left;
-    font-size:16px;
-    color:white;
-    text-decoration:none;
-    font-weight:600;
-    box-sizing:border-box;
-  "
->
-🖼️ Galeri Website
-</a>
-
-<a
-  href="packages.html"
-  style="
-    display:block;
-    width:100%;
-    margin-bottom:14px;
-    background:#1f1f1f;
-    padding:16px;
-    border-radius:14px;
-    text-align:left;
-    font-size:16px;
-    color:white;
-    text-decoration:none;
-    font-weight:600;
-    box-sizing:border-box;
-  "
->
-💰 Paket Harga
-</a>
-
-<a
-  href="template.html"
-  style="
-    display:block;
-    width:100%;
-    margin-bottom:14px;
-    background:#1f1f1f;
-    padding:16px;
-    border-radius:14px;
-    text-align:left;
-    font-size:16px;
-    color:white;
-    text-decoration:none;
-    font-weight:600;
-    box-sizing:border-box;
-  "
->
-🎞️ Template Photostrip
-</a>
-
-<button onclick="logoutAdmin()">
-🚪 Logout
-</button>
-
-</div>
-
-<div class="main-content">
-<div id="loginPage">
-
+<!-- ══ LOGIN PAGE ══ -->
+<div id="loginPage" class="login-wrap">
   <div class="login-box">
+    <div class="login-logo">
+      <div class="login-logo-icon">📸</div>
+      <span class="login-logo-text">DrSelf Studio</span>
+    </div>
+    <h2>Selamat datang</h2>
+    <p>Masuk ke panel admin untuk mengelola studio.</p>
 
-    <h2>Login Admin</h2>
-
+    <label class="field-label" for="adminPassword">Password</label>
     <input
-  type="password"
-  id="adminPassword"
-  placeholder="Masukkan Password"
-  class="login-input"
-  onkeypress="handleEnter(event)"
->
-<div style="margin-top:10px;display:flex;align-items:center;gap:8px;">
-  
-  <input
-    type="checkbox"
-    id="showPassword"
-    onclick="togglePassword()"
-  >
+      type="password"
+      id="adminPassword"
+      placeholder="Masukkan password"
+      class="login-input"
+      onkeypress="handleEnter(event)"
+    >
 
-  <label for="showPassword">
-    Lihat Password
-  </label>
+    <label class="show-pass">
+      <input type="checkbox" id="showPassword" onclick="togglePassword()">
+      Tampilkan password
+    </label>
 
+    <button class="login-btn" onclick="loginAdmin()">Masuk →</button>
+  </div>
 </div>
-    <button
-  onclick="loginAdmin()"
-  class="login-btn"
->
-      Login
-    </button>
 
+<!-- ══ SIDEBAR ══ -->
+<div class="sidebar" id="sidebar" style="display:none;">
+  <div class="sidebar-logo">
+    <div class="sidebar-logo-icon">📸</div>
+    <span class="sidebar-logo-text">DrSelf Studio</span>
   </div>
 
+  <span class="nav-label">Menu Utama</span>
+
+  <a href="#" class="nav-item active" onclick="return false;">
+    <span class="nav-icon">🏠</span> Dashboard
+  </a>
+  <a href="booking.html" class="nav-item">
+    <span class="nav-icon">📋</span> Customer Booking
+    <span class="nav-badge" id="bookingBadge" style="display:none;"></span>
+  </a>
+  <a href="gallery.html" class="nav-item">
+    <span class="nav-icon">🖼️</span> Galeri Website
+  </a>
+
+  <span class="nav-label" style="margin-top:14px;">Konfigurasi</span>
+
+  <a href="packages.html" class="nav-item">
+    <span class="nav-icon">💰</span> Paket Harga
+  </a>
+  <a href="template.html" class="nav-item">
+    <span class="nav-icon">🎞️</span> Template Photostrip
+  </a>
+
+  <div class="sidebar-spacer"></div>
+
+  <div class="sidebar-user">
+    <div class="user-avatar">AD</div>
+    <div class="user-info">
+      <div class="user-name">Admin</div>
+      <div class="user-role">Super Admin</div>
+    </div>
+    <button class="logout-btn" onclick="logoutAdmin()" title="Logout">🚪</button>
+  </div>
 </div>
 
-<div id="adminContent" style="display:none;">
-  <div style="
-display:grid;
-grid-template-columns:1fr;
-gap:25px;
-margin-bottom:35px;
-">
+<!-- ══ MAIN CONTENT ══ -->
+<div class="main-content" id="adminContent" style="display:none;">
 
-<div class="header-card">
+  <!-- Topbar -->
+  <div class="topbar">
+    <div>
+      <div class="topbar-greeting">Selamat datang kembali,</div>
+      <div class="topbar-title">Dashboard Admin</div>
+    </div>
+    <div class="topbar-actions">
+      <div class="icon-btn" title="Notifikasi">
+        🔔
+        <span class="notif-dot" id="notifDot" style="display:none;"></span>
+      </div>
+    </div>
+  </div>
 
-<h1>
-Dashboard Admin
-</h1>
+  <!-- Stat Cards -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-card-icon" style="background:rgba(127,119,221,0.12);">📅</div>
+      <div class="stat-card-label">Total Booking</div>
+      <div class="stat-card-value" id="statBooking">–</div>
+      <div class="stat-card-sub stat-up" id="statBookingSub"></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-card-icon" style="background:rgba(29,158,117,0.12);">🖼️</div>
+      <div class="stat-card-label">Foto di Galeri</div>
+      <div class="stat-card-value" id="statGaleri">–</div>
+      <div class="stat-card-sub" style="color:#555;">Aktif ditampilkan</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-card-icon" style="background:rgba(55,138,221,0.12);">💰</div>
+      <div class="stat-card-label">Paket Aktif</div>
+      <div class="stat-card-value" id="statPaket">–</div>
+      <div class="stat-card-sub" style="color:#555;">Tersedia</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-card-icon" style="background:rgba(186,117,23,0.12);">🎞️</div>
+      <div class="stat-card-label">Template</div>
+      <div class="stat-card-value" id="statTemplate">–</div>
+      <div class="stat-card-sub" style="color:#555;">Tersedia</div>
+    </div>
+  </div>
 
-<p>
-Pilih menu admin yang ingin dikelola.
-</p>
+  <!-- Panels -->
+  <div class="panels-grid">
 
+    <!-- Recent Bookings -->
+    <div class="panel">
+      <div class="panel-head">
+        <span class="panel-title">Booking Terbaru</span>
+        <a href="booking.html" class="panel-link">Lihat semua →</a>
+      </div>
+      <div id="recentBookings">
+        <!-- filled by JS -->
+        <div style="color:#555;font-size:13px;padding:20px 0;text-align:center;">Memuat data...</div>
+      </div>
+    </div>
+
+    <!-- Paket & Status -->
+    <div class="panel">
+      <div class="panel-head">
+        <span class="panel-title">Paket Terlaris</span>
+      </div>
+
+      <div class="pkg-item">
+        <div class="pkg-dot" style="background:#7F77DD;"></div>
+        <div class="pkg-label">Paket Premium</div>
+        <div class="pkg-count" id="pkgPremium">–</div>
+        <div class="pkg-bar-wrap"><div class="pkg-bar" id="barPremium" style="background:#7F77DD;width:0%;"></div></div>
+      </div>
+      <div class="pkg-item">
+        <div class="pkg-dot" style="background:#1D9E75;"></div>
+        <div class="pkg-label">Paket Basic</div>
+        <div class="pkg-count" id="pkgBasic">–</div>
+        <div class="pkg-bar-wrap"><div class="pkg-bar" id="barBasic" style="background:#1D9E75;width:0%;"></div></div>
+      </div>
+      <div class="pkg-item">
+        <div class="pkg-dot" style="background:#378ADD;"></div>
+        <div class="pkg-label">Paket Keluarga</div>
+        <div class="pkg-count" id="pkgKeluarga">–</div>
+        <div class="pkg-bar-wrap"><div class="pkg-bar" id="barKeluarga" style="background:#378ADD;width:0%;"></div></div>
+      </div>
+      <div class="pkg-item">
+        <div class="pkg-dot" style="background:#BA7517;"></div>
+        <div class="pkg-label">Paket Couple</div>
+        <div class="pkg-count" id="pkgCouple">–</div>
+        <div class="pkg-bar-wrap"><div class="pkg-bar" id="barCouple" style="background:#BA7517;width:0%;"></div></div>
+      </div>
+
+      <div class="today-grid">
+        <div class="today-card" style="background:rgba(29,158,117,0.1);">
+          <div class="today-val" style="color:#1D9E75;" id="todayDone">–</div>
+          <div class="today-lbl" style="color:#1D9E75;">Selesai</div>
+        </div>
+        <div class="today-card" style="background:rgba(186,117,23,0.1);">
+          <div class="today-val" style="color:#EF9F27;" id="todayPending">–</div>
+          <div class="today-lbl" style="color:#EF9F27;">Menunggu</div>
+        </div>
+        <div class="today-card" style="background:rgba(127,119,221,0.1);">
+          <div class="today-val" style="color:#AFA9EC;" id="todayActive">–</div>
+          <div class="today-lbl" style="color:#AFA9EC;">Berjalan</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
 </div>
 
 <script>
-
 const supabaseUrl = 'https://dokayeukqfzbkktnmcoy.supabase.co';
-
 const supabaseKey = 'sb_publishable_iUb2y0mBwhZN_Lkqq-PH_A_JCozJTxT';
+const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
 
-const supabaseClient = supabase.createClient(
-  supabaseUrl,
-  supabaseKey
-);
-
-  function loginAdmin(){
-
-  const password =
-    document.getElementById('adminPassword').value;
-
-  if(password === 'drstudio123'){
-
-    localStorage.setItem(
-      'admin_login',
-      'true'
-    );
-
+/* ── AUTH ── */
+function loginAdmin(){
+  const pw = document.getElementById('adminPassword').value;
+  if(pw === 'drstudio123'){
+    localStorage.setItem('admin_login','true');
     checkLogin();
-
   }else{
-
-    alert('Password salah');
-
+    const input = document.getElementById('adminPassword');
+    input.style.borderColor = '#E24B4A';
+    input.style.boxShadow = '0 0 0 3px rgba(226,75,74,0.18)';
+    setTimeout(()=>{
+      input.style.borderColor = '';
+      input.style.boxShadow = '';
+    },1500);
   }
-
 }
 
 function checkLogin(){
-
-  const isLogin =
-    localStorage.getItem('admin_login');
-
-  if(isLogin === 'true'){
-
-    document.getElementById('loginPage')
-      .style.display = 'none';
-
-    document.getElementById('adminContent')
-      .style.display = 'block';
-
-    document.getElementById('sidebar')
-      .style.display = 'block';
-
-  }else{
-
-    document.getElementById('loginPage')
-      .style.display = 'block';
-
-    document.getElementById('adminContent')
-      .style.display = 'none';
-
-    document.getElementById('sidebar')
-      .style.display = 'none';
-
-  }
-
+  const ok = localStorage.getItem('admin_login') === 'true';
+  document.getElementById('loginPage').style.display   = ok ? 'none'  : 'flex';
+  document.getElementById('adminContent').style.display = ok ? 'block' : 'none';
+  document.getElementById('sidebar').style.display      = ok ? 'flex'  : 'none';
+  if(ok) loadDashboard();
 }
-  
+
 function logoutAdmin(){
-
   localStorage.removeItem('admin_login');
-
   location.reload();
-
 }
-  function togglePassword(){
 
-  const input =
-    document.getElementById('adminPassword');
+function togglePassword(){
+  const i = document.getElementById('adminPassword');
+  i.type = i.type === 'password' ? 'text' : 'password';
+}
 
-  if(input.type === 'password'){
+function handleEnter(e){
+  if(e.key === 'Enter') loginAdmin();
+}
 
-    input.type = 'text';
+/* ── DASHBOARD DATA ── */
+async function loadDashboard(){
+  await Promise.all([
+    loadStats(),
+    loadRecentBookings(),
+    loadPaketStats(),
+    loadTodayStatus(),
+  ]);
+}
 
-  }else{
+async function loadStats(){
+  try{
+    const [b,g,p,t] = await Promise.all([
+      supabaseClient.from('bookings').select('id',{count:'exact',head:true}),
+      supabaseClient.from('gallery').select('id',{count:'exact',head:true}),
+      supabaseClient.from('packages').select('id',{count:'exact',head:true}),
+      supabaseClient.from('templates').select('id',{count:'exact',head:true}),
+    ]);
+    document.getElementById('statBooking').textContent  = b.count ?? '–';
+    document.getElementById('statGaleri').textContent   = g.count ?? '–';
+    document.getElementById('statPaket').textContent    = p.count ?? '–';
+    document.getElementById('statTemplate').textContent = t.count ?? '–';
 
-    input.type = 'password';
+    if((b.count ?? 0) > 0){
+      document.getElementById('statBookingSub').textContent = '↑ Data tersimpan';
+    }
 
+    /* notif dot jika ada pending */
+    const {count:pendCount} = await supabaseClient
+      .from('bookings')
+      .select('id',{count:'exact',head:true})
+      .eq('status','pending');
+    if((pendCount ?? 0) > 0){
+      document.getElementById('notifDot').style.display = 'block';
+      const badge = document.getElementById('bookingBadge');
+      badge.textContent = pendCount;
+      badge.style.display = 'inline-block';
+    }
+  }catch(e){console.warn('loadStats error',e);}
+}
+
+async function loadRecentBookings(){
+  const container = document.getElementById('recentBookings');
+  try{
+    const {data,error} = await supabaseClient
+      .from('bookings')
+      .select('name,package,booking_date,status')
+      .order('created_at',{ascending:false})
+      .limit(5);
+
+    if(error || !data || data.length === 0){
+      container.innerHTML = '<div style="color:#555;font-size:13px;padding:20px 0;text-align:center;">Belum ada booking.</div>';
+      return;
+    }
+
+    const colors = ['#3C3489','#0F6E56','#854F0B','#185FA5','#993556'];
+    const textColors = ['#CECBF6','#9FE1CB','#FAC775','#85B7EB','#F4C0D1'];
+
+    container.innerHTML = data.map((b,i)=>{
+      const initials = (b.name||'?').split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+      const date = b.booking_date ? new Date(b.booking_date).toLocaleDateString('id-ID',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}) : '–';
+      const statusMap = {
+        pending:  {cls:'st-pending', label:'Menunggu'},
+        paid:     {cls:'st-confirmed', label:'Terkonfirmasi'},
+        done:     {cls:'st-done', label:'Selesai'},
+        confirmed:{cls:'st-confirmed', label:'Terkonfirmasi'},
+      };
+      const s = statusMap[b.status] || {cls:'st-pending',label:b.status||'–'};
+      const ci = i % colors.length;
+      return `
+        <div class="booking-row">
+          <div class="b-avatar" style="background:${colors[ci]};color:${textColors[ci]};">${initials}</div>
+          <div class="b-info">
+            <div class="b-name">${b.name||'–'}</div>
+            <div class="b-pkg">${b.package||'–'} · ${date}</div>
+          </div>
+          <span class="b-status ${s.cls}">${s.label}</span>
+        </div>`;
+    }).join('');
+  }catch(e){
+    container.innerHTML = '<div style="color:#555;font-size:13px;padding:20px 0;text-align:center;">Gagal memuat data.</div>';
+    console.warn('loadRecentBookings error',e);
   }
-
 }
 
-function handleEnter(event){
-
-  if(event.key === 'Enter'){
-
-    loginAdmin();
-
-  }
-
+async function loadPaketStats(){
+  try{
+    const pakets = [
+      {id:'pkgPremium', bar:'barPremium', keyword:'premium'},
+      {id:'pkgBasic',   bar:'barBasic',   keyword:'basic'},
+      {id:'pkgKeluarga',bar:'barKeluarga',keyword:'keluarga'},
+      {id:'pkgCouple',  bar:'barCouple',  keyword:'couple'},
+    ];
+    const counts = await Promise.all(pakets.map(p=>
+      supabaseClient.from('bookings').select('id',{count:'exact',head:true}).ilike('package','%'+p.keyword+'%')
+    ));
+    const vals = counts.map(r=>r.count ?? 0);
+    const max = Math.max(...vals, 1);
+    pakets.forEach((p,i)=>{
+      document.getElementById(p.id).textContent = vals[i];
+      document.getElementById(p.bar).style.width = Math.round((vals[i]/max)*100)+'%';
+    });
+  }catch(e){console.warn('loadPaketStats error',e);}
 }
-  
+
+async function loadTodayStatus(){
+  try{
+    const today = new Date().toISOString().split('T')[0];
+    const [done, pending, active] = await Promise.all([
+      supabaseClient.from('bookings').select('id',{count:'exact',head:true}).eq('status','done').gte('booking_date',today),
+      supabaseClient.from('bookings').select('id',{count:'exact',head:true}).eq('status','pending').gte('booking_date',today),
+      supabaseClient.from('bookings').select('id',{count:'exact',head:true}).eq('status','confirmed').gte('booking_date',today),
+    ]);
+    document.getElementById('todayDone').textContent    = done.count    ?? 0;
+    document.getElementById('todayPending').textContent = pending.count ?? 0;
+    document.getElementById('todayActive').textContent  = active.count  ?? 0;
+  }catch(e){console.warn('loadTodayStatus error',e);}
+}
 </script>
-
-</div>
-
 </body>
 </html>
