@@ -1,371 +1,472 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Paket Harga – DrSelf Studio</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
 
-  <title>Admin Paket Harga</title>
-
-  <style>
-    *{
-      margin:0;
-      padding:0;
-      box-sizing:border-box;
-      font-family: Poppins, sans-serif;
-    }
-
-    body{
-      background:#000;
-      color:white;
-      padding:40px;
-    }
-
-    .container{
-      max-width:1200px;
-      margin:auto;
-    }
-
-    .header{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      margin-bottom:30px;
-    }
-
-    .header h1{
-      font-size:40px;
-      font-weight:700;
-    }
-
-    .back-btn{
-      padding:12px 20px;
-      border:none;
-      border-radius:12px;
-      background:#1e1e1e;
-      color:white;
-      cursor:pointer;
-      text-decoration:none;
-    }
-
-    .card{
-      background:#111;
-      border-radius:24px;
-      padding:30px;
-      margin-bottom:30px;
-    }
-
-    .card h2{
-      margin-bottom:20px;
-      font-size:28px;
-    }
-
-    .form-grid{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:20px;
-    }
-
-    input,
-textarea{
-  width:100%;
-  padding:15px;
-  border:none;
-  border-radius:14px;
-  background:#1d1d1d;
-  color:white;
-  font-size:16px;
+body{
+  background:#0a0a0c;
+  color:#e8e8f0;
+  font-family:'Poppins',sans-serif;
+  font-size:14px;
+  min-height:100vh;
 }
 
-    .submit-btn{
-      margin-top:20px;
-      width:100%;
-      padding:15px;
-      border:none;
-      border-radius:14px;
-      background:white;
-      color:black;
-      font-size:16px;
-      font-weight:600;
-      cursor:pointer;
-    }
+.layout{display:flex;min-height:100vh;}
 
-    .packages{
-      display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
-      gap:20px;
-    }
+/* ── SIDEBAR ── */
+.sidebar{
+  position:fixed;
+  top:0;left:0;
+  width:240px;
+  height:100vh;
+  background:#0f0f13;
+  border-right:0.5px solid rgba(255,255,255,0.06);
+  padding:22px 12px;
+  display:flex;
+  flex-direction:column;
+  z-index:999;
+}
 
-    .package-card{
-      background:#1a1a1a;
-      border-radius:20px;
-      padding:25px;
-    }
+.sidebar-logo{
+  display:flex;align-items:center;gap:10px;
+  padding:6px 10px 26px;
+}
 
-    .package-card h3{
-      font-size:28px;
-      margin-bottom:10px;
-    }
+.sidebar-logo-icon{
+  width:36px;height:36px;background:#7F77DD;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;
+}
 
-    .package-card h4{
-      font-size:24px;
-      margin-bottom:20px;
-    }
+.sidebar-logo-text{font-size:15px;font-weight:600;color:#fff;}
 
-    .package-card p{
-      margin-bottom:10px;
-      color:#ccc;
-    }
+.nav-label{
+  font-size:10px;color:#444;text-transform:uppercase;
+  letter-spacing:0.08em;padding:0 10px;margin:4px 0 6px;
+}
 
-    .btn-group{
-      display:flex;
-      gap:10px;
-      margin-top:20px;
-    }
+.nav-item{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 12px;border-radius:9px;
+  color:#888;text-decoration:none;
+  font-size:13.5px;font-weight:500;margin-bottom:2px;
+  transition:background 0.15s,color 0.15s;
+}
 
-    .edit-btn,
-    .delete-btn{
-      flex:1;
-      padding:12px;
-      border:none;
-      border-radius:12px;
-      cursor:pointer;
-      font-weight:600;
-    }
+.nav-item:hover{background:rgba(255,255,255,0.05);color:#ddd;}
+.nav-item.active{background:rgba(127,119,221,0.15);color:#AFA9EC;}
+.nav-icon{font-size:16px;flex-shrink:0;}
 
-    .edit-btn{
-      background:white;
-      color:black;
-    }
+.sidebar-spacer{flex:1;}
 
-    .delete-btn{
-      background:#ff3b3b;
-      color:white;
-    }
+.sidebar-user{
+  border-top:0.5px solid rgba(255,255,255,0.07);
+  padding-top:16px;
+  display:flex;align-items:center;gap:10px;padding:14px 10px 0;
+}
 
-    @media(max-width:768px){
+.user-avatar{
+  width:32px;height:32px;border-radius:50%;background:#3C3489;
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:600;color:#CECBF6;flex-shrink:0;
+}
 
-      body{
-        padding:20px;
-      }
+.user-info{flex:1;}
+.user-name{font-size:13px;font-weight:500;color:#ddd;}
+.user-role{font-size:11px;color:#555;}
 
-      .form-grid{
-        grid-template-columns:1fr;
-      }
+.logout-btn{
+  background:none;border:none;color:#555;font-size:16px;
+  cursor:pointer;padding:4px;border-radius:6px;transition:color 0.15s;
+}
+.logout-btn:hover{color:#E24B4A;}
 
-      .header{
-        flex-direction:column;
-        align-items:flex-start;
-        gap:15px;
-      }
+/* ── MAIN ── */
+.main{
+  margin-left:240px;
+  padding:28px 30px;
+  flex:1;
+  min-height:100vh;
+}
 
-    }
-  </style>
+.topbar{
+  display:flex;align-items:flex-start;justify-content:space-between;
+  margin-bottom:28px;
+}
+
+.topbar-title{font-size:20px;font-weight:600;color:#fff;}
+.topbar-sub{font-size:12px;color:#555;margin-top:2px;}
+
+.back-btn{
+  display:flex;align-items:center;gap:6px;
+  background:#131318;border:0.5px solid rgba(255,255,255,0.1);
+  border-radius:9px;padding:8px 14px;
+  color:#aaa;font-size:13px;text-decoration:none;
+  transition:background 0.15s,color 0.15s;
+}
+.back-btn:hover{background:#1e1e26;color:#fff;}
+
+/* ── FORM CARD ── */
+.form-card{
+  background:#131318;
+  border:0.5px solid rgba(255,255,255,0.08);
+  border-radius:16px;
+  padding:22px;
+  margin-bottom:28px;
+}
+
+.form-card-head{
+  display:flex;align-items:center;gap:10px;margin-bottom:20px;
+}
+
+.form-card-icon{
+  width:34px;height:34px;background:rgba(127,119,221,0.15);
+  border-radius:9px;display:flex;align-items:center;justify-content:center;
+  font-size:18px;
+}
+
+.form-card-title{font-size:15px;font-weight:600;color:#ddd;}
+.form-card-sub{font-size:12px;color:#555;margin-top:1px;}
+
+.form-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;
+}
+
+.field{display:flex;flex-direction:column;gap:6px;}
+.field-label{font-size:11px;color:#666;text-transform:uppercase;letter-spacing:0.06em;}
+
+.field input,.field textarea{
+  background:#1e1e26;color:#e8e8f0;
+  border:0.5px solid rgba(255,255,255,0.08);border-radius:9px;
+  padding:11px 14px;font-size:13px;font-family:'Poppins',sans-serif;
+  transition:border-color 0.15s,box-shadow 0.15s;resize:none;width:100%;
+}
+
+.field input:focus,.field textarea:focus{
+  outline:none;border-color:#7F77DD;
+  box-shadow:0 0 0 3px rgba(127,119,221,0.15);
+}
+
+.field input::placeholder,.field textarea::placeholder{color:#444;}
+
+.form-footer{
+  display:flex;align-items:center;justify-content:flex-end;gap:10px;
+  padding-top:16px;border-top:0.5px solid rgba(255,255,255,0.06);
+}
+
+.btn-cancel{
+  background:none;border:0.5px solid rgba(255,255,255,0.1);
+  border-radius:9px;padding:9px 18px;color:#888;
+  font-size:13px;font-family:'Poppins',sans-serif;cursor:pointer;
+  transition:background 0.15s,color 0.15s;
+}
+.btn-cancel:hover{background:rgba(255,255,255,0.05);color:#ddd;}
+
+.btn-save{
+  background:#7F77DD;border:none;border-radius:9px;
+  padding:9px 22px;color:#fff;font-size:13px;font-weight:600;
+  font-family:'Poppins',sans-serif;cursor:pointer;
+  display:flex;align-items:center;gap:7px;
+  transition:background 0.15s,transform 0.12s;
+}
+.btn-save:hover{background:#6b63c9;transform:translateY(-1px);}
+
+/* ── PACKAGES LIST ── */
+.section-label{
+  font-size:11px;color:#555;text-transform:uppercase;
+  letter-spacing:0.07em;margin-bottom:14px;
+}
+
+.packages-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;
+}
+
+.pkg-card{
+  background:#131318;
+  border:0.5px solid rgba(255,255,255,0.08);
+  border-radius:16px;padding:20px;
+  display:flex;flex-direction:column;
+  transition:border-color 0.2s;
+}
+
+.pkg-card:hover{border-color:rgba(127,119,221,0.35);}
+
+.pkg-name{font-size:16px;font-weight:600;color:#fff;margin-bottom:4px;}
+.pkg-price{font-size:22px;font-weight:700;color:#7F77DD;margin-bottom:14px;line-height:1;}
+
+.pkg-divider{
+  border:none;border-top:0.5px solid rgba(255,255,255,0.06);margin-bottom:14px;
+}
+
+.pkg-features{display:flex;flex-direction:column;gap:8px;margin-bottom:18px;flex:1;}
+
+.pkg-feature{
+  display:flex;align-items:flex-start;gap:8px;
+  font-size:12.5px;color:#999;line-height:1.4;
+}
+
+.feat-dot{
+  width:5px;height:5px;border-radius:50%;background:#534AB7;
+  flex-shrink:0;margin-top:5px;
+}
+
+.pkg-actions{display:flex;gap:8px;margin-top:auto;}
+
+.btn-edit{
+  flex:1;background:rgba(127,119,221,0.1);
+  border:0.5px solid rgba(127,119,221,0.25);border-radius:8px;
+  padding:8px;color:#AFA9EC;font-size:12.5px;font-weight:600;
+  font-family:'Poppins',sans-serif;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:5px;
+  transition:background 0.15s;
+}
+.btn-edit:hover{background:rgba(127,119,221,0.2);}
+
+.btn-del{
+  flex:1;background:rgba(226,75,74,0.08);
+  border:0.5px solid rgba(226,75,74,0.2);border-radius:8px;
+  padding:8px;color:#E24B4A;font-size:12.5px;font-weight:600;
+  font-family:'Poppins',sans-serif;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:5px;
+  transition:background 0.15s;
+}
+.btn-del:hover{background:rgba(226,75,74,0.15);}
+
+.empty-state{
+  text-align:center;padding:60px 20px;color:#444;
+  font-size:13px;grid-column:1/-1;
+}
+
+.toast{
+  position:fixed;bottom:28px;right:28px;
+  background:#1e1e26;border:0.5px solid rgba(127,119,221,0.3);
+  border-radius:10px;padding:12px 18px;
+  font-size:13px;color:#AFA9EC;
+  opacity:0;transform:translateY(8px);
+  transition:opacity 0.2s,transform 0.2s;
+  pointer-events:none;z-index:9999;
+}
+.toast.show{opacity:1;transform:translateY(0);}
+
+@media(max-width:900px){
+  .sidebar{display:none;}
+  .main{margin-left:0;padding:16px;}
+  .form-grid{grid-template-columns:1fr;}
+}
+</style>
 </head>
 <body>
 
-  <div class="container">
-
-    <div class="header">
-      <h1>Paket Harga</h1>
-
-      <a href="admin.html" class="back-btn">
-        ← Kembali Dashboard
-      </a>
-    </div>
-
-    <div class="card">
-
-      <h2>Tambah / Edit Paket</h2>
-
-      <form id="packageForm">
-
-        <input type="hidden" id="packageId">
-
-        <div class="form-grid">
-
-          <input
-            type="text"
-            id="name"
-            placeholder="Nama Paket"
-            required
-          >
-
-          <input
-            type="text"
-            id="price"
-            placeholder="Harga"
-            required
-          >
-
-          <input
-            type="text"
-            id="duration"
-            placeholder="Durasi"
-            required
-          >
-
-          <input
-            type="text"
-            id="files"
-            placeholder="File"
-            required
-          >
-
-          <input
-            type="text"
-            id="people"
-            placeholder="Jumlah Orang"
-            required
-          >
-
-          <textarea
-  id="bonus"
-  placeholder="Bonus"
-  rows="4"
-  required
-></textarea>
-
-        </div>
-
-        <button class="submit-btn" type="submit">
-          Simpan Paket
-        </button>
-
-      </form>
-
-    </div>
-
-    <div class="packages" id="packageList"></div>
-
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div class="sidebar-logo">
+    <div class="sidebar-logo-icon">📸</div>
+    <span class="sidebar-logo-text">DrSelf Studio</span>
   </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-<script>
+  <span class="nav-label">Menu Utama</span>
+  <a href="admin.html" class="nav-item"><span class="nav-icon">🏠</span> Dashboard</a>
+  <a href="booking.html" class="nav-item"><span class="nav-icon">📋</span> Customer Booking</a>
+  <a href="gallery.html" class="nav-item"><span class="nav-icon">🖼️</span> Galeri Website</a>
 
-const supabaseUrl = 'https://dokayeukqfzbkktnmcoy.supabase.co';
+  <span class="nav-label" style="margin-top:14px;">Konfigurasi</span>
+  <a href="packages.html" class="nav-item active"><span class="nav-icon">💰</span> Paket Harga</a>
+  <a href="template.html" class="nav-item"><span class="nav-icon">🎞️</span> Template Photostrip</a>
 
-const supabaseKey = 'sb_publishable_iUb2y0mBwhZN_Lkqq-PH_A_JCozJTxT';
+  <div class="sidebar-spacer"></div>
+  <div class="sidebar-user">
+    <div class="user-avatar">AD</div>
+    <div class="user-info">
+      <div class="user-name">Admin</div>
+      <div class="user-role">Super Admin</div>
+    </div>
+    <button class="logout-btn" onclick="logoutAdmin()" title="Logout">🚪</button>
+  </div>
+</div>
 
-const supabaseClient = supabase.createClient(
-  supabaseUrl,
-  supabaseKey
-)
+<!-- MAIN -->
+<div class="main">
 
-const packageForm = document.getElementById("packageForm")
-const packageList = document.getElementById("packageList")
+  <div class="topbar">
+    <div>
+      <div class="topbar-title">Paket Harga</div>
+      <div class="topbar-sub">Kelola paket yang ditampilkan ke pelanggan</div>
+    </div>
+    <a href="admin.html" class="back-btn">← Kembali ke dashboard</a>
+  </div>
 
-async function loadPackages(){
-
-  const { data, error } = await supabaseClient
-    .from("packages")
-    .select("*")
-    .order("id", { ascending:true })
-
-  if(error){
-    console.log(error)
-    return
-  }
-
-  packageList.innerHTML = data.map(pkg => `
-  
-    <div class="package-card">
-
-      <h3>${pkg.name}</h3>
-      <h4>${pkg.price}</h4>
-
-      <p>${pkg.duration}</p>
-      <p>${pkg.files}</p>
-      <p>${pkg.people}</p>
-      <p>${pkg.bonus}</p>
-
-      <div class="btn-group">
-
-        <button
-          class="edit-btn"
-          onclick="editPackage(${pkg.id})"
-        >
-          Edit
-        </button>
-
-        <button
-          class="delete-btn"
-          onclick="deletePackage(${pkg.id})"
-        >
-          Hapus
-        </button>
-
+  <!-- FORM -->
+  <div class="form-card">
+    <div class="form-card-head">
+      <div class="form-card-icon">➕</div>
+      <div>
+        <div class="form-card-title" id="formTitle">Tambah paket baru</div>
+        <div class="form-card-sub">Isi semua field lalu klik Simpan</div>
       </div>
-
     </div>
 
-  `).join("")
+    <form id="packageForm">
+      <input type="hidden" id="packageId">
+      <div class="form-grid">
+        <div class="field">
+          <span class="field-label">Nama paket</span>
+          <input type="text" id="name" placeholder="cth. Paket Premium" required>
+        </div>
+        <div class="field">
+          <span class="field-label">Harga (Rp)</span>
+          <input type="text" id="price" placeholder="cth. Rp 30.000" required>
+        </div>
+        <div class="field">
+          <span class="field-label">Durasi sesi</span>
+          <input type="text" id="duration" placeholder="cth. 13 menit" required>
+        </div>
+        <div class="field">
+          <span class="field-label">File digital</span>
+          <input type="text" id="files" placeholder="cth. Semua file digital HD" required>
+        </div>
+        <div class="field">
+          <span class="field-label">Jumlah orang</span>
+          <input type="text" id="people" placeholder="cth. Maks 6 orang" required>
+        </div>
+        <div class="field">
+          <span class="field-label">Bonus / catatan</span>
+          <textarea id="bonus" rows="2" placeholder="cth. Gratis 2 cetak foto + video stopmotion" required></textarea>
+        </div>
+      </div>
+      <div class="form-footer">
+        <button type="button" class="btn-cancel" onclick="resetForm()">Batal</button>
+        <button type="submit" class="btn-save">💾 Simpan paket</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- LIST -->
+  <div class="section-label" id="sectionLabel">Paket aktif</div>
+  <div class="packages-grid" id="packageList">
+    <div class="empty-state">Memuat paket...</div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const supabaseUrl = 'https://dokayeukqfzbkktnmcoy.supabase.co';
+const supabaseKey = 'sb_publishable_iUb2y0mBwhZN_Lkqq-PH_A_JCozJTxT';
+const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
+
+function logoutAdmin(){
+  localStorage.removeItem('admin_login');
+  window.location.href = 'admin.html';
 }
 
-loadPackages()
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2500);
+}
 
-packageForm.addEventListener("submit", async(e)=>{
+function resetForm(){
+  document.getElementById('packageForm').reset();
+  document.getElementById('packageId').value = '';
+  document.getElementById('formTitle').textContent = 'Tambah paket baru';
+}
 
-  e.preventDefault()
+async function loadPackages(){
+  const list = document.getElementById('packageList');
+  list.innerHTML = '<div class="empty-state">Memuat paket...</div>';
 
-  const id = document.getElementById("packageId").value
+  const {data, error} = await supabaseClient
+    .from('packages')
+    .select('*')
+    .order('id', {ascending:true});
 
-  const payload = {
-    name: document.getElementById("name").value,
-    price: document.getElementById("price").value,
-    duration: document.getElementById("duration").value,
-    files: document.getElementById("files").value,
-    people: document.getElementById("people").value,
-    bonus: document.getElementById("bonus").value,
-    active: true
+  if(error || !data || data.length === 0){
+    list.innerHTML = '<div class="empty-state">Belum ada paket. Tambahkan paket pertamamu di atas.</div>';
+    document.getElementById('sectionLabel').textContent = 'Paket aktif (0)';
+    return;
   }
+
+  document.getElementById('sectionLabel').textContent = `Paket aktif (${data.length})`;
+
+  list.innerHTML = data.map(pkg => `
+    <div class="pkg-card">
+      <div class="pkg-name">${pkg.name}</div>
+      <div class="pkg-price">${pkg.price}</div>
+      <hr class="pkg-divider">
+      <div class="pkg-features">
+        <div class="pkg-feature"><span class="feat-dot"></span>${pkg.duration}</div>
+        <div class="pkg-feature"><span class="feat-dot"></span>${pkg.files}</div>
+        <div class="pkg-feature"><span class="feat-dot"></span>${pkg.people}</div>
+        <div class="pkg-feature"><span class="feat-dot"></span>${pkg.bonus}</div>
+      </div>
+      <div class="pkg-actions">
+        <button class="btn-edit" onclick="editPackage(${pkg.id})">✏️ Edit</button>
+        <button class="btn-del" onclick="deletePackage(${pkg.id})">🗑️ Hapus</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+document.getElementById('packageForm').addEventListener('submit', async(e)=>{
+  e.preventDefault();
+  const btn = e.target.querySelector('.btn-save');
+  btn.textContent = 'Menyimpan...';
+  btn.disabled = true;
+
+  const id = document.getElementById('packageId').value;
+  const payload = {
+    name:     document.getElementById('name').value,
+    price:    document.getElementById('price').value,
+    duration: document.getElementById('duration').value,
+    files:    document.getElementById('files').value,
+    people:   document.getElementById('people').value,
+    bonus:    document.getElementById('bonus').value,
+    active:   true,
+  };
 
   if(id){
-
-    await supabaseClient
-      .from("packages")
-      .update(payload)
-      .eq("id", id)
-
+    await supabaseClient.from('packages').update(payload).eq('id', id);
+    showToast('✅ Paket berhasil diperbarui');
   }else{
-
-    await supabaseClient
-      .from("packages")
-      .insert([payload])
-
+    await supabaseClient.from('packages').insert([payload]);
+    showToast('✅ Paket baru berhasil ditambahkan');
   }
 
-  packageForm.reset()
-
-  loadPackages()
-})
+  resetForm();
+  btn.textContent = '💾 Simpan paket';
+  btn.disabled = false;
+  loadPackages();
+});
 
 async function deletePackage(id){
-
-  await supabaseClient
-    .from("packages")
-    .delete()
-    .eq("id", id)
-
-  loadPackages()
+  if(!confirm('Hapus paket ini?')) return;
+  await supabaseClient.from('packages').delete().eq('id', id);
+  showToast('🗑️ Paket dihapus');
+  loadPackages();
 }
 
 async function editPackage(id){
-
-  const { data } = await supabaseClient
-    .from("packages")
-    .select("*")
-    .eq("id", id)
-    .single()
-
-  document.getElementById("packageId").value = data.id
-  document.getElementById("name").value = data.name
-  document.getElementById("price").value = data.price
-  document.getElementById("duration").value = data.duration
-  document.getElementById("files").value = data.files
-  document.getElementById("people").value = data.people
-  document.getElementById("bonus").value = data.bonus
+  const {data} = await supabaseClient
+    .from('packages').select('*').eq('id', id).single();
+  document.getElementById('packageId').value  = data.id;
+  document.getElementById('name').value       = data.name;
+  document.getElementById('price').value      = data.price;
+  document.getElementById('duration').value   = data.duration;
+  document.getElementById('files').value      = data.files;
+  document.getElementById('people').value     = data.people;
+  document.getElementById('bonus').value      = data.bonus;
+  document.getElementById('formTitle').textContent = `Edit paket — ${data.name}`;
+  window.scrollTo({top:0, behavior:'smooth'});
 }
 
+loadPackages();
 </script>
 </body>
 </html>
