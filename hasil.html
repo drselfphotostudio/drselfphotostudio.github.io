@@ -1,1473 +1,597 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Hasil Foto Studio</title>
-
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Hasil Foto Studio – DrSelf</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
+<script src="https://cdn.jsdelivr.net/npm/@panzoom/panzoom/dist/panzoom.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-  .photo-number{
-  position:absolute;
-  top:10px;
-  left:10px;
-  background:#25D366;
-  color:white;
-  padding:5px 10px;
-  border-radius:8px;
-  font-size:12px;
-  font-weight:700;
-  z-index:10;
-}
+*{box-sizing:border-box;margin:0;padding:0;scrollbar-width:none;}
+::-webkit-scrollbar{display:none;}
 
-.photo-name{
-  font-size:11px;
-  color:#ccc;
-  word-break:break-all;
-}
-
-.photo-info{
-  padding:12px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:10px;
-}
-
-.download-btn{
-  background:none;
-  border:none;
-  color:#25D366;
-  font-size:12px;
-  font-weight:700;
-  cursor:pointer;
-  white-space:nowrap;
-}
-  .photostrip{
-  position:relative;
-  width:600px;
-  height:1750px;
-  margin:auto;
-  transform:translateY(-400px);
-  z-index:1;
-}
-
-.photostrip .slot{
-  position:absolute;
-  object-fit:cover;
-  border-radius:22px;
-}
-
-.photostrip-template{
-  position:absolute;
-  inset:0;
-  width:100%;
-  height:100%;
-  object-fit:contain;
-  pointer-events:none;
-}
-  .strip-wrapper{
-  position:relative;
-  width:100%;
-  aspect-ratio:9/16;
-  overflow:hidden;
-  border-radius:20px;
-}
-
-.photo-bg{
-  position:absolute;
-  inset:0;
-  width:100%;
-  height:100%;
-  background-size:cover;
-  background-position:center;
-}
-
-.strip-layer{
-  position:absolute;
-  inset:0;
-  width:100%;
-  height:100%;
-  object-fit:contain;
-  pointer-events:none;
-}
-.mode-picker{
-  display:flex;
-  gap:20px;
-  justify-content:center;
-  align-items:flex-start;
-  margin:30px 0;
-  flex-wrap:wrap;
-}
-
-.mode-picker button{
-  background:#1f1f1f;
-  border:2px solid #25D366;
-  color:white;
-  padding:12px 20px;
-  border-radius:14px;
-  cursor:pointer;
-  font-weight:600;
-  transition:0.2s;
-}
-
-.mode-picker button:hover{
-  background:#25D366;
-}
-  .template-btn{
-  width:120px;
-  background:#1e1e1e;
-  border:2px solid #25D366;
-  border-radius:22px;
-  overflow:hidden;
-  cursor:pointer;
-  transition:0.25s;
-  color:white;
-}
-
-.template-btn:hover{
-  transform:translateY(-5px);
-  background:#25D366;
-}
-
-.template-btn img{
-  width:100%;
-  height:180px;
-  object-fit:cover;
-  display:block;
-}
-
-.template-btn p{
-  margin:10px 0;
-  text-align:center;
-  font-weight:600;
-}
 body{
-  margin:0;
-  background:#111;
-  color:white;
-  font-family:Arial,sans-serif;
-  padding:20px;
-  box-sizing:border-box;
+  background:#08080a;
+  color:#e8e8f0;
+  font-family:'Poppins',sans-serif;
   min-height:100vh;
   overflow-x:hidden;
 }
-  *{
-  scroll-behavior:smooth;
-}
-  *{
-  scrollbar-width:none;
-}
 
-::-webkit-scrollbar{
-  display:none;
-}
-
-.container{
-  max-width:1400px;
-  margin:auto;
-  padding-bottom:100px;
-}
-
-h1{
+/* ── HERO ── */
+.hero{
   text-align:center;
-  margin-bottom:35px;
-  font-size:42px;
-  font-weight:800;
-  letter-spacing:1px;
-}
-
-.album-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-  gap:20px;
-  margin-bottom:40px;
-}
-
-.album-card{
-  background:#1e1e1e;
-  border-radius:20px;
-  padding:25px;
-  cursor:pointer;
-  transition:0.2s;
-  text-align:center;
-  box-shadow:0 5px 20px rgba(0,0,0,0.25);
-}
-
-.album-card:hover{
-  transform:translateY(-5px);
-  background:#25D366;
-}
-.album-card h3{
-  margin:0;
-  font-size:20px;
-}
-
-.album-card:hover h3{
-  color:white;
-}
-.album-icon{
-  font-size:50px;
-  margin-bottom:15px;
-}
-
-.album-card:hover{
-  box-shadow:0 10px 30px rgba(37,211,102,0.25);
-}
-.gallery{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-  gap:18px;
-  padding-bottom:120px;
-  align-items:start;
-}
-
-.photo-card img{
-  width:100%;
-  aspect-ratio:4/5;
-  object-fit:cover;
-  display:block;
-  transition:0.3s;
-  border-bottom:1px solid rgba(255,255,255,0.05);
-  box-shadow:0 5px 20px rgba(0,0,0,0.2);
-  will-change:transform;
-}
-.photo-card{
-  background:#161616;
-  border-radius:24px;
-  overflow:hidden;
+  padding:56px 20px 40px;
   position:relative;
-  transition:0.25s;
-  display:flex;
-  flex-direction:column;
-  border:1px solid rgba(255,255,255,0.04);
-  backdrop-filter:blur(10px);
-  box-shadow:0 10px 30px rgba(0,0,0,.35);
 }
-  
-  .photo-info{
-  padding:18px;
-  background:#181818;
-  display:flex;
-  flex-direction:column;
-  gap:14px;
-  margin-top:auto;
-}
-
-.photo-card::after{
-  content:'';
-  position:absolute;
-  inset:0;
-  background:linear-gradient(
-    to top,
-    rgba(0,0,0,0.25),
-    transparent
-  );
-  opacity:0;
-  transition:0.25s;
+.hero::before{
+  content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);
+  width:600px;height:280px;
+  background:radial-gradient(ellipse at top,rgba(127,119,221,0.16) 0%,transparent 70%);
   pointer-events:none;
 }
+.studio-badge{
+  display:inline-flex;align-items:center;gap:7px;
+  background:rgba(127,119,221,0.1);border:0.5px solid rgba(127,119,221,0.25);
+  border-radius:20px;padding:5px 14px;
+  font-size:12px;color:#AFA9EC;font-weight:500;margin-bottom:22px;letter-spacing:0.04em;
+}
+.hero h1{font-size:46px;font-weight:800;color:#fff;line-height:1.1;margin-bottom:10px;}
+.hero h1 span{background:linear-gradient(135deg,#7F77DD,#AFA9EC);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.hero-sub{font-size:14px;color:#555;margin-bottom:28px;}
+.back-btn{
+  display:inline-flex;align-items:center;gap:7px;
+  background:#131318;border:0.5px solid rgba(255,255,255,0.1);
+  border-radius:10px;padding:9px 18px;
+  color:#888;font-size:13px;cursor:pointer;text-decoration:none;
+  transition:background 0.15s,color 0.15s;
+}
+.back-btn:hover{background:#1e1e26;color:#ddd;}
 
-.photo-card:hover::after{
-  opacity:1;
+/* ── SEARCH ── */
+.search-wrap{
+  max-width:540px;margin:0 auto 32px;
+  background:#131318;border:0.5px solid rgba(255,255,255,0.08);
+  border-radius:14px;padding:18px 20px;
+  display:flex;align-items:center;gap:10px;flex-wrap:wrap;
 }
-.photo-card:hover img{
-  transform:scale(1.03);
+.search-label{font-size:12px;color:#AFA9EC;font-weight:500;white-space:nowrap;}
+.search-input{
+  flex:1;min-width:180px;
+  background:#1e1e26;color:#fff;
+  border:0.5px solid rgba(255,255,255,0.08);border-radius:9px;
+  padding:10px 14px;font-size:13px;font-family:'Poppins',sans-serif;
+  transition:border-color 0.15s,box-shadow 0.15s;
 }
- 
-.photo-card:hover{
-  transform:translateY(-5px);
-  box-shadow:
-0 10px 30px rgba(0,0,0,0.35),
-0 0 0 1px rgba(37,211,102,0.08);
+.search-input:focus{outline:none;border-color:#7F77DD;box-shadow:0 0 0 3px rgba(127,119,221,0.15);}
+.search-input::placeholder{color:#444;}
+.search-btn{
+  background:#7F77DD;border:none;border-radius:9px;
+  padding:10px 18px;color:#fff;font-size:13px;font-weight:600;
+  font-family:'Poppins',sans-serif;cursor:pointer;
+  transition:background 0.15s;white-space:nowrap;
 }
+.search-btn:hover{background:#6b63c9;}
 
-.photo-info label{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  margin-bottom:15px;
+/* ── STATUS CARD ── */
+.status-card{
+  max-width:1100px;margin:0 auto 24px;
+  background:#131318;border:0.5px solid rgba(255,255,255,0.07);
+  border-radius:14px;padding:18px 22px;
+  display:flex;align-items:center;gap:16px;
 }
+.status-icon-wrap{
+  width:44px;height:44px;border-radius:11px;
+  background:rgba(127,119,221,0.12);
+  display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;
+}
+.status-info{flex:1;min-width:0;}
+.status-title{font-size:15px;font-weight:600;color:#ddd;}
+.status-sub{font-size:12px;color:#555;margin-top:2px;}
+.status-pill{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:4px 12px;border-radius:20px;font-size:11.5px;font-weight:500;
+  margin-top:7px;
+}
+.pill-waiting{background:rgba(186,117,23,0.12);color:#EF9F27;}
+.pill-found{background:rgba(29,158,117,0.12);color:#1D9E75;}
+.pill-error{background:rgba(226,75,74,0.1);color:#E24B4A;}
+.status-actions{display:flex;gap:8px;flex-shrink:0;}
+.sel-all-btn{
+  background:#1e1e26;border:0.5px solid rgba(255,255,255,0.08);
+  border-radius:8px;padding:7px 13px;color:#888;font-size:12px;
+  font-family:'Poppins',sans-serif;cursor:pointer;transition:background 0.15s;
+}
+.sel-all-btn:hover{background:#282830;color:#ddd;}
 
-#printBtn{
-  position:fixed;
-  bottom:25px;
-  right:25px;
-  background:#25D366;
-  color:white;
-  border:none;
-  padding:16px 24px;
-  border-radius:50px;
-  font-size:16px;
-  font-weight:700;
-  cursor:pointer;
+/* ── MODE PICKER ── */
+.mode-section{max-width:1100px;margin:0 auto 20px;padding:0 20px;}
+.mode-label{font-size:11px;color:#555;text-transform:uppercase;letter-spacing:0.07em;margin-bottom:12px;}
+.mode-picker{display:flex;gap:10px;flex-wrap:wrap;}
+.mode-btn{
+  display:flex;flex-direction:column;align-items:center;gap:6px;
+  background:#131318;border:0.5px solid rgba(255,255,255,0.08);
+  border-radius:12px;overflow:hidden;cursor:pointer;
+  transition:border-color 0.2s,transform 0.2s;width:100px;
+  font-family:'Poppins',sans-serif;
+}
+.mode-btn:hover{border-color:rgba(127,119,221,0.35);transform:translateY(-2px);}
+.mode-btn.active{border-color:#7F77DD;background:rgba(127,119,221,0.08);}
+.mode-btn-img{width:100%;height:90px;object-fit:cover;display:block;}
+.mode-btn-placeholder{width:100%;height:90px;display:flex;align-items:center;justify-content:center;font-size:24px;background:#1e1e26;}
+.mode-btn-label{font-size:11px;font-weight:500;color:#888;padding:6px 4px;text-align:center;}
+.mode-btn.active .mode-btn-label{color:#AFA9EC;}
+
+/* ── SLOT SELECTOR ── */
+.slot-panel{
+  max-width:1100px;margin:0 auto 20px;
+  background:#131318;border:0.5px solid rgba(255,255,255,0.07);
+  border-radius:14px;padding:18px 20px;
   display:none;
-  box-shadow:0 10px 30px rgba(37,211,102,0.35);
-  transition:0.2s;
 }
+.slot-panel h3{font-size:14px;font-weight:600;color:#ddd;margin-bottom:14px;}
+.slot-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;}
+.slot-select{
+  background:#1e1e26;color:#ddd;border:0.5px solid rgba(255,255,255,0.08);
+  border-radius:8px;padding:8px 12px;font-size:12px;font-family:'Poppins',sans-serif;
+  width:100%;cursor:pointer;
+}
+.slot-label{font-size:11px;color:#555;margin-bottom:5px;}
 
-#printBtn:hover{
-  transform:translateY(-3px);
+/* ── GALLERY ── */
+.gallery-wrap{max-width:1100px;margin:0 auto;padding:0 20px 80px;}
+.gallery{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
+  gap:14px;
 }
+.photo-card{
+  background:#131318;border:0.5px solid rgba(255,255,255,0.07);
+  border-radius:14px;overflow:hidden;position:relative;
+  transition:border-color 0.2s,transform 0.2s;
+  display:flex;flex-direction:column;
+}
+.photo-card:hover{border-color:rgba(127,119,221,0.35);transform:translateY(-3px);}
+.photo-num{
+  position:absolute;top:10px;left:10px;
+  background:rgba(10,10,12,0.7);backdrop-filter:blur(6px);
+  border:0.5px solid rgba(255,255,255,0.1);
+  color:#AFA9EC;font-size:11px;font-weight:700;
+  padding:3px 8px;border-radius:6px;z-index:5;font-family:monospace;
+}
+.photo-card img{
+  width:100%;aspect-ratio:4/5;object-fit:cover;display:block;
+  cursor:zoom-in;transition:opacity 0.2s;
+}
+.photo-card img:hover{opacity:0.88;}
+.photo-info{
+  padding:12px 14px 14px;
+  border-top:0.5px solid rgba(255,255,255,0.05);
+  display:flex;align-items:center;justify-content:space-between;gap:8px;
+}
+.photo-fname{font-size:11px;color:#555;font-family:monospace;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;}
+.print-btn{
+  display:inline-flex;align-items:center;gap:5px;
+  background:rgba(127,119,221,0.1);border:0.5px solid rgba(127,119,221,0.2);
+  border-radius:7px;padding:5px 10px;color:#AFA9EC;font-size:11.5px;
+  font-family:'Poppins',sans-serif;cursor:pointer;white-space:nowrap;transition:background 0.15s;
+}
+.print-btn:hover{background:rgba(127,119,221,0.2);}
 
-.back-btn:hover{
-  transform:translateY(-2px);
+/* ── PHOTOSTRIP ── */
+.photostrip-wrap{
+  max-width:640px;margin:0 auto;padding:0 20px 80px;
+  display:flex;justify-content:center;
 }
-#previewModal{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,0.92);
-  display:none;
-  justify-content:center;
-  align-items:center;
-  z-index:9999;
-  padding:20px;
-  box-sizing:border-box;
-}
+.photostrip{position:relative;width:600px;height:1750px;}
+.photostrip .slot{position:absolute;object-fit:cover;border-radius:22px;}
+.photostrip-template{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;pointer-events:none;}
 
-#previewModal img{
-  width:auto;
-  height:auto;
-  max-width:90vw;
-  max-height:90vh;
-  display:block;
-  margin:auto;
-  border-radius:20px;
-  box-shadow:0 10px 40px rgba(0,0,0,0.5);
-  object-fit:contain;
-  animation:zoomPreview 0.2s ease;
-  cursor:grab;
-  user-select:none;
-  -webkit-user-drag:none;
-  touch-action:none;
+/* ── STATE ── */
+.state-wrap{
+  max-width:1100px;margin:0 auto;
+  text-align:center;padding:60px 20px;
+  display:flex;flex-direction:column;align-items:center;gap:10px;
 }
-  @keyframes zoomPreview{
-  from{
-    transform:scale(0.95);
-    opacity:0;
-  }
-  to{
-    transform:scale(1);
-    opacity:1;
-  }
-}
-#previewModal{
-  animation:fadePreview 0.2s ease;
-}
+.state-icon{font-size:44px;}
+.state-title{font-size:15px;font-weight:600;color:#ddd;}
+.state-sub{font-size:13px;color:#555;}
 
-@keyframes fadePreview{
-  from{
-    opacity:0;
-  }
-  to{
-    opacity:1;
-  }
+/* ── MODAL ── */
+.modal{
+  position:fixed;inset:0;
+  background:rgba(0,0,0,0.92);backdrop-filter:blur(8px);
+  display:none;justify-content:center;align-items:center;
+  z-index:9999;padding:20px;
 }
-#previewModal span{
-  position:absolute;
-  top:20px;
-  right:25px;
-  font-size:35px;
-  color:white;
-  cursor:pointer;
-  transition:0.2s;
+.modal.open{display:flex;}
+.modal-inner{position:relative;max-width:95vw;max-height:95vh;}
+.modal img{max-width:95vw;max-height:90vh;border-radius:14px;object-fit:contain;display:block;cursor:grab;}
+.modal-close{
+  position:absolute;top:-14px;right:-14px;
+  width:32px;height:32px;
+  background:#1e1e26;border:0.5px solid rgba(255,255,255,0.1);
+  border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:16px;cursor:pointer;color:#aaa;transition:background 0.15s;
 }
-  #previewModal span:hover{
-  transform:scale(1.1);
-  opacity:0.8;
+.modal-close:hover{background:#2e2e3a;color:#fff;}
+.modal-nav{
+  position:absolute;top:50%;transform:translateY(-50%);
+  width:36px;height:36px;background:rgba(30,30,38,0.85);
+  border:0.5px solid rgba(255,255,255,0.1);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;color:#ddd;font-size:18px;transition:background 0.15s;
 }
-  .nav-btn{
-  position:absolute;
-  top:50%;
-  transform:translateY(-50%);
-  width:60px;
-  height:60px;
-  border:none;
-  border-radius:50%;
-  background:rgba(255,255,255,0.15);
-  color:white;
-  font-size:32px;
-  cursor:pointer;
-  backdrop-filter:blur(10px);
-  transition:0.2s;
-  z-index:10000;
-}
+.modal-nav:hover{background:rgba(127,119,221,0.25);}
+.modal-prev{left:-48px;}
+.modal-next{right:-48px;}
 
-.nav-btn:hover{
-  background:rgba(255,255,255,0.25);
+/* ── TOAST ── */
+.toast{
+  position:fixed;bottom:24px;right:24px;
+  background:#1e1e26;border:0.5px solid rgba(127,119,221,0.3);
+  border-radius:10px;padding:10px 16px;
+  font-size:13px;color:#AFA9EC;
+  opacity:0;transform:translateY(8px);
+  transition:opacity 0.2s,transform 0.2s;pointer-events:none;z-index:99999;
 }
+.toast.show{opacity:1;transform:translateY(0);}
 
-.left{
-  left:20px;
-}
-
-.right{
-  right:20px;
-}
-  .search-card{
-  max-width:1100px;
-  margin:auto;
-  margin-bottom:40px;
-  padding:30px;
-  background:#1a1a1a;
-  border-radius:24px;
-  box-shadow:0 10px 40px rgba(0,0,0,.3);
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  gap:15px;
-  flex-wrap:wrap;
-}
-  .status-card{
-  max-width:1200px;
-  margin:auto;
-  background:#1a1a1a;
-  border-radius:24px;
-  padding:25px;
-  margin-bottom:35px;
-  box-shadow:0 10px 40px rgba(0,0,0,.3);
-}
-
-.status-left{
-  display:flex;
-  align-items:center;
-  gap:20px;
-}
-
-.status-icon{
-  width:70px;
-  height:70px;
-  border-radius:50%;
-  background:rgba(37,211,102,.15);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:30px;
-}
-  .status-badge{
-  display:inline-flex;
-  align-items:center;
-  gap:6px;
-  margin-top:12px;
-  padding:10px 16px;
-  border-radius:999px;
-  background:#25D366;
-  color:white;
-  font-size:13px;
-  font-weight:700;
-  box-shadow:0 4px 15px rgba(37,211,102,.3);
-}
-  .hero-section{
-  text-align:center;
-  margin-bottom:50px;
-}
-
-.hero-icon{
-  font-size:50px;
-  color:#25D366;
-  margin-bottom:15px;
-}
-
-.hero-subtitle{
-  color:#aaa;
-  font-size:18px;
-  margin-top:-10px;
-  margin-bottom:30px;
-}
-
-.hero-back-btn{
-  background:#25D366;
-  color:white;
-  border:none;
-  padding:16px 35px;
-  border-radius:16px;
-  font-weight:700;
-  cursor:pointer;
-  font-size:16px;
+@media(max-width:600px){
+  .hero h1{font-size:32px;}
+  .gallery{grid-template-columns:1fr 1fr;}
+  .modal-prev{left:-10px;}
+  .modal-next{right:-10px;}
 }
 </style>
 </head>
-
 <body>
 
-<div class="container">
+<!-- HERO -->
+<div class="hero">
+  <div class="studio-badge">📸 DR Self Photo Studio</div>
+  <h1>Hasil <span>Foto</span> Studio</h1>
+  <p class="hero-sub">Cari dan lihat hasil foto berdasarkan kode booking</p>
+  <button class="back-btn" id="backBtn" onclick="window.location.href='booking.html'" style="display:none;">← Kembali ke Customer Booking</button>
+</div>
 
-<div class="hero-section">
+<!-- SEARCH -->
+<div class="search-wrap">
+  <span class="search-label">🔖 Kode Booking</span>
+  <input type="text" id="searchKode" class="search-input" placeholder="Masukkan kode booking..." onkeypress="if(event.key==='Enter')searchAlbum()">
+  <button class="search-btn" onclick="searchAlbum()">🔍 Cari Foto</button>
+</div>
 
-  <div class="hero-icon">
-    📷
+<!-- STATUS -->
+<div class="status-card" id="statusCard">
+  <div class="status-icon-wrap">🖼️</div>
+  <div class="status-info">
+    <div class="status-title" id="statusTitle">Belum ada pencarian</div>
+    <div class="status-sub" id="statusSub">Masukkan kode booking di atas</div>
+    <div class="status-pill pill-waiting" id="statusPill">Menunggu Pencarian</div>
   </div>
-
-  <h1>Hasil Foto Studio</h1>
-
-  <p class="hero-subtitle">
-    Cari dan lihat hasil foto berdasarkan kode booking
-  </p>
-
-  <button
-onclick="backToCustomerBooking()"
-class="hero-back-btn"
->
-← Kembali Customer Booking
-</button>
-
-</div>
-  
- <div class="search-card">
-
-<div style="
-color:#25D366;
-font-weight:700;
-font-size:15px;
-">
-🔖 Kode Booking
+  <div class="status-actions">
+    <button class="sel-all-btn" onclick="selectAllPhotos()">☑ Pilih Semua</button>
+  </div>
 </div>
 
-<input
-type="text"
-id="searchKode"
-placeholder="Masukkan Kode Booking"
-style="
-padding:14px 18px;
-border:none;
-border-radius:12px;
-width:280px;
-font-size:16px;
-outline:none;
-"
->
-
-<button
-onclick="searchAlbum()"
-style="
-background:#25D366;
-border:none;
-padding:14px 20px;
-border-radius:8px;
-color:white;
-font-weight:600;
-cursor:pointer;
-"
->
-🔍 Cari Foto
-</button>
-
-</div>
-    
-<div
-id="albumList"
-class="album-grid"
-style="display:none;"
-></div>
-
-<div class="status-card">
-
-<div class="status-left">
-
-<div class="status-icon">
-🖼️
+<!-- MODE PICKER -->
+<div class="mode-section" id="modeSection" style="display:none;">
+  <div class="mode-label">Pilih tampilan</div>
+  <div class="mode-picker" id="templateContainer"></div>
 </div>
 
-<div>
-
-<h2 id="statusTitle">
-Belum ada foto
-</h2>
-
-<p id="statusKode">
-Masukkan kode booking
-</p>
-
-<div
-id="statusBadge"
-class="status-badge"
->
-Menunggu Pencarian
+<!-- SLOT SELECTOR -->
+<div class="slot-panel" id="slotPanel">
+  <h3>Atur Posisi Foto di Photostrip</h3>
+  <div class="slot-grid" id="slotSelector"></div>
 </div>
 
+<!-- GALLERY / PHOTOSTRIP -->
+<div class="gallery-wrap" id="galleryWrap">
+  <div class="state-wrap" id="stateWrap" style="display:none;"></div>
+  <div class="gallery" id="gallery"></div>
+</div>
+<div class="photostrip-wrap" id="photostripWrap" style="display:none;">
+  <div class="photostrip" id="photostripEl"></div>
 </div>
 
-<div style="margin-left:auto;">
-
-<button
-onclick="selectAllPhotos()"
-style="
-background:#2b2b2b;
-color:white;
-border:none;
-padding:10px 14px;
-border-radius:10px;
-cursor:pointer;
-"
->
-☑ Pilih Semua
-</button>
-
+<!-- PREVIEW MODAL -->
+<div class="modal" id="previewModal" onclick="handleModalBg(event)">
+  <div class="modal-inner">
+    <div class="modal-close" onclick="closePreview()">×</div>
+    <div class="modal-nav modal-prev" onclick="navPhoto(-1)">‹</div>
+    <img id="previewImage" src="" alt="Preview">
+    <div class="modal-nav modal-next" onclick="navPhoto(1)">›</div>
+  </div>
 </div>
 
-</div>
+<div class="toast" id="toast"></div>
 
-</div>
-
-  <div class="mode-picker">
-    <div id="photoSelector" style="
-display:none;
-max-width:500px;
-margin:20px auto;
-background:#1a1a1a;
-padding:20px;
-border-radius:20px;
-position:relative;
-z-index:9999;
-">
-
-<h3>Pilih Foto Photostrip</h3>
-
-<div style="display:grid;gap:15px;">
-
-<div id="slotSelector"></div>
-
-</div>
-
-</div>
-<div
-id="templateContainer"
-class="mode-picker">
-</div>
-
-</div>
-
-<div class="gallery" id="gallery"></div>
 <script>
+const supabaseUrl = 'https://dokayeukqfzbkktnmcoy.supabase.co';
+const supabaseKey = 'sb_publishable_iUb2y0mBwhZN_Lkqq-PH_A_JCozJTxT';
+const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
 
-const supabaseUrl =
-'https://dokayeukqfzbkktnmcoy.supabase.co';
+const urlParams     = new URLSearchParams(window.location.search);
+const kodeFromUrl   = urlParams.get('kode') || '';
+const isAdmin       = urlParams.get('admin') === '1';
 
-const supabaseKey =
-'sb_publishable_iUb2y0mBwhZN_Lkqq-PH_A_JCozJTxT';
-
-const supabaseClient =
-supabase.createClient(
-  supabaseUrl,
-  supabaseKey
-);
-
-let selectedPhotos = [];
-  let currentMode = 'original';
+let allTemplates    = [];
+let currentImages   = [];
+let currentIndex    = 0;
+let currentMode     = 'original';
 let currentTemplate = '';
-  let currentTemplateData = null;
-  let allTemplates = [];
-let currentKodeBooking = '';
+let currentTemplateData = null;
+let currentKode     = '';
+let panzoomInstance = null;
 
-const urlParams =
-new URLSearchParams(window.location.search);
+// show back btn for admin
+if(isAdmin) document.getElementById('backBtn').style.display = 'inline-flex';
 
-const kodeBooking =
-urlParams.get('kode');
-
-  function backToCustomerBooking(){
-
-  window.location.href =
-  'booking.html';
-
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2600);
 }
-const isAdmin =
-urlParams.get('admin') === '1';
 
-loadTemplates();
+function setStatus(icon, title, sub, pillClass, pillTxt){
+  document.querySelector('.status-icon-wrap').textContent = icon;
+  document.getElementById('statusTitle').textContent = title;
+  document.getElementById('statusSub').textContent   = sub;
+  const p = document.getElementById('statusPill');
+  p.className = 'status-pill '+pillClass;
+  p.textContent = pillTxt;
+}
 
-window.addEventListener('DOMContentLoaded', () => {
+function setState(icon, title, sub){
+  const w = document.getElementById('stateWrap');
+  w.style.display = 'flex';
+  w.innerHTML = `<div class="state-icon">${icon}</div><div class="state-title">${title}</div><div class="state-sub">${sub}</div>`;
+  document.getElementById('gallery').innerHTML = '';
+}
 
-  if(!isAdmin){
+function clearState(){
+  document.getElementById('stateWrap').style.display = 'none';
+}
 
-    document.querySelector('.hero-back-btn').style.display = 'none';
+/* ── TEMPLATES ── */
+async function loadTemplates(){
+  try{
+    const {data,error} = await supabaseClient.from('template').select('*').order('id',{ascending:true});
+    if(error) throw error;
+    allTemplates = data||[];
+    buildModePicker();
+  }catch(e){ console.warn('loadTemplates error', e); buildModePicker(); }
+}
 
-  }
+function buildModePicker(){
+  const c = document.getElementById('templateContainer');
+  c.innerHTML = '';
 
-  if(kodeBooking){
+  // Original
+  const orig = document.createElement('button');
+  orig.className = 'mode-btn active';
+  orig.id = 'modeBtn-original';
+  orig.onclick = ()=>setMode('original','',null);
+  orig.innerHTML = `<div class="mode-btn-placeholder">🖼️</div><div class="mode-btn-label">Tanpa Frame</div>`;
+  c.appendChild(orig);
 
-    document.getElementById('searchKode').value = kodeBooking;
+  // Stop Motion
+  const sm = document.createElement('button');
+  sm.className = 'mode-btn';
+  sm.onclick = openStopmotion;
+  sm.innerHTML = `<div class="mode-btn-placeholder">🎞️</div><div class="mode-btn-label">Stop Motion</div>`;
+  c.appendChild(sm);
 
-    openAlbum(kodeBooking);
-
-  }
-
-});
-  
-async function loadAlbums(){
-
-  const albumList =
-    document.getElementById('albumList');
-
-  albumList.innerHTML = '';
-
-  const { data, error } =
-    await supabaseClient
-      .storage
-      .from('customer-photo')
-      .list('', {
-        limit:100
-      });
-
-  if(error){
-
-    console.log(error);
-
-    return;
-  }
-
-  data.forEach(folder => {
-
-    if(folder.id === null){
-
-      albumList.innerHTML += `
-
-<div
-class="album-card"
-onclick="openAlbum('${folder.name}')"
->
-
-<div class="album-icon">
-📁
-</div>
-
-<h3>${folder.name}</h3>
-
-</div>
-
-`;
-
-    }
-
+  allTemplates.forEach(item=>{
+    const btn = document.createElement('button');
+    btn.className = 'mode-btn';
+    btn.id = 'modeBtn-'+item.id;
+    btn.onclick = ()=>setMode('template', item.image_url, item.id);
+    btn.innerHTML = `<img class="mode-btn-img" src="${item.image_url}" alt="${item.name}"><div class="mode-btn-label">${item.name}</div>`;
+    c.appendChild(btn);
   });
-
 }
 
-async function openAlbum(kodeBooking){
+function setMode(mode, templateUrl, templateId){
+  currentMode = mode;
+  currentTemplate = templateUrl;
+  currentTemplateData = templateId ? allTemplates.find(t=>t.id==templateId) : null;
 
-  currentKodeBooking = kodeBooking;
+  document.querySelectorAll('.mode-btn').forEach(b=>b.classList.remove('active'));
+  const active = document.getElementById('modeBtn-'+(templateId||'original'));
+  if(active) active.classList.add('active');
 
-  selectedPhotos = [];
-
-  document.getElementById('albumList')
-    .style.display = 'none';
-
-    const gallery =
-    document.getElementById('gallery');
-document.getElementById(
-'statusTitle'
-).innerHTML =
-'📸 Mengambil Foto...';
-
-document.getElementById(
-'statusKode'
-).innerHTML =
-'Mohon tunggu';
-  document.getElementById(
-'statusBadge'
-).innerHTML =
-'⏳ Memuat...';
-
-gallery.innerHTML = '';
-  
-  const { data, error } =
-    await supabaseClient
-      .storage
-      .from('customer-photo')
-      .list(kodeBooking);
-  const photos =
-  data.filter(file => file.name !== '.keep');
-
-    if(error){
-
-  console.log(error);
-
-  document.getElementById(
-  'statusTitle'
-  ).innerHTML =
-  '❌ Gagal Mengambil Foto';
-
-  document.getElementById(
-  'statusKode'
-  ).innerHTML =
-  `Kode Booking: ${kodeBooking}`;
-      document.getElementById(
-'statusBadge'
-).innerHTML =
-'🔴 Tidak Ditemukan';
-    
-  return;
+  if(currentKode) openAlbum(currentKode);
 }
 
-  document.getElementById(
-'statusTitle'
-).innerHTML =
-`${photos.length} Foto Ditemukan`
-
-document.getElementById(
-'statusKode'
-).innerHTML =
-`Kode Booking: ${kodeBooking}`;
-
-  document.getElementById(
-'statusBadge'
-).innerHTML =
-'🟢 Siap Dilihat';
-  
-  currentImages = photos.map(file =>
-`${supabaseUrl}/storage/v1/object/public/customer-photo/${kodeBooking}/${file.name}`
-);
-const selector =
-document.getElementById('photoSelector');
-
-if(currentMode !== 'original'){
-
-  selector.style.display = 'block';
-generateSlotSelector();
-  
-}else{
-
-  selector.style.display = 'none';
-
-}
-  photos.forEach((file,index) => {
-
-    const imageUrl =
-`${supabaseUrl}/storage/v1/object/public/customer-photo/${kodeBooking}/${file.name}`;
-    const originalUrl =
-`${supabaseUrl}/storage/v1/object/public/customer-photo/${kodeBooking}/${file.name}`;
-
-    let finalImage = imageUrl;
-
-if(currentMode === 'original'){
-
-  gallery.innerHTML += `
-
-<div class="photo-card">
-
-<div class="photo-number">
-${String(index+1).padStart(2,'0')}
-</div>
-
-<img
-src="${imageUrl}"
-loading="lazy"
-onclick="previewPhoto('${originalUrl}')"
->
-
-<div class="photo-info">
-
-<div class="photo-name">
-${file.name}
-</div>
-
-<button
-class="download-btn"
-onclick="window.print()"
->
-🖨️ Print
-</button>
-
-</div>
-
-</div>
-
-`;
-    
-}else{
-
-  let slotsHTML = '';
-
-for(let i=1; i<=currentTemplateData.total_slot; i++){
-
-  slotsHTML += `
-
-  <img
-  src="${
-    currentImages[
-      document.getElementById(`slot${i}`)?.value || 0
-    ]
-  }"
-  class="slot"
-  style="
-  top:${currentTemplateData[`slot${i}_top`]}px;
-  left:${currentTemplateData[`slot${i}_left`]}px;
-  width:${currentTemplateData[`slot${i}_width`]}px;
-  height:${currentTemplateData[`slot${i}_height`]}px;
-  "
-  >
-
-  `;
-
-}
-
-gallery.innerHTML = `
-
-<div class="photostrip">
-
-${slotsHTML}
-
-<img
-src="${currentTemplate}"
-class="photostrip-template"
->
-
-</div>
-
-`;
-  return;
-
-}
-
-});
-
-}
-function previewPhoto(url){
-  currentIndex =
-    currentImages.indexOf(url);
-
-  showPreview();
-
-}
-
-function showPreview(){
-
-  document.getElementById('previewModal')
-    .style.display = 'flex';
-
-  const img =
-    document.getElementById('previewImage');
-
-  img.style.transform =
-    'scale(1) translate(0px,0px)';
-
-  img.onload = () => {
-
-    if(panzoomInstance){
-      panzoomInstance.destroy();
-    }
-
-    panzoomInstance = Panzoom(img, {
-      maxScale:5,
-      minScale:1,
-      startScale:1,
-      startX:0,
-      startY:0,
-      contain:'automatic',
-      cursor:'grab',
-      step:0.15
-    });
-
-    img.parentElement.addEventListener(
-      'wheel',
-      panzoomInstance.zoomWithWheel
-    );
-
-  };
-
-  img.src = currentImages[currentIndex];
-
-}
-
-function nextPhoto(){
-
-  currentIndex++;
-
-  if(currentIndex >= currentImages.length){
-    currentIndex = 0;
-  }
-
-  showPreview();
-
-}
-
-function prevPhoto(){
-  
-
-  currentIndex--;
-
-  if(currentIndex < 0){
-    currentIndex =
-      currentImages.length - 1;
-  }
-
-  showPreview();
-
-}
-
-function togglePhoto(checkbox){
-
-  if(checkbox.checked){
-
-    selectedPhotos.push(
-      checkbox.value
-    );
-
-  }else{
-
-    selectedPhotos =
-      selectedPhotos.filter(
-        item => item !== checkbox.value
-      );
-
-  }
-
-  if(selectedPhotos.length > 0){
-
-    document.getElementById('printBtn')
-      .style.display = 'block';
-
-  }else{
-
-    document.getElementById('printBtn')
-      .style.display = 'none';
-
-  }
-
-}
-
-let panzoomInstance;
-let currentImages = [];
-let currentIndex = 0;
-
-document.addEventListener('keydown', e => {
-
-  const modal =
-    document.getElementById('previewModal');
-
-  if(modal.style.display !== 'flex')
-    return;
-
-  if(e.key === 'ArrowRight'){
-    nextPhoto();
-  }
-
-  if(e.key === 'ArrowLeft'){
-    prevPhoto();
-  }
-
-  if(e.key === 'Escape'){
-    closePreview();
-  }
-
-});
-let touchStartX = 0;
-let touchEndX = 0;
-
-const previewModal =
-document.getElementById('previewModal');
-
-previewModal.addEventListener(
-'touchstart',
-e => {
-
-  touchStartX =
-    e.changedTouches[0].screenX;
-
-});
-
-previewModal.addEventListener(
-'touchend',
-e => {
-
-  touchEndX =
-    e.changedTouches[0].screenX;
-
-  handleSwipe();
-
-});
-
-function handleSwipe(){
-
-  const swipeDistance =
-    touchEndX - touchStartX;
-
-  if(swipeDistance < -50){
-    nextPhoto();
-  }
-
-  if(swipeDistance > 50){
-    prevPhoto();
-  }
-
-}
-function closePreview(){
-
-  document.getElementById('previewModal')
-    .style.display = 'none';
-
-  if(panzoomInstance){
-    panzoomInstance.destroy();
-  }
-
-}
-
-function sendPrintRequest(){
-
-  const pesan =
-`Halo Admin 👋
-
-Saya ingin cetak foto berikut:
-
-Kode Booking:
-${currentKodeBooking}
-
-Foto dipilih:
-${selectedPhotos.join('\n')}
-
-Terima kasih`;
-
-  const nomorAdmin =
-'6285655194918';
-
-  window.open(
-`https://wa.me/${nomorAdmin}?text=${encodeURIComponent(pesan)}`,
-'_blank'
-);
-
-}
+/* ── SEARCH / OPEN ALBUM ── */
 function searchAlbum(){
-
-  const kode =
-    document.getElementById('searchKode')
-    .value
-    .trim();
-
-  if(!kode){
-
-    alert('Masukkan kode booking');
-
-    return;
-  }
-
+  const kode = document.getElementById('searchKode').value.trim();
+  if(!kode){ showToast('Masukkan kode booking dulu'); return; }
   openAlbum(kode);
-
 }
-  document
-.getElementById('searchKode')
 
-.addEventListener('keypress', function(e){
+async function openAlbum(kode){
+  currentKode   = kode;
+  currentImages = [];
+  document.getElementById('searchKode').value = kode;
+  document.getElementById('modeSection').style.display = 'block';
+  document.getElementById('photostripWrap').style.display = 'none';
+  document.getElementById('galleryWrap').style.display = 'block';
+  setState('⏳','Mengambil foto...','Mohon tunggu sebentar');
+  setStatus('⏳','Mengambil foto...','Kode: '+kode,'pill-waiting','Memuat...');
 
-  if(e.key === 'Enter'){
+  try{
+    const {data:files,error} = await supabaseClient.storage
+      .from('customer-photo').list(kode,{sortBy:{column:'name',order:'asc'}});
+    if(error) throw error;
 
-    searchAlbum();
+    const photos = (files||[]).filter(f=>f.name!=='.keep' && f.name!=='');
 
+    if(!photos.length){
+      setState('📭','Foto belum tersedia','Foto sedang diproses. Coba beberapa saat lagi.');
+      setStatus('📭',kode,'Belum ada foto tersedia','pill-error','Tidak Ditemukan');
+      return;
+    }
+
+    currentImages = photos.map(f=>`${supabaseUrl}/storage/v1/object/public/customer-photo/${kode}/${f.name}`);
+    setStatus('✅',photos.length+' Foto Ditemukan','Kode: '+kode,'pill-found','Siap Dilihat');
+    clearState();
+
+    if(currentMode === 'original'){
+      renderGallery(photos, kode);
+      document.getElementById('slotPanel').style.display = 'none';
+    }else if(currentTemplateData){
+      renderPhotostrip();
+      generateSlotSelector();
+      document.getElementById('slotPanel').style.display = 'block';
+    }
+  }catch(err){
+    console.error('openAlbum error:', err);
+    setState('⚠️','Gagal memuat foto','Periksa koneksi internet dan coba lagi.');
+    setStatus('⚠️','Gagal memuat','Error saat mengambil data','pill-error','Error');
   }
-
-});
-  async function loadTemplates(){
-
-  const { data, error } =
-  await supabaseClient
-  .from('template')
-  .select('*')
-  .order('id',{ ascending:true });
-
-if(error){
-
-  console.log(error);
-
-  return;
-
 }
 
-allTemplates = data;
-    console.log('TEMPLATE DATA:', data);
-    
-  const container =
-    document.getElementById('templateContainer');
-
-  container.innerHTML = '';
-
-    // tombol original
-  container.innerHTML += `
-
-<div
-class="template-btn"
-onclick="
-setMode(
-'original',
-''
-)
-"
->
-
-<div style="
-height:180px;
-display:flex;
-align-items:center;
-justify-content:center;
-font-size:20px;
-font-weight:bold;
-">
-Original
-</div>
-
-<p>Tanpa Frame</p>
-
-</div>
-
-`;
-
-
-// tombol stop motion
-container.innerHTML += `
-
-<div
-class="template-btn"
-onclick="openStopmotion()"
->
-
-<div style="
-height:180px;
-display:flex;
-align-items:center;
-justify-content:center;
-font-size:20px;
-font-weight:bold;
-">
-🎞️
-</div>
-
-<p>Stop Motion</p>
-
-</div>
-
-`;
-    
-  // template dari database
-  data.forEach(item => {
-
-    container.innerHTML += `
-
-<div
-class="template-btn"
-onclick="
-setMode(
-'template',
-'${item.image_url}',
-${item.id}
-)
-"
->
-
-<img src="${item.image_url}">
-
-<p>${item.name}</p>
-
-</div>
-
-`;
-
+function renderGallery(photos, kode){
+  const gallery = document.getElementById('gallery');
+  gallery.innerHTML = '';
+  photos.forEach((file,index)=>{
+    const url   = `${supabaseUrl}/storage/v1/object/public/customer-photo/${kode}/${file.name}`;
+    const label = String(index+1).padStart(2,'0');
+    const card  = document.createElement('div');
+    card.className = 'photo-card';
+    card.innerHTML = `
+      <div class="photo-num">${label}</div>
+      <img src="${url}" loading="lazy" alt="Foto ${label}" onclick="openPreview(${index})">
+      <div class="photo-info">
+        <span class="photo-fname">${file.name}</span>
+        <button class="print-btn" onclick="window.print()">🖨️ Print</button>
+      </div>`;
+    gallery.appendChild(card);
   });
-
 }
-  function generateSlotSelector(){
 
-  const container =
-    document.getElementById('slotSelector');
-
-  container.innerHTML = '';
-
-  let totalSlot = 4;
-
-  if(currentTemplateData?.total_slot){
-
-    totalSlot =
-      currentTemplateData.total_slot;
-
-  }
-
-  for(let i=1; i<=totalSlot; i++){
-
-    let options = '';
-
-    currentImages.forEach((img,index)=>{
-
-      options += `
-      <option value="${index}">
-        Foto ${index+1}
-      </option>
-      `;
-
-    });
-
-    container.innerHTML += `
-
-    <select
-    id="slot${i}"
-    onchange="
-updatePhotostrip()
-"
-    style="
-    width:100%;
-    margin-bottom:12px;
-    padding:8px;
-    border-radius:10px;
-    "
-    >
-
-    ${options}
-
-    </select>
-
-    `;
-
-  }
-
-}
-  function updatePhotostrip(){
-
-  let slotsHTML = '';
+/* ── PHOTOSTRIP ── */
+function renderPhotostrip(){
+  if(!currentTemplateData) return;
+  const el = document.getElementById('photostripEl');
+  el.innerHTML = '';
+  el.style.width  = '600px';
+  el.style.height = '1750px';
 
   for(let i=1; i<=currentTemplateData.total_slot; i++){
-
-    const selectedIndex =
-      document.getElementById(`slot${i}`).value;
-
-    slotsHTML += `
-
-    <img
-    src="${currentImages[selectedIndex]}"
-    class="slot"
-    style="
-    top:${currentTemplateData[`slot${i}_top`]}px;
-    left:${currentTemplateData[`slot${i}_left`]}px;
-    width:${currentTemplateData[`slot${i}_width`]}px;
-    height:${currentTemplateData[`slot${i}_height`]}px;
-    "
-    >
-
-    `;
-
+    const selEl = document.getElementById('slot'+i);
+    const idx   = selEl ? parseInt(selEl.value)||0 : 0;
+    const img   = document.createElement('img');
+    img.src   = currentImages[idx]||'';
+    img.className = 'slot';
+    img.style.cssText = `top:${currentTemplateData['slot'+i+'_top']}px;left:${currentTemplateData['slot'+i+'_left']}px;width:${currentTemplateData['slot'+i+'_width']}px;height:${currentTemplateData['slot'+i+'_height']}px;`;
+    el.appendChild(img);
   }
+  const tpl = document.createElement('img');
+  tpl.src = currentTemplate;
+  tpl.className = 'photostrip-template';
+  el.appendChild(tpl);
 
-  document.getElementById('gallery').innerHTML = `
-
-  <div class="photostrip">
-
-  ${slotsHTML}
-
-  <img
-  src="${currentTemplate}"
-  class="photostrip-template"
-  >
-
-  </div>
-
-  `;
-
+  document.getElementById('galleryWrap').style.display  = 'none';
+  document.getElementById('photostripWrap').style.display = 'block';
 }
 
-  function openStopmotion(){
-
-  const urlParams =
-    new URLSearchParams(
-      window.location.search
-    );
-
-  const kode =
-    urlParams.get('kode') ||
-    document.getElementById('searchKode')
-    .value
-    .trim();
-
-  if(!kode){
-
-    alert('Kode booking tidak ditemukan');
-
-    return;
+function generateSlotSelector(){
+  const c = document.getElementById('slotSelector');
+  c.innerHTML = '';
+  const total = currentTemplateData?.total_slot||4;
+  for(let i=1;i<=total;i++){
+    const wrap = document.createElement('div');
+    const lbl  = document.createElement('div');
+    lbl.className = 'slot-label';
+    lbl.textContent = 'Slot '+i;
+    const sel  = document.createElement('select');
+    sel.id = 'slot'+i;
+    sel.className = 'slot-select';
+    sel.onchange  = renderPhotostrip;
+    currentImages.forEach((url,idx)=>{
+      const opt = document.createElement('option');
+      opt.value = idx;
+      opt.textContent = 'Foto '+(idx+1);
+      if(idx===i-1) opt.selected = true;
+      sel.appendChild(opt);
+    });
+    wrap.appendChild(lbl);
+    wrap.appendChild(sel);
+    c.appendChild(wrap);
   }
-
-  const isAdmin =
-urlParams.get('admin') === '1';
-
-  if(isAdmin){
-
-    window.location.href =
-    `stopmotion.html?kode=${kode}&admin=1`;
-
-  }else{
-
-    window.location.href =
-    `stopmotion.html?kode=${kode}`;
-
-  }
-
 }
-  
-  function setMode(
-mode,
-template='',
-templateId=null
-){
 
-  currentMode = mode;
+/* ── PREVIEW ── */
+function openPreview(index){
+  currentIndex = index;
+  const img = document.getElementById('previewImage');
+  img.src = currentImages[index];
+  document.getElementById('previewModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
 
-  currentTemplate = template;
-
-  if(mode === 'original'){
-
-    currentTemplateData = null;
-
-  }else{
-
-    currentTemplateData =
-      allTemplates.find(
-        item => item.id == templateId
-      );
-
-  }
-
-  generateSlotSelector();
-
-if(currentKodeBooking){
-
-  openAlbum(currentKodeBooking);
-
-  if(mode !== 'original'){
-    updatePhotostrip();
-  }
-
+  img.onload = ()=>{
+    if(panzoomInstance){ panzoomInstance.destroy(); panzoomInstance=null; }
+    panzoomInstance = Panzoom(img,{maxScale:5,minScale:1,contain:'automatic',cursor:'grab'});
+    img.parentElement.addEventListener('wheel', panzoomInstance.zoomWithWheel);
+  };
 }
-    }
-  function selectAllPhotos(){
 
-  alert('Fitur Pilih Semua sedang disiapkan');
-
+function navPhoto(dir){
+  currentIndex = (currentIndex+dir+currentImages.length)%currentImages.length;
+  const img = document.getElementById('previewImage');
+  img.src = currentImages[currentIndex];
 }
+
+function closePreview(){
+  document.getElementById('previewModal').classList.remove('open');
+  document.body.style.overflow = '';
+  if(panzoomInstance){ panzoomInstance.destroy(); panzoomInstance=null; }
+}
+
+function handleModalBg(e){
+  if(e.target===document.getElementById('previewModal')) closePreview();
+}
+
+/* ── KEYBOARD & SWIPE ── */
+document.addEventListener('keydown',e=>{
+  if(!document.getElementById('previewModal').classList.contains('open')) return;
+  if(e.key==='ArrowRight') navPhoto(1);
+  if(e.key==='ArrowLeft')  navPhoto(-1);
+  if(e.key==='Escape')     closePreview();
+});
+let touchStartX=0;
+document.getElementById('previewModal').addEventListener('touchstart',e=>{touchStartX=e.changedTouches[0].screenX;});
+document.getElementById('previewModal').addEventListener('touchend',e=>{
+  const diff=e.changedTouches[0].screenX-touchStartX;
+  if(diff<-50) navPhoto(1);
+  if(diff>50)  navPhoto(-1);
+});
+
+/* ── MISC ── */
+function selectAllPhotos(){ showToast('Fitur pilih semua sedang disiapkan'); }
+
+function openStopmotion(){
+  const kode = currentKode || document.getElementById('searchKode').value.trim();
+  if(!kode){ showToast('Cari foto dulu'); return; }
+  window.location.href = `stopmotion.html?kode=${kode}${isAdmin?'&admin=1':''}`;
+}
+
+/* ── INIT ── */
+loadTemplates();
+
+window.addEventListener('DOMContentLoaded',()=>{
+  if(kodeFromUrl){
+    document.getElementById('searchKode').value = kodeFromUrl;
+    openAlbum(kodeFromUrl);
+  }
+});
 </script>
-
-<div
-id="previewModal"
-onclick="closePreview()"
->
-  <button
-class="nav-btn left"
-onclick="event.stopPropagation();prevPhoto()"
->
-❮
-</button>
-
-<button
-class="nav-btn right"
-onclick="event.stopPropagation();nextPhoto()"
->
-❯
-</button>
-
-<span onclick="closePreview()">
-✕
-</span>
-
-<img
-id="previewImage"
-onclick="event.stopPropagation()"
->
-
-</div>
-  <script src="https://cdn.jsdelivr.net/npm/@panzoom/panzoom/dist/panzoom.min.js"></script>
 </body>
 </html>
