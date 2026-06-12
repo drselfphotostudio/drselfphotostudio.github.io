@@ -10,7 +10,6 @@
 *{box-sizing:border-box;margin:0;padding:0;}
 body{background:#0a0a0c;color:#e8e8f0;font-family:'Poppins',sans-serif;font-size:14px;}
 
-/* LOGIN */
 .login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;background:#0a0a0c;}
 .login-box{width:100%;max-width:380px;background:#131318;border:0.5px solid rgba(255,255,255,0.08);border-radius:20px;padding:40px 36px;}
 .login-logo{display:flex;align-items:center;gap:12px;margin-bottom:32px;}
@@ -26,7 +25,6 @@ body{background:#0a0a0c;color:#e8e8f0;font-family:'Poppins',sans-serif;font-size
 .login-btn{width:100%;background:#7F77DD;color:#fff;border:none;border-radius:10px;padding:13px;font-size:15px;font-weight:600;font-family:'Poppins',sans-serif;cursor:pointer;transition:background 0.2s,transform 0.15s;}
 .login-btn:hover{background:#6b63c9;transform:translateY(-1px);}
 
-/* SIDEBAR */
 .sidebar{position:fixed;top:0;left:0;width:240px;height:100vh;background:#0f0f13;border-right:0.5px solid rgba(255,255,255,0.06);padding:22px 12px;display:flex;flex-direction:column;z-index:999;}
 .sidebar-logo{display:flex;align-items:center;gap:10px;padding:6px 10px 26px;}
 .sidebar-logo-icon{width:36px;height:36px;background:#7F77DD;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;}
@@ -46,7 +44,6 @@ body{background:#0a0a0c;color:#e8e8f0;font-family:'Poppins',sans-serif;font-size
 .logout-btn{background:none;border:none;color:#555;font-size:17px;cursor:pointer;padding:4px;border-radius:6px;transition:color 0.15s,background 0.15s;}
 .logout-btn:hover{color:#E24B4A;background:rgba(226,75,74,0.1);}
 
-/* MAIN */
 .main-content{margin-left:240px;min-height:100vh;background:#0a0a0c;padding:28px 30px;}
 .topbar{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:28px;}
 .topbar-greeting{font-size:11px;color:#555;margin-bottom:3px;}
@@ -56,24 +53,21 @@ body{background:#0a0a0c;color:#e8e8f0;font-family:'Poppins',sans-serif;font-size
 .icon-btn:hover{background:#1e1e26;}
 .notif-dot{position:absolute;top:7px;right:7px;width:7px;height:7px;background:#7F77DD;border-radius:50%;}
 
-/* STAT CARDS */
 .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:26px;}
-.stat-card{background:#131318;border:0.5px solid rgba(255,255,255,0.07);border-radius:16px;padding:18px;cursor:default;}
+.stat-card{background:#131318;border:0.5px solid rgba(255,255,255,0.07);border-radius:16px;padding:18px;}
 .stat-card-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;margin-bottom:14px;}
 .stat-card-label{font-size:11.5px;color:#666;margin-bottom:5px;}
 .stat-card-value{font-size:26px;font-weight:600;color:#fff;line-height:1;}
 .stat-card-sub{font-size:11px;margin-top:6px;color:#555;}
 .stat-up{color:#1D9E75 !important;}
 
-/* PANELS */
 .panels-grid{display:grid;grid-template-columns:1.5fr 1fr;gap:16px;}
 .panel{background:#131318;border:0.5px solid rgba(255,255,255,0.07);border-radius:16px;padding:20px;}
 .panel-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
 .panel-title{font-size:14px;font-weight:600;color:#ddd;}
-.panel-link{font-size:12px;color:#7F77DD;cursor:pointer;text-decoration:none;transition:opacity 0.15s;}
+.panel-link{font-size:12px;color:#7F77DD;text-decoration:none;transition:opacity 0.15s;}
 .panel-link:hover{opacity:0.75;}
 
-/* Booking rows */
 .booking-row{display:flex;align-items:center;gap:11px;padding:10px 0;border-bottom:0.5px solid rgba(255,255,255,0.05);}
 .booking-row:last-child{border-bottom:none;}
 .b-avatar{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;flex-shrink:0;}
@@ -85,7 +79,6 @@ body{background:#0a0a0c;color:#e8e8f0;font-family:'Poppins',sans-serif;font-size
 .st-pending{background:rgba(186,117,23,0.15);color:#EF9F27;}
 .st-done{background:rgba(127,119,221,0.15);color:#AFA9EC;}
 
-/* Package bars */
 .pkg-item{display:flex;align-items:center;gap:10px;padding:9px 0;}
 .pkg-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
 .pkg-label{font-size:13px;color:#ccc;flex:1;}
@@ -93,14 +86,13 @@ body{background:#0a0a0c;color:#e8e8f0;font-family:'Poppins',sans-serif;font-size
 .pkg-bar-wrap{width:64px;height:4px;background:rgba(255,255,255,0.07);border-radius:4px;overflow:hidden;}
 .pkg-bar{height:100%;border-radius:4px;}
 
-/* Today mini cards */
 .today-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:18px;padding-top:18px;border-top:0.5px solid rgba(255,255,255,0.06);}
 .today-card{border-radius:10px;padding:11px;text-align:center;}
 .today-val{font-size:20px;font-weight:600;}
 .today-lbl{font-size:11px;margin-top:2px;}
 
 @media(max-width:1024px){.stats-grid{grid-template-columns:repeat(2,1fr);}.panels-grid{grid-template-columns:1fr;}}
-@media(max-width:768px){.sidebar{transform:translateX(-100);}.main-content{margin-left:0;padding:16px;}.stats-grid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:768px){.main-content{margin-left:0;padding:16px;}.stats-grid{grid-template-columns:repeat(2,1fr);}}
 </style>
 </head>
 <body onload="checkLogin()">
@@ -166,7 +158,6 @@ body{background:#0a0a0c;color:#e8e8f0;font-family:'Poppins',sans-serif;font-size
     </div>
   </div>
 
-  <!-- Stat Cards -->
   <div class="stats-grid">
     <div class="stat-card">
       <div class="stat-card-icon" style="background:rgba(127,119,221,0.12);">📅</div>
@@ -194,7 +185,6 @@ body{background:#0a0a0c;color:#e8e8f0;font-family:'Poppins',sans-serif;font-size
     </div>
   </div>
 
-  <!-- Panels -->
   <div class="panels-grid">
     <div class="panel">
       <div class="panel-head">
@@ -229,10 +219,10 @@ body{background:#0a0a0c;color:#e8e8f0;font-family:'Poppins',sans-serif;font-size
         <div class="pkg-bar-wrap"><div class="pkg-bar" id="barBasic" style="background:#1D9E75;width:0%;"></div></div>
       </div>
       <div class="pkg-item">
-        <div class="pkg-dot" style="background:#378ADD;"></div>
+        <div class="pkg-dot" style="background:#AFA9EC;"></div>
         <div class="pkg-label">Paket Keluarga</div>
         <div class="pkg-count" id="pkgKeluarga">–</div>
-        <div class="pkg-bar-wrap"><div class="pkg-bar" id="barKeluarga" style="background:#378ADD;width:0%;"></div></div>
+        <div class="pkg-bar-wrap"><div class="pkg-bar" id="barKeluarga" style="background:#AFA9EC;width:0%;"></div></div>
       </div>
       <div class="pkg-item">
         <div class="pkg-dot" style="background:#BA7517;"></div>
@@ -244,7 +234,7 @@ body{background:#0a0a0c;color:#e8e8f0;font-family:'Poppins',sans-serif;font-size
       <div class="today-grid">
         <div class="today-card" style="background:rgba(29,158,117,0.1);">
           <div class="today-val" style="color:#1D9E75;" id="todayDone">–</div>
-          <div class="today-lbl" style="color:#1D9E75;">Selesai</div>
+          <div class="today-lbl" style="color:#1D9E75;">Foto Terkirim</div>
         </div>
         <div class="today-card" style="background:rgba(186,117,23,0.1);">
           <div class="today-val" style="color:#EF9F27;" id="todayPending">–</div>
@@ -264,7 +254,6 @@ const supabaseUrl = 'https://dokayeukqfzbkktnmcoy.supabase.co';
 const supabaseKey = 'sb_publishable_iUb2y0mBwhZN_Lkqq-PH_A_JCozJTxT';
 const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
 
-/* AUTH */
 function loginAdmin(){
   const pw = document.getElementById('adminPassword').value;
   if(pw === 'drstudio123'){
@@ -273,7 +262,7 @@ function loginAdmin(){
   }else{
     const input = document.getElementById('adminPassword');
     input.style.borderColor = '#E24B4A';
-    input.style.boxShadow   = '0 0 0 3px rgba(226,75,74,0.18)';
+    input.style.boxShadow = '0 0 0 3px rgba(226,75,74,0.18)';
     setTimeout(()=>{ input.style.borderColor=''; input.style.boxShadow=''; }, 1500);
   }
 }
@@ -286,83 +275,69 @@ function checkLogin(){
   if(ok) loadDashboard();
 }
 
-function logoutAdmin(){
-  localStorage.removeItem('admin_login');
-  location.reload();
-}
+function logoutAdmin(){ localStorage.removeItem('admin_login'); location.reload(); }
+function togglePassword(){ const i=document.getElementById('adminPassword'); i.type=i.type==='password'?'text':'password'; }
+function handleEnter(e){ if(e.key==='Enter') loginAdmin(); }
 
-function togglePassword(){
-  const i = document.getElementById('adminPassword');
-  i.type = i.type === 'password' ? 'text' : 'password';
-}
-
-function handleEnter(e){ if(e.key === 'Enter') loginAdmin(); }
-
-/* DASHBOARD */
 async function loadDashboard(){
   await Promise.all([loadStats(), loadRecentBookings(), loadPaketStats(), loadTodayStatus()]);
 }
 
 async function loadStats(){
   try{
-    const [b, g, p, t] = await Promise.all([
-      supabaseClient.from('bookings').select('id', {count:'exact', head:true}),
-      supabaseClient.from('galeri').select('id', {count:'exact', head:true}),    // ✅ nama tabel: galeri
-      supabaseClient.from('packages').select('id', {count:'exact', head:true}),
-      supabaseClient.from('template').select('id', {count:'exact', head:true}),  // ✅ nama tabel: template
+    const [b,g,p,t] = await Promise.all([
+      supabaseClient.from('bookings').select('id',{count:'exact',head:true}),
+      supabaseClient.from('galeri').select('id',{count:'exact',head:true}),
+      supabaseClient.from('packages').select('id',{count:'exact',head:true}),
+      supabaseClient.from('template').select('id',{count:'exact',head:true}),
     ]);
-
     document.getElementById('statBooking').textContent  = b.count ?? '–';
     document.getElementById('statGaleri').textContent   = g.count ?? '–';
     document.getElementById('statPaket').textContent    = p.count ?? '–';
     document.getElementById('statTemplate').textContent = t.count ?? '–';
+    if((b.count??0)>0) document.getElementById('statBookingSub').textContent='↑ Data tersimpan';
 
-    if((b.count ?? 0) > 0){
-      document.getElementById('statBookingSub').textContent = '↑ Data tersimpan';
-    }
-
-    // notif dot jika ada pending
+    // notif: unpaid/pending
     const {count:pendCount} = await supabaseClient
-      .from('bookings').select('id',{count:'exact',head:true}).eq('payment_status','pending');  // ✅ field: payment_status
-    if((pendCount ?? 0) > 0){
-      document.getElementById('notifDot').style.display = 'block';
-      const badge = document.getElementById('bookingBadge');
-      badge.textContent = pendCount;
-      badge.style.display = 'inline-block';
+      .from('bookings').select('id',{count:'exact',head:true})
+      .in('payment_status',['unpaid','pending']);
+    if((pendCount??0)>0){
+      document.getElementById('notifDot').style.display='block';
+      const badge=document.getElementById('bookingBadge');
+      badge.textContent=pendCount;
+      badge.style.display='inline-block';
     }
-  }catch(e){ console.warn('loadStats error', e); }
+  }catch(e){ console.warn('loadStats error',e); }
 }
 
 async function loadRecentBookings(){
   const container = document.getElementById('recentBookings');
   try{
-    const {data, error} = await supabaseClient
+    const {data,error} = await supabaseClient
       .from('bookings')
-      .select('nama, paket, tanggal, jam, payment_status')  // ✅ field sesuai booking.html
-      .order('created_at', {ascending:false})
+      .select('nama,paket,tanggal,jam,payment_status,result_url')
+      .order('created_at',{ascending:false})
       .limit(5);
 
-    if(error || !data || data.length === 0){
-      container.innerHTML = '<div style="color:#555;font-size:13px;padding:20px 0;text-align:center;">Belum ada booking.</div>';
+    if(error||!data||!data.length){
+      container.innerHTML='<div style="color:#555;font-size:13px;padding:20px 0;text-align:center;">Belum ada booking.</div>';
       return;
     }
 
     const colors     = ['#3C3489','#0F6E56','#854F0B','#185FA5','#993556'];
     const textColors = ['#CECBF6','#9FE1CB','#FAC775','#85B7EB','#F4C0D1'];
 
-    container.innerHTML = data.map((b, i)=>{
+    container.innerHTML = data.map((b,i)=>{
       const initials = (b.nama||'?').split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
-      const waktu    = [b.tanggal, b.jam].filter(Boolean).join(' · ') || '–';
+      const waktu    = [b.tanggal,b.jam].filter(Boolean).join(' · ')||'–';
 
-      const statusMap = {
-        paid:    {cls:'st-confirmed', label:'Terkonfirmasi'},
-        pending: {cls:'st-pending',   label:'Menunggu'},
-        unpaid:  {cls:'st-pending',   label:'Belum Bayar'},   // ✅ tambah unpaid
-        done:    {cls:'st-done',      label:'Selesai'},
-      };
-      const s  = statusMap[b.payment_status] || {cls:'st-pending', label: b.payment_status || '–'};
-      const ci = i % colors.length;
+      // Selesai = paid + sudah ada foto
+      let cls='st-pending', label=b.payment_status||'–';
+      if(b.payment_status==='paid' && b.result_url){ cls='st-done'; label='Foto Terkirim'; }
+      else if(b.payment_status==='paid'){             cls='st-confirmed'; label='Terkonfirmasi'; }
+      else if(b.payment_status==='unpaid'||b.payment_status==='pending'){ cls='st-pending'; label='Belum Bayar'; }
 
+      const ci=i%colors.length;
       return `
         <div class="booking-row">
           <div class="b-avatar" style="background:${colors[ci]};color:${textColors[ci]};">${initials}</div>
@@ -370,52 +345,58 @@ async function loadRecentBookings(){
             <div class="b-name">${b.nama||'–'}</div>
             <div class="b-pkg">${b.paket||'–'} · ${waktu}</div>
           </div>
-          <span class="b-status ${s.cls}">${s.label}</span>
+          <span class="b-status ${cls}">${label}</span>
         </div>`;
     }).join('');
   }catch(e){
-    container.innerHTML = '<div style="color:#555;font-size:13px;padding:20px 0;text-align:center;">Gagal memuat data.</div>';
-    console.warn('loadRecentBookings error', e);
+    container.innerHTML='<div style="color:#555;font-size:13px;padding:20px 0;text-align:center;">Gagal memuat data.</div>';
+    console.warn('loadRecentBookings error',e);
   }
 }
 
 async function loadPaketStats(){
   try{
-    const pakets = [
-      {id:'pkgPremium',  bar:'barPremium',  keyword:'premium'},
-      {id:'pkgStandard', bar:'barStandard', keyword:'standard'},  // ✅ tambah Standard
-      {id:'pkgBasic',    bar:'barBasic',    keyword:'basic'},
-      {id:'pkgKeluarga', bar:'barKeluarga', keyword:'keluarga'},
-      {id:'pkgCouple',   bar:'barCouple',   keyword:'couple'},
+    const pakets=[
+      {id:'pkgPremium', bar:'barPremium', keyword:'premium'},
+      {id:'pkgStandard',bar:'barStandard',keyword:'standard'},
+      {id:'pkgBasic',   bar:'barBasic',   keyword:'basic'},
+      {id:'pkgKeluarga',bar:'barKeluarga',keyword:'keluarga'},
+      {id:'pkgCouple',  bar:'barCouple',  keyword:'couple'},
     ];
-    const counts = await Promise.all(
-      pakets.map(p =>
-        supabaseClient.from('bookings').select('id',{count:'exact',head:true}).ilike('paket','%'+p.keyword+'%')
-      )
-    );
-    const vals = counts.map(r => r.count ?? 0);
-    const max  = Math.max(...vals, 1);
-    pakets.forEach((p, i)=>{
-      const el = document.getElementById(p.id);
-      const barEl = document.getElementById(p.bar);
-      if(el) el.textContent = vals[i];
-      if(barEl) barEl.style.width = Math.round((vals[i]/max)*100)+'%';
+    const counts=await Promise.all(pakets.map(p=>
+      supabaseClient.from('bookings').select('id',{count:'exact',head:true}).ilike('paket','%'+p.keyword+'%')
+    ));
+    const vals=counts.map(r=>r.count??0);
+    const max=Math.max(...vals,1);
+    pakets.forEach((p,i)=>{
+      const el=document.getElementById(p.id);
+      const barEl=document.getElementById(p.bar);
+      if(el) el.textContent=vals[i];
+      if(barEl) barEl.style.width=Math.round((vals[i]/max)*100)+'%';
     });
-  }catch(e){ console.warn('loadPaketStats error', e); }
+  }catch(e){ console.warn('loadPaketStats error',e); }
 }
 
 async function loadTodayStatus(){
   try{
-    // Ambil semua booking, hitung berdasarkan payment_status (tanpa filter tanggal hari ini)
-    const [done, pending_unpaid, paid] = await Promise.all([
-      supabaseClient.from('bookings').select('id',{count:'exact',head:true}).eq('payment_status','done'),
-      supabaseClient.from('bookings').select('id',{count:'exact',head:true}).in('payment_status',['pending','unpaid']),  // ✅ gabung pending+unpaid
-      supabaseClient.from('bookings').select('id',{count:'exact',head:true}).eq('payment_status','paid'),
-    ]);
-    document.getElementById('todayDone').textContent    = done.count         ?? 0;
-    document.getElementById('todayPending').textContent = pending_unpaid.count ?? 0;
-    document.getElementById('todayActive').textContent  = paid.count         ?? 0;
-  }catch(e){ console.warn('loadTodayStatus error', e); }
+    // Foto Terkirim = paid + result_url tidak null/kosong
+    // Belum Bayar   = unpaid atau pending
+    // Paid          = paid (semua, termasuk yang sudah ada foto)
+    const {data:allBookings,error} = await supabaseClient
+      .from('bookings').select('payment_status,result_url');
+    if(error) throw error;
+
+    let selesai=0, belumBayar=0, paid=0;
+    (allBookings||[]).forEach(b=>{
+      if(b.payment_status==='paid' && b.result_url && b.result_url.trim()!=='') selesai++;
+      if(b.payment_status==='unpaid'||b.payment_status==='pending') belumBayar++;
+      if(b.payment_status==='paid') paid++;
+    });
+
+    document.getElementById('todayDone').textContent    = selesai;
+    document.getElementById('todayPending').textContent = belumBayar;
+    document.getElementById('todayActive').textContent  = paid;
+  }catch(e){ console.warn('loadTodayStatus error',e); }
 }
 </script>
 </body>
