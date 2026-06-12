@@ -1,345 +1,242 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Customer Booking – DrSelf Studio</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:#0a0a0c;color:#e8e8f0;font-family:'Poppins',sans-serif;font-size:14px;min-height:100vh;}
 
-  <title>Customer Booking</title>
+/* SIDEBAR */
+.sidebar{position:fixed;top:0;left:0;width:240px;height:100vh;background:#0f0f13;border-right:0.5px solid rgba(255,255,255,0.06);padding:22px 12px;display:flex;flex-direction:column;z-index:999;}
+.sidebar-logo{display:flex;align-items:center;gap:10px;padding:6px 10px 26px;}
+.sidebar-logo-icon{width:36px;height:36px;background:#7F77DD;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;}
+.sidebar-logo-text{font-size:15px;font-weight:600;color:#fff;}
+.nav-label{font-size:10px;color:#444;text-transform:uppercase;letter-spacing:0.08em;padding:0 10px;margin:4px 0 6px;}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:9px;color:#888;text-decoration:none;font-size:13.5px;font-weight:500;margin-bottom:2px;transition:background 0.15s,color 0.15s;}
+.nav-item:hover{background:rgba(255,255,255,0.05);color:#ddd;}
+.nav-item.active{background:rgba(127,119,221,0.15);color:#AFA9EC;}
+.nav-icon{font-size:16px;flex-shrink:0;}
+.nav-badge{margin-left:auto;background:#3C3489;color:#CECBF6;font-size:11px;font-weight:600;padding:2px 8px;border-radius:20px;}
+.sidebar-spacer{flex:1;}
+.sidebar-user{display:flex;align-items:center;gap:10px;padding:14px 10px 0;border-top:0.5px solid rgba(255,255,255,0.07);}
+.user-avatar{width:32px;height:32px;border-radius:50%;background:#3C3489;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:#CECBF6;flex-shrink:0;}
+.user-info{flex:1;}
+.user-name{font-size:13px;font-weight:500;color:#ddd;}
+.user-role{font-size:11px;color:#555;}
+.logout-btn{background:none;border:none;color:#555;font-size:16px;cursor:pointer;padding:4px;border-radius:6px;transition:color 0.15s;}
+.logout-btn:hover{color:#E24B4A;}
 
-  <style>
+/* MAIN */
+.main{margin-left:240px;padding:28px 30px;min-height:100vh;}
+.topbar{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:24px;}
+.topbar-title{font-size:20px;font-weight:600;color:#fff;}
+.topbar-sub{font-size:12px;color:#555;margin-top:2px;display:flex;align-items:center;gap:6px;}
+.live-dot{width:7px;height:7px;border-radius:50%;background:#1D9E75;display:inline-block;animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.4;}}
+.back-btn{display:flex;align-items:center;gap:6px;background:#131318;border:0.5px solid rgba(255,255,255,0.1);border-radius:9px;padding:8px 14px;color:#aaa;font-size:13px;text-decoration:none;transition:background 0.15s,color 0.15s;}
+.back-btn:hover{background:#1e1e26;color:#fff;}
 
-    *{
-      margin:0;
-      padding:0;
-      box-sizing:border-box;
-      font-family:Poppins,sans-serif;
-    }
+/* TOOLBAR */
+.toolbar{display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap;}
+.search-wrap{display:flex;align-items:center;gap:8px;background:#131318;border:0.5px solid rgba(255,255,255,0.08);border-radius:9px;padding:8px 14px;flex:1;max-width:280px;}
+.search-wrap span{color:#555;font-size:15px;}
+.search-wrap input{background:none;border:none;outline:none;color:#ddd;font-size:13px;font-family:'Poppins',sans-serif;width:100%;}
+.search-wrap input::placeholder{color:#444;}
+.filter-btn{background:#131318;border:0.5px solid rgba(255,255,255,0.08);border-radius:9px;padding:8px 14px;color:#888;font-size:13px;cursor:pointer;font-family:'Poppins',sans-serif;transition:background 0.15s,color 0.15s,border-color 0.15s;}
+.filter-btn:hover{background:#1e1e26;color:#ddd;}
+.filter-btn.active{background:rgba(127,119,221,0.12);border-color:rgba(127,119,221,0.3);color:#AFA9EC;}
+.count-txt{margin-left:auto;font-size:12px;color:#555;}
 
-    body{
-      background:#000;
-      color:white;
-      padding:40px;
-    }
+/* TABLE */
+.table-card{background:#131318;border:0.5px solid rgba(255,255,255,0.07);border-radius:16px;overflow:hidden;}
+.table-wrap{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;min-width:960px;}
+thead tr{border-bottom:0.5px solid rgba(255,255,255,0.07);}
+th{padding:12px 16px;font-size:11px;font-weight:500;color:#555;text-transform:uppercase;letter-spacing:0.06em;text-align:left;background:#0f0f13;white-space:nowrap;}
+td{padding:14px 16px;font-size:13px;color:#bbb;border-bottom:0.5px solid rgba(255,255,255,0.04);vertical-align:middle;}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr:hover td{background:rgba(255,255,255,0.015);}
 
-    .container{
-  width:100%;
-  max-width:none;
+.kode-cell{font-family:monospace;font-size:12px;color:#7F77DD;font-weight:600;}
+.nama-cell{color:#e0e0e8;font-weight:500;}
+.harga-cell{color:#ddd;font-weight:500;}
+
+/* STATUS BADGES */
+.st-badge{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;font-size:11.5px;font-weight:500;white-space:nowrap;}
+.st-paid{background:rgba(29,158,117,0.12);color:#1D9E75;}
+.st-pending{background:rgba(186,117,23,0.12);color:#EF9F27;}
+.st-dot{width:5px;height:5px;border-radius:50%;background:currentColor;flex-shrink:0;}
+.approve-btn{display:inline-flex;align-items:center;gap:5px;background:rgba(127,119,221,0.12);border:0.5px solid rgba(127,119,221,0.25);border-radius:7px;padding:5px 10px;color:#AFA9EC;font-size:11.5px;font-family:'Poppins',sans-serif;cursor:pointer;margin-top:6px;transition:background 0.15s;}
+.approve-btn:hover{background:rgba(127,119,221,0.22);}
+
+/* UPLOAD */
+.upload-label{display:inline-flex;align-items:center;gap:6px;background:#1e1e26;border:0.5px solid rgba(255,255,255,0.08);border-radius:7px;padding:6px 11px;color:#888;font-size:11.5px;cursor:pointer;transition:background 0.15s;font-family:'Poppins',sans-serif;}
+.upload-label:hover{background:#282830;color:#ddd;}
+.upload-info{font-size:11.5px;color:#1D9E75;display:flex;align-items:center;gap:5px;margin-top:5px;}
+.upload-waiting{font-size:11.5px;color:#555;margin-top:4px;}
+.uploading-txt{font-size:11.5px;color:#EF9F27;margin-top:5px;}
+
+/* ACTIONS */
+.action-col{display:flex;flex-direction:column;gap:6px;}
+.btn-lihat{display:inline-flex;align-items:center;gap:5px;background:rgba(55,138,221,0.1);border:0.5px solid rgba(55,138,221,0.2);border-radius:7px;padding:6px 11px;color:#85B7EB;font-size:11.5px;text-decoration:none;cursor:pointer;transition:background 0.15s;white-space:nowrap;}
+.btn-lihat:hover{background:rgba(55,138,221,0.18);}
+.btn-wa{display:inline-flex;align-items:center;gap:5px;background:rgba(29,158,117,0.1);border:0.5px solid rgba(29,158,117,0.2);border-radius:7px;padding:6px 11px;color:#1D9E75;font-size:11.5px;text-decoration:none;cursor:pointer;transition:background 0.15s;white-space:nowrap;}
+.btn-wa:hover{background:rgba(29,158,117,0.18);}
+.btn-none{font-size:11.5px;color:#444;}
+
+/* STATE ROWS */
+.state-row td{text-align:center;padding:48px 20px;color:#444;font-size:13px;}
+
+/* TOAST */
+.toast{position:fixed;bottom:26px;right:26px;background:#1e1e26;border:0.5px solid rgba(127,119,221,0.3);border-radius:10px;padding:11px 18px;font-size:13px;color:#AFA9EC;opacity:0;transform:translateY(8px);transition:opacity 0.2s,transform 0.2s;pointer-events:none;z-index:9999;}
+.toast.show{opacity:1;transform:translateY(0);}
+
+@media(max-width:900px){
+  .sidebar{display:none;}
+  .main{margin-left:0;padding:16px;}
 }
-
-    .header{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      margin-bottom:30px;
-    }
-
-    .header h1{
-      font-size:42px;
-    }
-
-    .back-btn{
-      background:#1d1d1d;
-      color:white;
-      padding:14px 20px;
-      border-radius:14px;
-      text-decoration:none;
-    }
-
-    .card{
-      background:#111;
-      padding:30px;
-      border-radius:24px;
-    }
-
-    table{
-      width:100%;
-      border-collapse:collapse;
-    }
-
-    th{
-      background:#25D366;
-      color:white;
-      padding:18px;
-      text-align:left;
-    }
-
-    td{
-  padding:18px;
-  border-bottom:1px solid #222;
-}
-
-th,
-td{
-  white-space:normal;
-}
-    table{
-  width:100%;
-  table-layout:fixed;
-}
-
-    .status{
-  padding:6px 12px;
-      border-radius:999px;
-      font-size:14px;
-      font-weight:600;
-      display:inline-block;
-    }
-
-    .paid{
-      background:#25D366;
-      color:white;
-    }
-
-    .unpaid{
-      background:#ffb800;
-      color:black;
-    }
-    .table-wrapper{
-  overflow-x:auto;
-}
-
-  </style>
+</style>
 </head>
 <body>
 
-<div class="container">
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div class="sidebar-logo">
+    <div class="sidebar-logo-icon">📸</div>
+    <span class="sidebar-logo-text">DrSelf Studio</span>
+  </div>
+  <span class="nav-label">Menu Utama</span>
+  <a href="admin.html" class="nav-item"><span class="nav-icon">🏠</span> Dashboard</a>
+  <a href="booking.html" class="nav-item active">
+    <span class="nav-icon">📋</span> Customer Booking
+    <span class="nav-badge" id="pendingBadge" style="display:none;"></span>
+  </a>
+  <a href="gallery.html" class="nav-item"><span class="nav-icon">🖼️</span> Galeri Website</a>
+  <span class="nav-label" style="margin-top:14px;">Konfigurasi</span>
+  <a href="packages.html" class="nav-item"><span class="nav-icon">💰</span> Paket Harga</a>
+  <a href="template.html" class="nav-item"><span class="nav-icon">🎞️</span> Template Photostrip</a>
+  <div class="sidebar-spacer"></div>
+  <div class="sidebar-user">
+    <div class="user-avatar">AD</div>
+    <div class="user-info">
+      <div class="user-name">Admin</div>
+      <div class="user-role">Super Admin</div>
+    </div>
+    <button class="logout-btn" onclick="logoutAdmin()" title="Logout">🚪</button>
+  </div>
+</div>
 
-  <div class="header">
-
-    <h1>Customer Booking</h1>
-
-    <a
-      href="admin.html"
-      class="back-btn"
-    >
-      ← Kembali Dashboard
-    </a>
-
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div>
+      <div class="topbar-title">Customer Booking</div>
+      <div class="topbar-sub"><span class="live-dot"></span>Live — data diperbarui otomatis</div>
+    </div>
+    <a href="admin.html" class="back-btn">← Kembali ke dashboard</a>
   </div>
 
-<div
-id="booking-section"
-class="content-section"
->
-<div class="table-wrapper">
+  <div class="toolbar">
+    <div class="search-wrap">
+      <span>🔍</span>
+      <input type="text" id="searchInput" placeholder="Cari nama, kode, atau paket..." oninput="renderTable()">
+    </div>
+    <button class="filter-btn active" onclick="setFilter('all',this)">Semua</button>
+    <button class="filter-btn" onclick="setFilter('paid',this)">Paid</button>
+    <button class="filter-btn" onclick="setFilter('pending',this)">Menunggu</button>
+    <span class="count-txt" id="countTxt"></span>
+  </div>
 
-<table>
-  
-<thead>
-<tr>
-  <th>Kode</th>
-  <th>Nama</th>
-  <th>Tanggal</th>
-  <th>Jam</th>
-  <th>Paket</th>
-<th>Harga</th>
-<th>Status</th>
-<th>Upload Foto</th>
-<th>Aksi</th>
-</tr>
-</thead>
-
-<tbody id="bookingTable">
-</tbody>
-
-</table>
-
+  <div class="table-card">
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Kode</th>
+            <th>Nama</th>
+            <th>Tanggal</th>
+            <th>Jam</th>
+            <th>Paket</th>
+            <th>Harga</th>
+            <th>Status</th>
+            <th>Upload Foto</th>
+            <th>Aksi</th>
+          </tr>
+        </thead>
+        <tbody id="bookingTable">
+          <tr class="state-row"><td colspan="9">Memuat data booking...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>
 
-</div>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<div class="toast" id="toast"></div>
 
 <script>
+const supabaseUrl = 'https://dokayeukqfzbkktnmcoy.supabase.co';
+const supabaseKey = 'sb_publishable_iUb2y0mBwhZN_Lkqq-PH_A_JCozJTxT';
+const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
 
-const supabaseUrl =
-'https://dokayeukqfzbkktnmcoy.supabase.co';
+let allData = [];
+let activeFilter = 'all';
 
-const supabaseKey =
-'sb_publishable_iUb2y0mBwhZN_Lkqq-PH_A_JCozJTxT';
+function logoutAdmin(){
+  localStorage.removeItem('admin_login');
+  window.location.href = 'admin.html';
+}
 
-const supabaseClient =
-supabase.createClient(
-  supabaseUrl,
-  supabaseKey
-);
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2800);
+}
 
-async function loadBookings(){
+function setFilter(f, btn){
+  activeFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderTable();
+}
 
-  const { data, error } =
-await supabaseClient
-  .from('bookings')
-  .select(`
-  *,
-  packages (
-    price
-  )
-`)
-    .order('created_at', {
-      ascending:false
-    });
+function renderTable(){
+  const q = (document.getElementById('searchInput').value||'').toLowerCase();
+  let rows = allData;
+  if(activeFilter === 'paid')    rows = rows.filter(r=>r.payment_status==='paid');
+  if(activeFilter === 'pending') rows = rows.filter(r=>r.payment_status!=='paid');
+  if(q) rows = rows.filter(r=>
+    (r.kode_booking||'').toLowerCase().includes(q)||
+    (r.nama||'').toLowerCase().includes(q)||
+    (r.paket||'').toLowerCase().includes(q)
+  );
 
-  if(error){
+  const pendingCount = allData.filter(r=>r.payment_status!=='paid').length;
+  const badge = document.getElementById('pendingBadge');
+  if(pendingCount>0){badge.textContent=pendingCount;badge.style.display='inline-block';}
+  else badge.style.display='none';
 
-    console.log(error);
+  document.getElementById('countTxt').textContent = rows.length+' booking';
 
-    alert('Gagal load booking');
-
+  const tbody = document.getElementById('bookingTable');
+  if(!rows.length){
+    tbody.innerHTML='<tr class="state-row"><td colspan="9">Tidak ada data ditemukan.</td></tr>';
     return;
-
   }
 
-  const bookingTable =
-  document.getElementById('bookingTable');
+  tbody.innerHTML = rows.map(item=>{
+    const isPaid = item.payment_status==='paid';
+    const fotoCount = item.result_url ? item.result_url.split(',').filter(u=>u.trim()).length : 0;
 
-  bookingTable.innerHTML =
-  data.map(item => `
-
-    <tr>
-
-      <td>${item.kode_booking || '-'}</td>
-
-<td>${item.nama || '-'}</td>
-
-<td>${item.tanggal || '-'}</td>
-
-<td>${item.jam || '-'}</td>
-
-<td>${item.paket || '-'}</td>
-      <td>
-        ${item.packages?.price || 'Rp 0'}
-      </td>
-
-      <td>
-
-${
-  item.payment_status === 'paid'
-  ?
-
-  `
-    <span class="status paid">
-      Paid
-    </span>
-  `
-
-  :
-
-  `
-    <div style="display:flex;flex-direction:column;gap:8px;">
-      <span class="status unpaid">
-        Menunggu Pembayaran
-      </span>
-
-      <button
-        onclick="approvePayment(${item.id})"
-        style="
-          background:#25D366;
-          color:white;
-          border:none;
-          padding:10px 16px;
-          border-radius:999px;
-          cursor:pointer;
-          font-weight:600;
-        "
-      >
-        Approve
-      </button>
-    </div>
-  `
-}
-
-</td>
-
-      <td>
-
-${
-  item.payment_status === 'paid'
-  ?
-
-  `
-    <div style="display:flex;flex-direction:column;gap:8px;">
-
-      <input
-  id="upload-${item.id}"
-  type="file"
-  style="cursor:pointer;"
-  accept="image/*"
-  multiple
-  onchange="uploadPhoto(event, ${item.id}, '${item.kode_booking}')"
->
-
-<div
-  id="upload-status-${item.id}"
-  style="
-    color:#ffb800;
-    font-size:14px;
-    display:none;
-  "
->
-  ⏳ Sedang upload...
-</div>
-
-      ${
-        item.result_url
-        ?
-        `
-          <span style="
-            color:#25D366;
-            font-size:14px;
-            font-weight:600;
-          ">
-            ✅ ${item.result_url.split(',').length} foto sudah diupload
-          </span>
-        `
-        :
-        `
-          <span style="
-            color:#666;
-            font-size:14px;
-          ">
-            Belum ada foto
-          </span>
-        `
-      }
-
-    </div>
-  `
-
-  :
-
-  `
-    <span style="color:#ffb800;font-weight:600;">
-      Menunggu approve pembayaran
-    </span>
-  `
-}
-
-</td>
-
-      <td>
-
-${
-item.result_url
-?
-
-`
-<div style="
-display:flex;
-flex-direction:column;
-gap:8px;
-">
-
-<a
-href="hasil.html?kode=${item.kode_booking}&admin=1"
-style="
-color:#25D366;
-text-decoration:none;
-font-weight:600;
-">
-📷 Lihat
-</a>
-
-<a
-href="https://wa.me/62${item.no_wa.substring(1)}?text=${encodeURIComponent(
+    // WhatsApp URL — safe fallback jika no_wa kosong
+    let waHref = '#';
+    if(item.no_wa && item.no_wa.length>3){
+      const noWa = item.no_wa.startsWith('0') ? '62'+item.no_wa.substring(1) : item.no_wa;
+      const waMsg = encodeURIComponent(
 `Halo Kak,
 
 Terima kasih telah mempercayakan momen spesial Anda kepada DR Self Photo Studio.
@@ -353,211 +250,137 @@ Apabila mengalami kendala saat mengakses atau mengunduh foto, silakan hubungi ka
 
 Salam hangat,
 DR Self Photo Studio`
-)}"
-target="_blank"
-style="
-color:#25D366;
-text-decoration:none;
-font-weight:600;
-"
->
-📲 Kirim WA
-</a>
+      );
+      waHref = `https://wa.me/${noWa}?text=${waMsg}`;
+    }
 
-</div>
-`
-
-:
-
-`
-<span style="color:#666;">
-Belum ada
-</span>
-`
-
+    return `<tr>
+      <td><span class="kode-cell">${item.kode_booking||'–'}</span></td>
+      <td><span class="nama-cell">${item.nama||'–'}</span></td>
+      <td>${item.tanggal||'–'}</td>
+      <td>${item.jam||'–'}</td>
+      <td>${item.paket||'–'}</td>
+      <td><span class="harga-cell">${item.packages?.price||'–'}</span></td>
+      <td>
+        ${isPaid
+          ? `<span class="st-badge st-paid"><span class="st-dot"></span>Paid</span>`
+          : `<div>
+               <span class="st-badge st-pending"><span class="st-dot"></span>Menunggu Bayar</span>
+               <div><button class="approve-btn" onclick="approvePayment(${item.id})">✓ Approve</button></div>
+             </div>`
+        }
+      </td>
+      <td>
+        ${isPaid
+          ? `<div>
+               <label class="upload-label" for="upload-${item.id}">⬆ Upload foto</label>
+               <input id="upload-${item.id}" type="file" accept="image/*" multiple style="display:none;"
+                 onchange="uploadPhoto(event,${item.id},'${item.kode_booking}')">
+               <div class="uploading-txt" id="upload-status-${item.id}" style="display:none;"></div>
+               ${fotoCount>0
+                 ? `<div class="upload-info">✓ ${fotoCount} foto diupload</div>`
+                 : `<div class="upload-waiting">Belum ada foto</div>`
+               }
+             </div>`
+          : `<span class="btn-none">Menunggu approve pembayaran</span>`
+        }
+      </td>
+      <td>
+        ${item.result_url
+          ? `<div class="action-col">
+               <a class="btn-lihat" href="hasil.html?kode=${item.kode_booking}&admin=1">👁 Lihat</a>
+               <a class="btn-wa" href="${waHref}" target="_blank">💬 Kirim WA</a>
+             </div>`
+          : `<span class="btn-none">Belum ada foto</span>`
+        }
+      </td>
+    </tr>`;
+  }).join('');
 }
 
-</td>
-
-    </tr>
-
-  `).join('');
-
+async function loadBookings(){
+  try{
+    const {data,error} = await supabaseClient
+      .from('bookings')
+      .select('*, packages(price)')
+      .order('created_at',{ascending:false});
+    if(error) throw error;
+    allData = data||[];
+    renderTable();
+  }catch(err){
+    console.error('loadBookings error:', err);
+    document.getElementById('bookingTable').innerHTML =
+      '<tr class="state-row"><td colspan="9">Gagal memuat data. Periksa koneksi.</td></tr>';
+  }
 }
 
+async function approvePayment(id){
+  try{
+    const {error} = await supabaseClient.from('bookings').update({payment_status:'paid'}).eq('id',id);
+    if(error) throw error;
+    showToast('✅ Pembayaran disetujui');
+    loadBookings();
+  }catch(err){
+    console.error('approvePayment error:', err);
+    showToast('❌ Gagal approve pembayaran');
+  }
+}
+
+async function uploadPhoto(event, bookingId, kodeBooking){
+  const input  = document.getElementById('upload-'+bookingId);
+  const status = document.getElementById('upload-status-'+bookingId);
+  const files  = event.target.files;
+  if(!files||!files.length) return;
+
+  input.disabled = true;
+  status.style.display = 'block';
+  status.textContent = '⏳ Mengupload '+files.length+' foto...';
+
+  try{
+    for(let i=0;i<files.length;i++){
+      const file = files[i];
+      const ext  = file.name.split('.').pop()||'jpg';
+      const fileName = kodeBooking+'/'+kodeBooking+'-'+String(i+1).padStart(2,'0')+'.'+ext;
+      const {error:upErr} = await supabaseClient.storage
+        .from('customer-photo').upload(fileName, file, {upsert:true});
+      if(upErr) throw upErr;
+    }
+
+    const {data:folder,error:listErr} = await supabaseClient.storage
+      .from('customer-photo').list(kodeBooking);
+    if(listErr) throw listErr;
+
+    const allUrls = (folder||[])
+      .filter(f=>f.name!=='.keep')
+      .map(f=>supabaseClient.storage
+        .from('customer-photo')
+        .getPublicUrl(kodeBooking+'/'+f.name).data.publicUrl
+      );
+
+    const {error:updateErr} = await supabaseClient
+      .from('bookings').update({result_url:allUrls.join(',')}).eq('id',bookingId);
+    if(updateErr) throw updateErr;
+
+    showToast('✅ '+files.length+' foto berhasil diupload');
+    event.target.value='';
+    setTimeout(()=>loadBookings(), 800);
+  }catch(err){
+    console.error('uploadPhoto error:', err);
+    showToast('❌ Upload gagal: '+(err.message||'error tidak diketahui'));
+  }finally{
+    input.disabled=false;
+    status.style.display='none';
+  }
+}
+
+// init
 loadBookings();
 
-  // Realtime booking baru
+// realtime
 supabaseClient
   .channel('bookings-realtime')
-  .on(
-    'postgres_changes',
-    {
-      event: '*',
-      schema: 'public',
-      table: 'bookings'
-    },
-    (payload) => {
-
-      console.log('Realtime Event:', payload);
-
-      loadBookings();
-
-    }
-  )
-  .subscribe((status) => {
-
-    console.log('Realtime Status:', status);
-
-  });
-  
-  async function uploadPhoto(
-  event,
-  bookingId,
-  kodeBooking
-){
-    const input =
-document.getElementById(
-  `upload-${bookingId}`
-);
-
-const status =
-document.getElementById(
-  `upload-status-${bookingId}`
-);
-
-const files =
-event.target.files;
-
-if(!files.length){
-
-  input.disabled = false;
-
-  status.style.display = 'none';
-
-  return;
-
-}
-
-input.disabled = true;
-    input.style.opacity = '0.5';
-
-status.style.display = 'block';
-
-status.innerHTML =
-`⏳ Sedang upload ${files.length} foto...`;
-
-let uploadedUrls = [];
-
-  for(let i = 0; i < files.length; i++){
-
-  const file = files[i];
-
-  const fileName =
-`${kodeBooking}/${kodeBooking}-${String(i + 1).padStart(2,'0')}.jpg`;
-
-  const { error: uploadError } =
-  await supabaseClient.storage
-    .from('customer-photo')
-    .upload(fileName, file);
-
-    if(uploadError){
-
-  input.disabled = false;
-  input.style.opacity = '1';
-
-  status.innerHTML =
-  '❌ Upload gagal';
-
-  alert('Upload gagal');
-
-  return;
-
-}
-
-    const {
-      data: publicUrlData
-    } = supabaseClient.storage
-      .from('customer-photo')
-      .getPublicUrl(fileName);
-
-    uploadedUrls.push(
-      publicUrlData.publicUrl
-    );
-
-  }
-
-  const {
-  data: filesInFolder
-} = await supabaseClient.storage
-  .from('customer-photo')
-  .list(kodeBooking);
-
-const allUrls = filesInFolder
-  .filter(file => file.name !== '.keep')
-  .map(file => {
-
-  return supabaseClient.storage
-    .from('customer-photo')
-    .getPublicUrl(
-      `${kodeBooking}/${file.name}`
-    )
-    .data.publicUrl;
-
-});
-
-const { data: updateData, error: updateError } =
-await supabaseClient
-  .from('bookings')
-  .update({
-    result_url: allUrls.join(',')
-  })
-  .eq('id', bookingId)
-  .select();
-
-console.log('UPDATE RESULT:', updateData);
-console.log('UPDATE ERROR:', updateError);
-
-if(updateError){
-
-  input.disabled = false;
-  input.style.opacity = '1';
-
-  console.log(updateError);
-
-  alert(
-    'Gagal simpan URL foto ke database:\n\n' +
-    updateError.message
-  );
-
-  return;
-}
-
-status.innerHTML =
-'✅ Upload berhasil';
-    event.target.value = '';
-    input.style.opacity = '1';
-input.disabled = false;
-
-setTimeout(() => {
-
-  loadBookings();
-
-}, 1000);
-
-}
-async function approvePayment(id){
-
-  await supabaseClient
-    .from('bookings')
-    .update({
-      payment_status:'paid'
-    })
-    .eq('id', id);
-
-  loadBookings();
-
-}
+  .on('postgres_changes',{event:'*',schema:'public',table:'bookings'},()=>loadBookings())
+  .subscribe(status=>console.log('Realtime:',status));
 </script>
 </body>
 </html>
