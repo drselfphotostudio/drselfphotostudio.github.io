@@ -217,6 +217,12 @@ body{background:#0a0a0c;color:#e8e8f0;font-family:'Poppins',sans-serif;font-size
         <div class="pkg-bar-wrap"><div class="pkg-bar" id="barPremium" style="background:#7F77DD;width:0%;"></div></div>
       </div>
       <div class="pkg-item">
+        <div class="pkg-dot" style="background:#378ADD;"></div>
+        <div class="pkg-label">Paket Standard</div>
+        <div class="pkg-count" id="pkgStandard">–</div>
+        <div class="pkg-bar-wrap"><div class="pkg-bar" id="barStandard" style="background:#378ADD;width:0%;"></div></div>
+      </div>
+      <div class="pkg-item">
         <div class="pkg-dot" style="background:#1D9E75;"></div>
         <div class="pkg-label">Paket Basic</div>
         <div class="pkg-count" id="pkgBasic">–</div>
@@ -242,11 +248,11 @@ body{background:#0a0a0c;color:#e8e8f0;font-family:'Poppins',sans-serif;font-size
         </div>
         <div class="today-card" style="background:rgba(186,117,23,0.1);">
           <div class="today-val" style="color:#EF9F27;" id="todayPending">–</div>
-          <div class="today-lbl" style="color:#EF9F27;">Menunggu</div>
+          <div class="today-lbl" style="color:#EF9F27;">Belum Bayar</div>
         </div>
         <div class="today-card" style="background:rgba(127,119,221,0.1);">
           <div class="today-val" style="color:#AFA9EC;" id="todayActive">–</div>
-          <div class="today-lbl" style="color:#AFA9EC;">Berjalan</div>
+          <div class="today-lbl" style="color:#AFA9EC;">Paid</div>
         </div>
       </div>
     </div>
@@ -351,6 +357,7 @@ async function loadRecentBookings(){
       const statusMap = {
         paid:    {cls:'st-confirmed', label:'Terkonfirmasi'},
         pending: {cls:'st-pending',   label:'Menunggu'},
+        unpaid:  {cls:'st-pending',   label:'Belum Bayar'},   // ✅ tambah unpaid
         done:    {cls:'st-done',      label:'Selesai'},
       };
       const s  = statusMap[b.payment_status] || {cls:'st-pending', label: b.payment_status || '–'};
@@ -376,35 +383,38 @@ async function loadPaketStats(){
   try{
     const pakets = [
       {id:'pkgPremium',  bar:'barPremium',  keyword:'premium'},
+      {id:'pkgStandard', bar:'barStandard', keyword:'standard'},  // ✅ tambah Standard
       {id:'pkgBasic',    bar:'barBasic',    keyword:'basic'},
       {id:'pkgKeluarga', bar:'barKeluarga', keyword:'keluarga'},
       {id:'pkgCouple',   bar:'barCouple',   keyword:'couple'},
     ];
     const counts = await Promise.all(
       pakets.map(p =>
-        supabaseClient.from('bookings').select('id',{count:'exact',head:true}).ilike('paket','%'+p.keyword+'%')  // ✅ field: paket
+        supabaseClient.from('bookings').select('id',{count:'exact',head:true}).ilike('paket','%'+p.keyword+'%')
       )
     );
     const vals = counts.map(r => r.count ?? 0);
     const max  = Math.max(...vals, 1);
     pakets.forEach((p, i)=>{
-      document.getElementById(p.id).textContent   = vals[i];
-      document.getElementById(p.bar).style.width  = Math.round((vals[i]/max)*100)+'%';
+      const el = document.getElementById(p.id);
+      const barEl = document.getElementById(p.bar);
+      if(el) el.textContent = vals[i];
+      if(barEl) barEl.style.width = Math.round((vals[i]/max)*100)+'%';
     });
   }catch(e){ console.warn('loadPaketStats error', e); }
 }
 
 async function loadTodayStatus(){
   try{
-    const today = new Date().toISOString().split('T')[0];
-    const [done, pending, paid] = await Promise.all([
-      supabaseClient.from('bookings').select('id',{count:'exact',head:true}).eq('payment_status','done').gte('tanggal', today),     // ✅ field: tanggal
-      supabaseClient.from('bookings').select('id',{count:'exact',head:true}).eq('payment_status','pending').gte('tanggal', today),
-      supabaseClient.from('bookings').select('id',{count:'exact',head:true}).eq('payment_status','paid').gte('tanggal', today),
+    // Ambil semua booking, hitung berdasarkan payment_status (tanpa filter tanggal hari ini)
+    const [done, pending_unpaid, paid] = await Promise.all([
+      supabaseClient.from('bookings').select('id',{count:'exact',head:true}).eq('payment_status','done'),
+      supabaseClient.from('bookings').select('id',{count:'exact',head:true}).in('payment_status',['pending','unpaid']),  // ✅ gabung pending+unpaid
+      supabaseClient.from('bookings').select('id',{count:'exact',head:true}).eq('payment_status','paid'),
     ]);
-    document.getElementById('todayDone').textContent    = done.count    ?? 0;
-    document.getElementById('todayPending').textContent = pending.count ?? 0;
-    document.getElementById('todayActive').textContent  = paid.count    ?? 0;
+    document.getElementById('todayDone').textContent    = done.count         ?? 0;
+    document.getElementById('todayPending').textContent = pending_unpaid.count ?? 0;
+    document.getElementById('todayActive').textContent  = paid.count         ?? 0;
   }catch(e){ console.warn('loadTodayStatus error', e); }
 }
 </script>
