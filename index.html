@@ -1,576 +1,667 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="DR Self Photo Studio adalah self photo studio di Tuban dengan konsep modern dan estetik. Booking sekarang via WhatsApp.">
-  <meta name="keywords" content="self photo studio Tuban, photobox Tuban, studio foto Tuban, DR Self Photo Studio">
-  <title>DR Self Photo Studio | Self Photo Studio di Tuban - Booking Murah</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-  <style>
-    body { margin:0; font-family:'Poppins',sans-serif; background:#0f0f0f; color:#fff; }
-    body { padding-top:80px; }
-    header {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      padding:20px 30px;
-      background:#000;
-      z-index:1000;
-      box-sizing: border-box;
-    }
-    nav a {
-      color:#fff;
-      margin-left:15px;
-      text-decoration:none;
-      font-size:14px;
-      white-space:nowrap;
-    }
-
-    .hero {
-      height: 100vh;
-      display:flex; flex-direction:column; justify-content:center; align-items:center;
-      text-align:center;
-      padding: 0 40px;
-    }
-    .hero h2 {
-      font-size:42px;
-      margin:0;
-      line-height:1.2;
-    }
-    .hero { padding: 0 20px; }
-    .hero p { opacity:0.8; max-width:90%; }
-    .btn {
-      margin-top:20px;
-      padding:12px 25px;
-      border-radius:30px;
-      text-decoration:none;
-      font-weight:600;
-      display:inline-block;
-      white-space:nowrap;
-      max-width:100%;
-    }
-    .btn-primary { background:#25D366; color:#fff; }
-    .btn-secondary { background:#fff; color:#000; margin-left:10px; }
-.btn:hover {
-  transform: scale(1.05);
-  transition: 0.3s;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.4);
-}
-.btn-primary:hover {
-  box-shadow: 0 0 20px rgba(37,211,102,0.6);
-}
-    .section { padding:80px 20px; max-width:1100px; margin:auto; }
-    .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:25px; }
-
-    .card { background:#1a1a1a; padding:25px; border-radius:15px; text-align:center; }
-    .price { font-size:28px; font-weight:700; }
-
-    .highlight { background:#fff; color:#000; text-align:center; padding:60px 20px; }
-
-    .gallery img { width:100%; border-radius:15px; }
-
-    .testimonial { font-style:italic; }
-
-    footer {
-  text-align:center;
-  padding:30px;
-  background:#000;
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="description" content="DR Self Photo Studio adalah self photo studio di Tuban dengan konsep modern dan estetik. Booking sekarang."/>
+<meta name="keywords" content="self photo studio Tuban, photobox Tuban, studio foto Tuban, DR Self Photo Studio"/>
+<title>DR Self Photo Studio | Self Photo Studio di Tuban</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{
+  --bg:#09090b;
+  --bg2:#111115;
+  --bg3:#18181d;
+  --border:rgba(255,255,255,0.07);
+  --accent:#C9A96E;
+  --accent2:#E8C99A;
+  --text:#e8e8f0;
+  --muted:#666;
+  --radius:16px;
 }
 
-    .hero{
-  background-size:cover;
-  background-position:center;
-  background-repeat:no-repeat;
-  background-color:black;
-  height:100vh;
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
 
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-
-  color:white;
-  text-align:center;
-  position:relative;
-
-  transition:1s;
-}
-.hero * {
-  position: relative;
-  z-index: 1;
-}
-@media (max-width: 768px) {
-
-  header {
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 15px;
-  }
-
-  header h1 {
-    font-size: 20px;
-    margin-bottom: 10px;
-  }
-
-  nav {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-  }
-
-  nav a {
-    margin: 0;
-    font-size: 12px;
-  }
-
-  .hero {
-    height: auto;
-    padding: 60px 20px;
-  }
-
-  .hero h2 {
-    font-size: 26px;
-  }
-
-  .hero p {
-    font-size: 14px;
-  }
-
-  .btn {
-    padding: 10px 18px;
-    font-size: 12px;
-    width: 100%;
-    text-align: center;
-}
-  }
-
-  .section {
-    padding: 50px 15px;
-  }
-.hero div {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Poppins',sans-serif;
+  font-size:15px;
+  overflow-x:hidden;
 }
 
-.btn-secondary {
-  margin-left: 0;
-}
-.hero div .btn {
-  width: 200px;
-  text-align: center;
-  border: none;
-  margin-top: 0;
-}
-.hero div {
-  margin-top: 20px;
-}
-.btn-primary {
-  box-shadow: 0 5px 15px rgba(37,211,102,0.4);
+/* ── HEADER ── */
+header{
+  position:fixed;top:0;left:0;width:100%;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:18px 48px;
+  background:rgba(9,9,11,0.85);
+  backdrop-filter:blur(14px);
+  border-bottom:0.5px solid var(--border);
+  z-index:1000;
+  transition:padding 0.3s;
 }
 
-.btn-secondary {
-  box-shadow: 0 5px 15px rgba(255,255,255,0.2);
-}
-.wa-center {
-  display: flex;
-  justify-content: center;
-  margin: 20px 0 10px;
+.logo{
+  font-family:'Playfair Display',serif;
+  font-size:20px;font-weight:700;
+  color:#fff;letter-spacing:0.02em;
 }
 
-#contact .btn {
-  width: 250px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.logo span{color:var(--accent);}
+
+nav{display:flex;align-items:center;gap:32px;}
+nav a{
+  color:var(--muted);font-size:13px;font-weight:500;
+  text-decoration:none;letter-spacing:0.04em;
+  transition:color 0.2s;
 }
-  .booking-form{
-  max-width:500px;
-  margin:auto;
-  display:flex;
-  flex-direction:column;
-  gap:15px;
+nav a:hover{color:#fff;}
+
+.nav-cta{
+  background:var(--accent);color:#000 !important;
+  padding:8px 20px;border-radius:30px;
+  font-weight:600 !important;font-size:13px !important;
+  transition:background 0.2s,transform 0.15s !important;
+}
+.nav-cta:hover{background:var(--accent2);transform:translateY(-1px);}
+
+/* ── HERO ── */
+.hero{
+  min-height:100vh;padding-top:80px;
+  display:flex;flex-direction:column;justify-content:center;align-items:center;
+  text-align:center;position:relative;overflow:hidden;
 }
 
-.booking-form input,
-.booking-form select,
-.booking-form textarea{
-  padding:15px;
-  border:none;
-  border-radius:12px;
-  font-family:Poppins,sans-serif;
+.hero-bg{
+  position:absolute;inset:0;
+  background-image:linear-gradient(rgba(9,9,11,0.55),rgba(9,9,11,0.7)),url('');
+  background-size:cover;background-position:center;
+  transition:background-image 1.2s ease;
+  z-index:0;
 }
 
-.booking-form button{
-  background:#25D366;
-  color:white;
-  border:none;
-  padding:15px;
-  border-radius:12px;
-  font-weight:600;
-  cursor:pointer;
+.hero-glow{
+  position:absolute;top:40%;left:50%;transform:translate(-50%,-50%);
+  width:600px;height:600px;
+  background:radial-gradient(ellipse,rgba(201,169,110,0.12) 0%,transparent 70%);
+  pointer-events:none;z-index:0;
 }
 
-#successMsg{
-  text-align:center;
-  margin-top:20px;
-  color:#25D366;
-  font-weight:600;
+.hero-content{position:relative;z-index:1;padding:0 24px;}
+
+.hero-eyebrow{
+  display:inline-block;
+  font-size:11px;font-weight:500;letter-spacing:0.18em;text-transform:uppercase;
+  color:var(--accent);border:0.5px solid rgba(201,169,110,0.3);
+  padding:5px 16px;border-radius:20px;margin-bottom:28px;
+  background:rgba(201,169,110,0.06);
 }
-  </style>
+
+.hero h1{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(40px,7vw,82px);
+  font-weight:900;line-height:1.05;
+  color:#fff;margin-bottom:20px;
+  letter-spacing:-0.01em;
+}
+
+.hero h1 em{
+  font-style:normal;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+
+.hero-sub{
+  font-size:16px;color:rgba(255,255,255,0.55);
+  max-width:480px;margin:0 auto 36px;line-height:1.7;
+}
+
+.hero-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+
+.btn-gold{
+  background:var(--accent);color:#000;
+  padding:13px 28px;border-radius:30px;
+  font-weight:600;font-size:14px;text-decoration:none;
+  display:inline-flex;align-items:center;gap:8px;
+  transition:background 0.2s,transform 0.15s,box-shadow 0.2s;
+  box-shadow:0 8px 24px rgba(201,169,110,0.3);
+}
+.btn-gold:hover{background:var(--accent2);transform:translateY(-2px);box-shadow:0 12px 32px rgba(201,169,110,0.4);}
+
+.btn-outline{
+  background:rgba(255,255,255,0.06);color:#fff;
+  padding:13px 28px;border-radius:30px;
+  font-weight:500;font-size:14px;text-decoration:none;
+  border:0.5px solid rgba(255,255,255,0.15);
+  display:inline-flex;align-items:center;gap:8px;
+  transition:background 0.2s,transform 0.15s;
+}
+.btn-outline:hover{background:rgba(255,255,255,0.1);transform:translateY(-2px);}
+
+/* hero scroll indicator */
+.scroll-hint{
+  position:absolute;bottom:32px;left:50%;transform:translateX(-50%);
+  font-size:11px;color:var(--muted);letter-spacing:0.1em;
+  display:flex;flex-direction:column;align-items:center;gap:8px;z-index:1;
+}
+.scroll-line{width:1px;height:40px;background:linear-gradient(var(--accent),transparent);}
+
+/* ── FEATURE STRIP ── */
+.feature-strip{
+  display:flex;justify-content:center;flex-wrap:wrap;gap:0;
+  border-top:0.5px solid var(--border);border-bottom:0.5px solid var(--border);
+  background:var(--bg2);
+}
+.feature-item{
+  padding:20px 36px;
+  display:flex;align-items:center;gap:10px;
+  border-right:0.5px solid var(--border);
+  font-size:13px;color:var(--muted);
+  white-space:nowrap;
+}
+.feature-item:last-child{border-right:none;}
+.feature-item span{font-size:18px;}
+.feature-item strong{color:#fff;font-weight:500;}
+
+/* ── SECTIONS ── */
+.section{padding:100px 48px;max-width:1140px;margin:0 auto;}
+
+.section-eyebrow{
+  font-size:11px;font-weight:500;letter-spacing:0.16em;text-transform:uppercase;
+  color:var(--accent);margin-bottom:12px;
+}
+
+.section-title{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(28px,4vw,44px);font-weight:700;
+  color:#fff;margin-bottom:16px;line-height:1.15;
+}
+
+.section-sub{font-size:15px;color:var(--muted);max-width:480px;line-height:1.7;margin-bottom:56px;}
+
+/* ── PRICING ── */
+.pricing-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;}
+
+.price-card{
+  background:var(--bg2);
+  border:0.5px solid var(--border);border-radius:var(--radius);
+  padding:28px;position:relative;overflow:hidden;
+  transition:border-color 0.2s,transform 0.2s;
+}
+.price-card:hover{border-color:rgba(201,169,110,0.35);transform:translateY(-4px);}
+.price-card.featured{border-color:var(--accent);}
+
+.price-card.featured::before{
+  content:'Terpopuler';
+  position:absolute;top:16px;right:16px;
+  background:var(--accent);color:#000;
+  font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;
+  padding:3px 10px;border-radius:20px;
+}
+
+.price-name{font-size:14px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px;}
+.price-val{
+  font-family:'Playfair Display',serif;
+  font-size:36px;font-weight:700;color:#fff;margin-bottom:20px;line-height:1;
+}
+.price-divider{height:0.5px;background:var(--border);margin-bottom:20px;}
+.price-features{display:flex;flex-direction:column;gap:10px;margin-bottom:24px;}
+.price-feature{display:flex;align-items:flex-start;gap:9px;font-size:13px;color:#aaa;line-height:1.4;}
+.price-feature::before{content:'✦';color:var(--accent);font-size:10px;margin-top:2px;flex-shrink:0;}
+
+.btn-book{
+  display:block;text-align:center;
+  background:rgba(201,169,110,0.1);
+  border:0.5px solid rgba(201,169,110,0.3);
+  border-radius:10px;padding:11px;
+  color:var(--accent);font-size:13px;font-weight:600;
+  text-decoration:none;transition:background 0.15s;
+}
+.btn-book:hover{background:rgba(201,169,110,0.18);}
+.price-card.featured .btn-book{background:var(--accent);color:#000;border-color:var(--accent);}
+.price-card.featured .btn-book:hover{background:var(--accent2);}
+
+/* ── WHY ── */
+.why-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;}
+.why-card{
+  background:var(--bg2);border:0.5px solid var(--border);
+  border-radius:var(--radius);padding:24px;
+  transition:border-color 0.2s;
+}
+.why-card:hover{border-color:rgba(201,169,110,0.25);}
+.why-icon{font-size:28px;margin-bottom:14px;}
+.why-title{font-size:14px;font-weight:600;color:#fff;margin-bottom:6px;}
+.why-desc{font-size:13px;color:var(--muted);line-height:1.6;}
+
+/* ── GALLERY ── */
+.gallery-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+  gap:10px;
+}
+.gallery-item{
+  border-radius:12px;overflow:hidden;
+  aspect-ratio:4/5;position:relative;cursor:zoom-in;
+}
+.gallery-item img{
+  width:100%;height:100%;object-fit:cover;display:block;
+  transition:transform 0.4s,opacity 0.2s;
+}
+.gallery-item:hover img{transform:scale(1.05);opacity:0.85;}
+
+/* ── TESTIMONIALS ── */
+.testi-wrapper{overflow:hidden;position:relative;mask-image:linear-gradient(to right,transparent,black 10%,black 90%,transparent);}
+.testi-track{display:flex;gap:16px;width:max-content;animation:scrollTesti 28s linear infinite;}
+.testi-track:hover{animation-play-state:paused;}
+.testi-card{
+  min-width:260px;
+  background:var(--bg2);border:0.5px solid var(--border);
+  border-radius:var(--radius);padding:22px;
+  flex-shrink:0;
+}
+.testi-stars{color:var(--accent);font-size:13px;margin-bottom:10px;}
+.testi-text{font-size:13px;color:#bbb;line-height:1.6;margin-bottom:14px;font-style:italic;}
+.testi-name{font-size:12px;font-weight:600;color:var(--accent);}
+
+@keyframes scrollTesti{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
+
+/* ── BOOKING FORM ── */
+.booking-wrap{
+  display:grid;grid-template-columns:1fr 1.2fr;gap:48px;align-items:start;
+}
+.booking-info{}
+.booking-info p{font-size:14px;color:var(--muted);line-height:1.8;margin-bottom:24px;}
+.booking-detail{
+  display:flex;flex-direction:column;gap:12px;
+}
+.booking-detail-item{
+  display:flex;align-items:center;gap:10px;
+  font-size:13px;color:#aaa;
+}
+.booking-detail-item span:first-child{font-size:18px;}
+
+.form-card{
+  background:var(--bg2);border:0.5px solid var(--border);
+  border-radius:var(--radius);padding:28px;
+}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.form-group{display:flex;flex-direction:column;gap:6px;margin-bottom:12px;}
+.form-group.full{grid-column:1/-1;}
+.form-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;}
+
+.form-input, .form-select, .form-textarea{
+  background:#1e1e26;color:#fff;
+  border:0.5px solid rgba(255,255,255,0.08);border-radius:9px;
+  padding:11px 14px;font-size:13px;font-family:'Poppins',sans-serif;
+  width:100%;transition:border-color 0.15s,box-shadow 0.15s;
+}
+.form-input:focus,.form-select:focus,.form-textarea:focus{
+  outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(201,169,110,0.12);
+}
+.form-input::placeholder,.form-textarea::placeholder{color:#444;}
+.form-select option{background:#1e1e26;}
+.form-textarea{resize:none;}
+
+.btn-submit{
+  width:100%;background:var(--accent);color:#000;
+  border:none;border-radius:10px;padding:13px;
+  font-size:14px;font-weight:700;font-family:'Poppins',sans-serif;
+  cursor:pointer;transition:background 0.15s,transform 0.12s;
+  margin-top:4px;
+}
+.btn-submit:hover{background:var(--accent2);transform:translateY(-1px);}
+.btn-submit:disabled{background:#333;color:#666;cursor:not-allowed;transform:none;}
+
+.success-msg{
+  display:none;text-align:center;padding:20px;
+  background:rgba(201,169,110,0.08);border:0.5px solid rgba(201,169,110,0.25);
+  border-radius:12px;margin-top:16px;
+}
+.success-msg .kode{
+  font-family:'Playfair Display',serif;
+  font-size:28px;color:var(--accent);font-weight:700;
+  letter-spacing:0.08em;margin:8px 0;
+}
+.success-msg p{font-size:13px;color:var(--muted);}
+
+/* ── FOOTER ── */
+footer{
+  text-align:center;padding:40px 24px;
+  border-top:0.5px solid var(--border);
+  background:var(--bg);
+}
+.footer-logo{
+  font-family:'Playfair Display',serif;
+  font-size:22px;font-weight:700;color:#fff;margin-bottom:8px;
+}
+.footer-logo span{color:var(--accent);}
+.footer-sub{font-size:12px;color:var(--muted);margin-bottom:20px;}
+.footer-address{font-size:12px;color:var(--muted);line-height:1.6;}
+.footer-copy{font-size:11px;color:#333;margin-top:20px;}
+
+/* ── LIGHTBOX ── */
+.lightbox{position:fixed;inset:0;background:rgba(0,0,0,0.92);backdrop-filter:blur(8px);display:none;justify-content:center;align-items:center;z-index:9999;padding:20px;}
+.lightbox.open{display:flex;}
+.lightbox img{max-width:90vw;max-height:90vh;border-radius:12px;object-fit:contain;}
+.lightbox-close{position:absolute;top:20px;right:24px;font-size:28px;color:#aaa;cursor:pointer;background:rgba(30,30,38,0.8);width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;}
+.lightbox-close:hover{color:#fff;}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  header{padding:16px 20px;}
+  nav{gap:16px;}
+  .feature-item{padding:16px 20px;font-size:12px;}
+  .section{padding:72px 20px;}
+  .booking-wrap{grid-template-columns:1fr;}
+  .form-row{grid-template-columns:1fr;}
+}
+@media(max-width:600px){
+  nav .nav-cta{display:none;}
+  .hero-btns{flex-direction:column;align-items:center;}
+  .btn-gold,.btn-outline{width:100%;max-width:280px;justify-content:center;}
+  .feature-strip{flex-direction:column;}
+  .feature-item{border-right:none;border-bottom:0.5px solid var(--border);}
+}
+</style>
 </head>
 <body>
 
+<!-- HEADER -->
 <header>
-  <h1>DR Self Photo Studio</h1>
+  <div class="logo">DR <span>Self</span> Studio</div>
   <nav>
     <a href="#pricing">Harga</a>
     <a href="#gallery">Galeri</a>
     <a href="#testi">Testimoni</a>
-    <a href="#contact">Booking</a>
+    <a href="#contact" class="nav-cta">Booking Sekarang</a>
   </nav>
 </header>
 
+<!-- HERO -->
 <div class="hero">
-  <h2>Capture Your Moment</h2>
-  <p>Self Photo Studio di Tuban dengan konsep modern & estetik</p>
-  <div>
-    <a href="#contact" class="btn btn-primary">
-  Booking Sekarang
-</a>
-    <a href="#gallery" class="btn btn-secondary">Lihat Galeri</a>
+  <div class="hero-bg" id="heroBg"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">✦ Self Photo Studio · Tuban</div>
+    <h1>Capture Your <em>Moment</em></h1>
+    <p class="hero-sub">Studio foto private dengan pencahayaan estetik, konsep modern, dan hasil foto berkualitas HD.</p>
+    <div class="hero-btns">
+      <a href="#contact" class="btn-gold">📅 Booking Sekarang</a>
+      <a href="#gallery" class="btn-outline">Lihat Galeri →</a>
+    </div>
+  </div>
+  <div class="scroll-hint">
+    <div class="scroll-line"></div>
+    <span>SCROLL</span>
   </div>
 </div>
 
+<!-- FEATURE STRIP -->
+<div class="feature-strip">
+  <div class="feature-item"><span>🔒</span><div><strong>Private Room</strong></div></div>
+  <div class="feature-item"><span>📸</span><div><strong>Unlimited Shoot</strong></div></div>
+  <div class="feature-item"><span>🖼️</span><div><strong>HD Quality</strong></div></div>
+  <div class="feature-item"><span>💡</span><div><strong>Estetik Lighting</strong></div></div>
+  <div class="feature-item"><span>📍</span><div><strong>Plumpang, Tuban</strong></div></div>
+</div>
+
+<!-- PRICING -->
 <div class="section" id="pricing">
-
-  <h2 style="text-align:center;">
-    Paket Harga
-  </h2>
-
-  <div
-    class="grid"
-    id="pricingList"
-  >
+  <div class="section-eyebrow">Harga & Paket</div>
+  <h2 class="section-title">Pilih Paket yang Tepat</h2>
+  <p class="section-sub">Semua paket sudah termasuk file digital HD dan sesi foto yang nyaman.</p>
+  <div class="pricing-grid" id="pricingList">
+    <div style="color:#555;font-size:13px;">Memuat paket...</div>
   </div>
-
 </div>
 
-<div class="highlight">
-  <h2>Kenapa Pilih DR Self Photo Studio?</h2>
-  <p>Private Room • Unlimited Shoot • HD Quality • Estetik Lighting</p>
-</div>
-
-<div class="section" id="gallery">
-
-  <h2 style="text-align:center;">
-    Galeri
-  </h2>
-
-  <div
-    class="grid gallery"
-    id="galleryList"
-  ></div>
-
-</div>
-
-<div class="section" id="testi">
-  <h2 style="text-align:center;">Apa Kata Mereka</h2>
-
-  <div class="testimonial-wrapper">
-    <div class="testimonial-track" id="testiTrack">
-
-      <div class="card testimonial">"Tempatnya nyaman banget!"<br><strong>- Andi</strong></div>
-      <div class="card testimonial">"Hasil foto estetik banget!"<br><strong>- Rina</strong></div>
-      <div class="card testimonial">"Worth it buat konten IG!"<br><strong>- Dika</strong></div>
-      <div class="card testimonial">"Private banget, bebas pose"<br><strong>- Sari</strong></div>
-      <div class="card testimonial">"Lightingnya bagus banget"<br><strong>- Budi</strong></div>
-      <div class="card testimonial">"Tempatnya clean & modern"<br><strong>- Nia</strong></div>
-      <div class="card testimonial">"Pasti balik lagi kesini!"<br><strong>- Fajar</strong></div>
-
+<!-- WHY -->
+<div style="background:var(--bg2);border-top:0.5px solid var(--border);border-bottom:0.5px solid var(--border);">
+  <div class="section">
+    <div class="section-eyebrow">Keunggulan</div>
+    <h2 class="section-title">Kenapa Pilih DR Self?</h2>
+    <div class="why-grid">
+      <div class="why-card">
+        <div class="why-icon">🔒</div>
+        <div class="why-title">100% Private</div>
+        <div class="why-desc">Studio hanya untuk kamu. Bebas berpose tanpa gangguan.</div>
+      </div>
+      <div class="why-card">
+        <div class="why-icon">💡</div>
+        <div class="why-title">Lighting Estetik</div>
+        <div class="why-desc">Setup pencahayaan profesional yang membuat setiap foto tampak cinematic.</div>
+      </div>
+      <div class="why-card">
+        <div class="why-icon">🖼️</div>
+        <div class="why-title">File HD Langsung</div>
+        <div class="why-desc">Semua foto dikirim dalam kualitas HD melalui WhatsApp setelah sesi.</div>
+      </div>
+      <div class="why-card">
+        <div class="why-icon">📅</div>
+        <div class="why-title">Booking Mudah</div>
+        <div class="why-desc">Pilih jadwal sesuai keinginan, tanpa ribet langsung dari website ini.</div>
+      </div>
     </div>
   </div>
 </div>
 
-<style>
-.testimonial-wrapper {
-  overflow: hidden;
-  position: relative;
-}
-
-.testimonial-track {
-  display: flex;
-  gap: 20px;
-  width: max-content;
-  animation: scrollTesti 25s linear infinite;
-}
-
-.testimonial-track .card {
-  min-width: 250px;
-}
-
-@keyframes scrollTesti {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
-</style>
-
-<script>
-// duplicate items biar looping halus
-const track = document.getElementById('testiTrack');
-track.innerHTML += track.innerHTML;
-</script>
-
-<div class="section" id="contact">
-
-<h2 style="text-align:center;">Booking Sekarang</h2>
-
-<form id="bookingForm" class="booking-form">
-
-  <input type="text" id="nama" placeholder="Nama" required>
-
-  <input type="text" id="wa" placeholder="No WhatsApp" required>
-
-  <input type="date" id="tanggal" required>
-
-  <select id="jam" required>
-    <option value="">Pilih Jam</option>
-    <option>10:00</option>
-    <option>11:00</option>
-    <option>12:00</option>
-    <option>13:00</option>
-    <option>14:00</option>
-    <option>15:00</option>
-    <option>16:00</option>
-    <option>17:00</option>
-  </select>
-
-  <select id="paket" required>
-    <option value="">Pilih Paket</option>
-    <option>Basic</option>
-    <option>Standard</option>
-    <option>Premium</option>
-  </select>
-
-  <input type="number" id="jumlah" placeholder="Jumlah Orang" required>
-
-  <textarea id="catatan" placeholder="Catatan"></textarea>
-
-  <button type="submit">
-    Booking Sekarang
-  </button>
-
-</form>
-
-<div id="successMsg"></div>
-
-<p style="text-align:center; margin-top:40px;">
-📍 Dsn Pesuruan Rt.003 Rw.005 Kel. Kesemben Kec. Plumpang Kab. Tuban
-</p>
-
+<!-- GALLERY -->
+<div class="section" id="gallery">
+  <div class="section-eyebrow">Galeri</div>
+  <h2 class="section-title">Hasil Foto Studio</h2>
+  <p class="section-sub">Beberapa momen yang telah kami abadikan bersama pelanggan.</p>
+  <div class="gallery-grid" id="galleryList">
+    <div style="color:#555;font-size:13px;">Memuat galeri...</div>
+  </div>
 </div>
 
+<!-- TESTIMONIALS -->
+<div style="background:var(--bg2);border-top:0.5px solid var(--border);border-bottom:0.5px solid var(--border);padding:72px 0;" id="testi">
+  <div style="text-align:center;margin-bottom:40px;padding:0 24px;">
+    <div class="section-eyebrow">Testimoni</div>
+    <h2 class="section-title" style="margin:0;">Apa Kata Mereka</h2>
+  </div>
+  <div class="testi-wrapper">
+    <div class="testi-track" id="testiTrack">
+      <div class="testi-card"><div class="testi-stars">★★★★★</div><div class="testi-text">"Tempatnya nyaman banget, lighting-nya estetik dan hasil fotonya bagus!"</div><div class="testi-name">— Andi</div></div>
+      <div class="testi-card"><div class="testi-stars">★★★★★</div><div class="testi-text">"Hasil foto estetik banget, puas banget sama hasilnya!"</div><div class="testi-name">— Rina</div></div>
+      <div class="testi-card"><div class="testi-stars">★★★★★</div><div class="testi-text">"Worth it buat konten IG, foto langsung HD dikirim via WA!"</div><div class="testi-name">— Dika</div></div>
+      <div class="testi-card"><div class="testi-stars">★★★★★</div><div class="testi-text">"Private banget, bebas pose sesuka hati tanpa diawasi."</div><div class="testi-name">— Sari</div></div>
+      <div class="testi-card"><div class="testi-stars">★★★★★</div><div class="testi-text">"Lighting-nya bagus banget, fotonya jadi cinematic!"</div><div class="testi-name">— Budi</div></div>
+      <div class="testi-card"><div class="testi-stars">★★★★★</div><div class="testi-text">"Tempatnya clean dan modern, recommended banget!"</div><div class="testi-name">— Nia</div></div>
+      <div class="testi-card"><div class="testi-stars">★★★★★</div><div class="testi-text">"Pasti balik lagi kesini, pelayanannya ramah dan cepat!"</div><div class="testi-name">— Fajar</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- BOOKING -->
+<div class="section" id="contact">
+  <div class="booking-wrap">
+    <div class="booking-info">
+      <div class="section-eyebrow">Booking</div>
+      <h2 class="section-title">Reservasi Sesi Foto</h2>
+      <p>Isi form di samping untuk memesan slot sesi foto. Kamu akan menerima kode booking setelah submit — simpan kode ini untuk pembayaran dan pengambilan foto.</p>
+      <div class="booking-detail">
+        <div class="booking-detail-item"><span>📍</span><span>Dsn Pesuruan Rt.003 Rw.005, Kel. Kesemben, Kec. Plumpang, Kab. Tuban</span></div>
+        <div class="booking-detail-item"><span>🕐</span><span>Buka setiap hari, 10:00 – 17:00 WIB</span></div>
+        <div class="booking-detail-item"><span>📲</span><span>Konfirmasi via WhatsApp setelah booking</span></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="form-card">
+        <form id="bookingForm">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Nama Lengkap</label>
+              <input type="text" id="nama" class="form-input" placeholder="Nama kamu" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">No. WhatsApp</label>
+              <input type="text" id="wa" class="form-input" placeholder="08xxxxxxxxxx" required>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Tanggal</label>
+              <input type="date" id="tanggal" class="form-input" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Jam</label>
+              <select id="jam" class="form-select" required>
+                <option value="">Pilih jam</option>
+                <option>10:00</option><option>11:00</option><option>12:00</option>
+                <option>13:00</option><option>14:00</option><option>15:00</option>
+                <option>16:00</option><option>17:00</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Paket</label>
+              <select id="paket" class="form-select" required>
+                <option value="">Pilih paket</option>
+                <option>Basic</option><option>Standard</option><option>Premium</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Jumlah Orang</label>
+              <input type="number" id="jumlah" class="form-input" placeholder="cth. 2" min="1" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Catatan (opsional)</label>
+            <textarea id="catatan" class="form-textarea" rows="3" placeholder="Permintaan khusus atau catatan lainnya..."></textarea>
+          </div>
+          <button type="submit" class="btn-submit" id="submitBtn">Booking Sekarang →</button>
+        </form>
+
+        <div class="success-msg" id="successMsg">
+          <div style="font-size:28px;margin-bottom:8px;">🎉</div>
+          <div style="font-size:13px;color:var(--muted);margin-bottom:6px;">Kode Booking kamu:</div>
+          <div class="kode" id="kodeDisplay"></div>
+          <p>Screenshot / catat kode ini untuk konfirmasi pembayaran via WhatsApp.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
 <footer>
-  © 2026 DR Self Photo Studio - Self Photo Studio Tuban
+  <div class="footer-logo">DR <span>Self</span> Studio</div>
+  <div class="footer-sub">Self Photo Studio di Tuban · Modern & Estetik</div>
+  <div class="footer-address">📍 Dsn Pesuruan Rt.003 Rw.005, Kel. Kesemben, Kec. Plumpang, Kab. Tuban</div>
+  <div class="footer-copy">© 2026 DR Self Photo Studio · All rights reserved</div>
 </footer>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script>
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <div class="lightbox-close" onclick="closeLightbox()">×</div>
+  <img id="lightboxImg" src="" alt="Preview">
+</div>
 
+<script>
 const supabaseUrl = 'https://dokayeukqfzbkktnmcoy.supabase.co';
-
 const supabaseKey = 'sb_publishable_iUb2y0mBwhZN_Lkqq-PH_A_JCozJTxT';
+const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
 
-const supabaseClient = supabase.createClient(
-  supabaseUrl,
-  supabaseKey
-);
-
-    async function loadPackages(){
-
-  const { data, error } = await supabaseClient
-    .from('packages')
-    .select('*')
-    .eq('active', true)
-    .order('id', { ascending:true });
-
-  if(error){
-
-    console.log(error);
-
-    return;
+/* ── HERO BACKGROUND SLIDESHOW ── */
+async function loadHeroBg(){
+  const {data} = await supabaseClient.from('galeri').select('image_url').eq('active',true).order('id',{ascending:false});
+  if(!data||!data.length) return;
+  let i=0;
+  const bg = document.getElementById('heroBg');
+  function setBg(){
+    bg.style.backgroundImage=`linear-gradient(rgba(9,9,11,0.6),rgba(9,9,11,0.75)),url('${data[i].image_url}')`;
+    i=(i+1)%data.length;
   }
+  setBg(); setInterval(setBg,4500);
+}
 
-  const pricingList =
-    document.getElementById('pricingList');
+/* ── PRICING ── */
+async function loadPackages(){
+  const {data,error} = await supabaseClient.from('packages').select('*').eq('active',true).order('id',{ascending:true});
+  const list = document.getElementById('pricingList');
+  if(error||!data||!data.length){ list.innerHTML='<p style="color:#555;font-size:13px;">Paket belum tersedia.</p>'; return; }
 
-  pricingList.innerHTML =
-    data.map(pkg => `
-
-      <div class="card">
-
-        <h3>${pkg.name}</h3>
-
-        <div class="price">
-          ${pkg.price}
+  const featured = Math.floor(data.length/2); // tengah jadi featured
+  list.innerHTML = data.map((pkg,i)=>{
+    const feats = [pkg.duration,pkg.files,pkg.people,...(pkg.bonus?pkg.bonus.split('\n').filter(Boolean):[])];
+    return `
+      <div class="price-card ${i===featured?'featured':''}">
+        <div class="price-name">${pkg.name}</div>
+        <div class="price-val">${pkg.price}</div>
+        <div class="price-divider"></div>
+        <div class="price-features">
+          ${feats.map(f=>`<div class="price-feature">${f}</div>`).join('')}
         </div>
-
-        <p>
-          • ${pkg.duration}<br>
-          • ${pkg.files}<br>
-          • ${pkg.people}<br>
-          ${
-  pkg.bonus
-    .split('\n')
-    .map(item => `• ${item}`)
-    .join('<br>')
-}
-        </p>
-
-      </div>
-
-    `).join('');
-
+        <a href="#contact" class="btn-book">Pilih Paket Ini</a>
+      </div>`;
+  }).join('');
 }
 
-loadPackages();
-    
-const form = document.getElementById('bookingForm');
-
-form.addEventListener('submit', async (e) => {
-
-  e.preventDefault();
-
-  const kode =
-    'DR' + Math.floor(Math.random() * 100000);
-
-  const { error } = await supabaseClient
-    .from('bookings')
-    .insert([{
-
-      kode_booking: kode,
-
-      nama: document.getElementById('nama').value,
-
-      no_wa: document.getElementById('wa').value,
-
-      tanggal: document.getElementById('tanggal').value,
-
-      jam: document.getElementById('jam').value,
-
-      paket: document.getElementById('paket').value,
-
-      jumlah_orang: document.getElementById('jumlah').value,
-
-      catatan: document.getElementById('catatan').value
-
-    }]);
-
-  if(error){
-
-  alert(error.message);
-
-  console.log(error);
-
-  return;
-}
-  
-  alert(
-`Booking berhasil!
-
-Kode Booking: ${kode}
-
-Silakan screenshot / simpan kode booking ini untuk pembayaran dan pengambilan foto 🙏`
-);
-
-form.reset();
-
-});
+/* ── GALLERY ── */
 async function loadGallery(){
-
-  const { data, error } =
-  await supabaseClient
-    .from('galeri')
-    .select('*')
-    .eq('active', true)
-    .order('id',{ascending:false})
-
-  if(error){
-
-    console.log(error)
-
-    return
-  }
-
-  const galleryList =
-    document.getElementById('galleryList')
-
-  galleryList.innerHTML =
-    data.map(item => `
-
-      <img
-        src="${item.image_url}"
-        alt="${item.title}"
-        loading="lazy"
-      >
-
-    `).join('')
-
+  const {data,error} = await supabaseClient.from('galeri').select('*').eq('active',true).order('id',{ascending:false});
+  const list = document.getElementById('galleryList');
+  if(error||!data||!data.length){ list.innerHTML='<p style="color:#555;font-size:13px;">Belum ada foto.</p>'; return; }
+  list.innerHTML = data.map(item=>`
+    <div class="gallery-item" onclick="openLightbox('${item.image_url}')">
+      <img src="${item.image_url}" alt="${item.title}" loading="lazy">
+    </div>`).join('');
 }
 
-loadGallery()
+/* ── TESTIMONIALS LOOP ── */
+const track = document.getElementById('testiTrack');
+track.innerHTML += track.innerHTML;
 
-    async function loadHeroGallery(){
-
-  const { data, error } =
-  await supabaseClient
-    .from('galeri')
-    .select('*')
-    .eq('active', true)
-    .order('id',{ascending:false})
-
-  if(error || !data || data.length === 0){
-    return
-  }
-
-  let current = 0
-
-  const hero =
-  document.querySelector('.hero')
-
-  function changeBg(){
-
-    hero.style.backgroundImage =
-    `
-    linear-gradient(
-      rgba(0,0,0,0.45),
-      rgba(0,0,0,0.45)
-    ),
-    url('${data[current].image_url}')
-    `
-
-    current++
-
-    if(current >= data.length){
-      current = 0
-    }
-
-  }
-
-  changeBg()
-
-  setInterval(changeBg, 4000)
-
+/* ── LIGHTBOX ── */
+function openLightbox(src){
+  document.getElementById('lightboxImg').src=src;
+  document.getElementById('lightbox').classList.add('open');
+  document.body.style.overflow='hidden';
 }
+function closeLightbox(){
+  document.getElementById('lightbox').classList.remove('open');
+  document.body.style.overflow='';
+}
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeLightbox(); });
 
-loadHeroGallery()
-    
+/* ── BOOKING FORM ── */
+document.getElementById('bookingForm').addEventListener('submit', async e=>{
+  e.preventDefault();
+  const btn = document.getElementById('submitBtn');
+  btn.disabled=true; btn.textContent='Memproses...';
+
+  const kode='DR'+Math.floor(Math.random()*100000);
+  const {error} = await supabaseClient.from('bookings').insert([{
+    kode_booking: kode,
+    nama:         document.getElementById('nama').value,
+    no_wa:        document.getElementById('wa').value,
+    tanggal:      document.getElementById('tanggal').value,
+    jam:          document.getElementById('jam').value,
+    paket:        document.getElementById('paket').value,
+    jumlah_orang: document.getElementById('jumlah').value,
+    catatan:      document.getElementById('catatan').value,
+  }]);
+
+  btn.disabled=false; btn.textContent='Booking Sekarang →';
+
+  if(error){ alert('Gagal booking: '+error.message); return; }
+
+  document.getElementById('kodeDisplay').textContent=kode;
+  document.getElementById('successMsg').style.display='block';
+  document.getElementById('bookingForm').style.display='none';
+});
+
+/* ── INIT ── */
+loadHeroBg();
+loadPackages();
+loadGallery();
 </script>
 </body>
 </html>
