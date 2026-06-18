@@ -6,6 +6,7 @@
 <title>Stop Motion - DR Self Photo Studio</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/gif.js@0.2.0/dist/gif.js"></script>
 <style>
 
 :root{--bg:#09090b;--bg2:#111115;--border:rgba(255,255,255,0.07);--accent:#C9A96E;--accent2:#E8C99A;--radius:16px;}
@@ -78,7 +79,7 @@ body{background:var(--bg);color:#e8e8f0;font-family:"Poppins",sans-serif;min-hei
     <div class="controls-row">
       <button class="btn btn-play" id="playBtn" onclick="togglePlay()">&#9654; Play</button>
       <button class="btn btn-fs" onclick="toggleFullscreen()">&#x26F6; Fullscreen</button>
-      <button class="btn btn-dl" id="dlBtn" onclick="downloadVideo()">&#8595; Download Video</button>
+      <button class="btn btn-dl" id="dlBtn" onclick="downloadVideo()">&#8595; Download GIF</button>
     </div>
     <div class="dl-progress" id="dlProgress">
       <div class="dl-bar-wrap"><div class="dl-bar-fill" id="dlBar"></div></div>
@@ -152,83 +153,65 @@ async function downloadVideo(){
   prog.style.display='block';
 
   try{
-    // Step 1: Fetch images as blobs via Supabase (avoids CORS on canvas)
+    // Step 1: Fetch all images as bitmaps
     lbl.textContent='Mengunduh foto...';
     const bitmaps=[];
     for(let i=0;i<imgs.length;i++){
       const resp=await fetch(imgs[i]);
-      if(!resp.ok) throw new Error('Gagal fetch foto '+(i+1));
       const blob=await resp.blob();
       const bmp=await createImageBitmap(blob);
       bitmaps.push(bmp);
-      bar.style.width=((i+1)/imgs.length*40)+'%';
-      lbl.textContent='Mengunduh foto '+(i+1)+' / '+imgs.length+'...';
+      bar.style.width=((i+1)/imgs.length*50)+'%';
+      lbl.textContent='Mengunduh '+(i+1)+' / '+imgs.length+'...';
     }
 
-    // Step 2: Setup canvas
+    // Step 2: Build GIF
+    lbl.textContent='Membuat GIF...';
+    bar.style.width='55%';
+
     const canvas=document.createElement('canvas');
-    canvas.width=bitmaps[0].width;
-    canvas.height=bitmaps[0].height;
+    // Scale down for faster processing & smaller file
+    const scale=Math.min(1,800/bitmaps[0].width);
+    canvas.width=Math.round(bitmaps[0].width*scale);
+    canvas.height=Math.round(bitmaps[0].height*scale);
     const ctx=canvas.getContext('2d');
-    ctx.drawImage(bitmaps[0],0,0);
 
-    // Step 3: Pick best format
-    const types=[
-      {mime:'video/mp4;codecs=avc1.42E01E',ext:'mp4'},
-      {mime:'video/mp4',ext:'mp4'},
-      {mime:'video/webm;codecs=vp9',ext:'webm'},
-      {mime:'video/webm;codecs=vp8',ext:'webm'},
-      {mime:'video/webm',ext:'webm'},
-    ];
-    const chosen=types.find(t=>MediaRecorder.isTypeSupported(t.mime))||{mime:'video/webm',ext:'webm'};
-
-    const frameMs=+sld.value;
-    const stream=canvas.captureStream(0);
-    const videoTrack=stream.getVideoTracks()[0];
-    const chunks=[];
-
-    const rec=new MediaRecorder(stream,{
-      mimeType:chosen.mime,
-      videoBitsPerSecond:15000000
+    const gif=new GIF({
+      workers:2,
+      quality:8,
+      width:canvas.width,
+      height:canvas.height,
+      workerScript:'https://cdn.jsdelivr.net/npm/gif.js@0.2.0/dist/gif.worker.js'
     });
-    rec.ondataavailable=e=>{if(e.data&&e.data.size>0)chunks.push(e.data);};
 
-    // Step 4: Record — draw frame, requestFrame, wait
-    lbl.textContent='Merekam...';
-    bar.style.width='45%';
-    rec.start();
-    await new Promise(r=>setTimeout(r,150));
-
+    const delay=+sld.value;
     for(let i=0;i<bitmaps.length;i++){
       ctx.clearRect(0,0,canvas.width,canvas.height);
-      ctx.drawImage(bitmaps[i],0,0);
-      if(videoTrack.requestFrame) videoTrack.requestFrame();
-      bar.style.width=(45+(i+1)/bitmaps.length*45)+'%';
-      lbl.textContent='Merekam frame '+(i+1)+' / '+bitmaps.length+'...';
-      await new Promise(r=>setTimeout(r,frameMs));
+      ctx.drawImage(bitmaps[i],0,0,canvas.width,canvas.height);
+      gif.addFrame(ctx,{copy:true,delay:delay});
     }
 
-    // Extra frame at end to flush
-    await new Promise(r=>setTimeout(r,200));
-
-    await new Promise(resolve=>{rec.onstop=resolve;rec.stop();});
-
-    bar.style.width='95%';
-    lbl.textContent='Menyimpan...';
-
-    const totalSize=chunks.reduce((a,c)=>a+c.size,0);
-    if(totalSize<500) throw new Error('Video kosong, browser tidak support. Coba Chrome.');
-
-    const blob=new Blob(chunks,{type:chosen.mime});
-    const url=URL.createObjectURL(blob);
-    const a=document.createElement('a');
-    a.href=url;a.download='stopmotion-'+kode+'.'+chosen.ext;
-    document.body.appendChild(a);a.click();document.body.removeChild(a);
-    setTimeout(()=>URL.revokeObjectURL(url),5000);
-
-    bar.style.width='100%';
-    lbl.textContent='Selesai! '+chosen.ext.toUpperCase()+' ('+Math.round(totalSize/1024)+' KB)';
-    setTimeout(()=>{prog.style.display='none';bar.style.width='0%';},4000);
+    await new Promise((resolve,reject)=>{
+      gif.on('progress',p=>{
+        bar.style.width=(55+p*40)+'%';
+        lbl.textContent='Encoding GIF... '+Math.round(p*100)+'%';
+      });
+      gif.on('finished',blob=>{
+        bar.style.width='100%';
+        lbl.textContent='Selesai! Menyimpan...';
+        const url=URL.createObjectURL(blob);
+        const a=document.createElement('a');
+        a.href=url;
+        a.download='stopmotion-'+kode+'.gif';
+        document.body.appendChild(a);a.click();document.body.removeChild(a);
+        setTimeout(()=>URL.revokeObjectURL(url),5000);
+        lbl.textContent='Tersimpan! ('+Math.round(blob.size/1024)+' KB)';
+        setTimeout(()=>{prog.style.display='none';bar.style.width='0%';},4000);
+        resolve();
+      });
+      gif.on('error',reject);
+      gif.render();
+    });
 
   }catch(err){
     console.error(err);
