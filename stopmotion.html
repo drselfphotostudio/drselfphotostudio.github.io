@@ -152,7 +152,7 @@ async function downloadVideo(){
   prog.style.display='block';
 
   try{
-    // Load all images
+    // Step 1: Load all images into memory
     lbl.textContent='Memuat foto...';
     const frames=[];
     for(let i=0;i<imgs.length;i++){
@@ -160,82 +160,97 @@ async function downloadVideo(){
         const x=new Image();
         x.crossOrigin='anonymous';
         x.onload=()=>res(x);
-        x.onerror=rej;
-        x.src=imgs[i]+'?t='+Date.now();
+        x.onerror=()=>rej(new Error('Gagal load foto '+(i+1)));
+        x.src=imgs[i];
       });
       frames.push(im);
-      bar.style.width=((i+1)/imgs.length*30)+'%';
+      bar.style.width=((i+1)/imgs.length*25)+'%';
       lbl.textContent='Memuat foto '+(i+1)+' / '+imgs.length+'...';
     }
 
-    // Setup canvas
+    // Step 2: Setup canvas
     const canvas=document.createElement('canvas');
     canvas.width=frames[0].naturalWidth;
     canvas.height=frames[0].naturalHeight;
     const ctx=canvas.getContext('2d');
 
-    // Pick best supported format
+    // Draw first frame so canvas is not empty before stream starts
+    ctx.drawImage(frames[0],0,0);
+
+    // Step 3: Setup MediaRecorder AFTER canvas has content
+    const frameMs=+sld.value;
+    const fps=Math.max(1,Math.round(1000/frameMs));
+
     const types=[
-      'video/mp4;codecs=avc1',
-      'video/mp4',
-      'video/webm;codecs=vp9',
-      'video/webm;codecs=vp8',
-      'video/webm'
+      {mime:'video/mp4;codecs=avc1.42E01E',ext:'mp4'},
+      {mime:'video/mp4',ext:'mp4'},
+      {mime:'video/webm;codecs=vp9',ext:'webm'},
+      {mime:'video/webm;codecs=vp8',ext:'webm'},
+      {mime:'video/webm',ext:'webm'},
     ];
-    const mimeType=types.find(t=>MediaRecorder.isTypeSupported(t))||'video/webm';
-    const ext=mimeType.includes('mp4')?'mp4':'webm';
+    const chosen=types.find(t=>MediaRecorder.isTypeSupported(t.mime))||{mime:'video/webm',ext:'webm'};
 
-    lbl.textContent='Menyiapkan rekaman...';
-    bar.style.width='35%';
-
-    const stream=canvas.captureStream(0); // 0 = manual frame control
-    const rec=new MediaRecorder(stream,{
-      mimeType,
-      videoBitsPerSecond:10000000
-    });
+    const stream=canvas.captureStream(fps);
     const chunks=[];
-    rec.ondataavailable=e=>{if(e.data&&e.data.size>0)chunks.push(e.data);};
 
+    const rec=new MediaRecorder(stream,{
+      mimeType:chosen.mime,
+      videoBitsPerSecond:12000000
+    });
+
+    rec.ondataavailable=e=>{
+      if(e.data&&e.data.size>0) chunks.push(e.data);
+    };
+
+    // Step 4: Start recording then draw frames
+    lbl.textContent='Merekam video...';
+    bar.style.width='30%';
+
+    rec.start(100); // collect data every 100ms
+
+    // Small delay to let recorder initialize
+    await new Promise(r=>setTimeout(r,200));
+
+    for(let i=0;i<frames.length;i++){
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      ctx.drawImage(frames[i],0,0);
+      bar.style.width=(30+(i+1)/frames.length*55)+'%';
+      lbl.textContent='Merekam frame '+(i+1)+' / '+frames.length+'...';
+      await new Promise(r=>setTimeout(r,frameMs));
+    }
+
+    // Step 5: Stop and wait for final data
     await new Promise(resolve=>{
       rec.onstop=resolve;
-      rec.start();
-
-      (async()=>{
-        const frameMs=+sld.value;
-        for(let i=0;i<frames.length;i++){
-          ctx.clearRect(0,0,canvas.width,canvas.height);
-          ctx.drawImage(frames[i],0,0);
-          // Force frame capture
-          stream.getVideoTracks()[0].requestFrame&&
-            stream.getVideoTracks()[0].requestFrame();
-          bar.style.width=(35+(i+1)/frames.length*60)+'%';
-          lbl.textContent='Merender frame '+(i+1)+' / '+frames.length+'...';
-          await new Promise(r=>setTimeout(r,frameMs));
-        }
-        rec.stop();
-      })();
+      rec.stop();
     });
 
-    // Save file
-    bar.style.width='100%';
+    bar.style.width='95%';
     lbl.textContent='Menyimpan file...';
-    const blob=new Blob(chunks,{type:mimeType});
+
+    // Step 6: Check we got data
+    if(!chunks.length) throw new Error('Tidak ada data video yang terekam');
+    const totalSize=chunks.reduce((a,c)=>a+c.size,0);
+    if(totalSize<1000) throw new Error('Video terlalu kecil, coba lagi');
+
+    const blob=new Blob(chunks,{type:chosen.mime});
     const url=URL.createObjectURL(blob);
     const a=document.createElement('a');
     a.href=url;
-    a.download='stopmotion-'+kode+'.'+ext;
+    a.download='stopmotion-'+kode+'.'+chosen.ext;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+    setTimeout(()=>URL.revokeObjectURL(url),3000);
 
-    lbl.textContent='Selesai! Video tersimpan ✓';
-    setTimeout(()=>{prog.style.display='none';bar.style.width='0%';},3000);
+    bar.style.width='100%';
+    lbl.textContent='Selesai! ('+chosen.ext.toUpperCase()+', '+Math.round(totalSize/1024)+' KB)';
+    setTimeout(()=>{prog.style.display='none';bar.style.width='0%';},4000);
 
   }catch(err){
     console.error(err);
     lbl.textContent='Gagal: '+err.message;
-    setTimeout(()=>{prog.style.display='none';bar.style.width='0%';},4000);
+    setTimeout(()=>{prog.style.display='none';bar.style.width='0%';},5000);
   }finally{
     btn.disabled=false;
   }
