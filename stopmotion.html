@@ -6,7 +6,7 @@
 <title>Stop Motion - DR Self Photo Studio</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="https://cdn.jsdelivr.net/npm/omggif@1.0.10/omggif.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gifshot@0.4.5/build/gifshot.min.js"></script>
 <style>
 
 :root{--bg:#09090b;--bg2:#111115;--border:rgba(255,255,255,0.07);--accent:#C9A96E;--accent2:#E8C99A;--radius:16px;}
@@ -153,14 +153,20 @@ async function downloadVideo(){
   prog.style.display='block';
 
   try{
-    // Load images
+    // Convert image URLs to data URLs via canvas (bypass CORS)
     lbl.textContent='Mengunduh foto...';
-    const bitmaps=[];
+    const dataURLs=[];
     for(let i=0;i<imgs.length;i++){
       const resp=await fetch(imgs[i]);
       const blob=await resp.blob();
       const bmp=await createImageBitmap(blob);
-      bitmaps.push(bmp);
+      const c=document.createElement('canvas');
+      const MAX=600;
+      const scale=Math.min(1,MAX/bmp.width);
+      c.width=Math.round(bmp.width*scale);
+      c.height=Math.round(bmp.height*scale);
+      c.getContext('2d').drawImage(bmp,0,0,c.width,c.height);
+      dataURLs.push(c.toDataURL('image/png'));
       bar.style.width=((i+1)/imgs.length*50)+'%';
       lbl.textContent='Mengunduh '+(i+1)+' / '+imgs.length+'...';
     }
@@ -168,48 +174,32 @@ async function downloadVideo(){
     lbl.textContent='Membuat GIF...';
     bar.style.width='55%';
 
-    // Scale down to max 600px wide for speed
-    const MAX=600;
-    const scale=Math.min(1,MAX/bitmaps[0].width);
-    const W=Math.round(bitmaps[0].width*scale);
-    const H=Math.round(bitmaps[0].height*scale);
-
-    const canvas=document.createElement('canvas');
-    canvas.width=W; canvas.height=H;
-    const ctx=canvas.getContext('2d',{willReadFrequently:true});
-
-    const delay=Math.round(+sld.value/10); // GIF delay in 10ms units
-    const bufSize=W*H*imgs.length*5+1024;
-    const buf=new Uint8Array(bufSize);
-    const writer=new GifWriter(buf,W,H,{loop:0});
-
-    for(let i=0;i<bitmaps.length;i++){
-      ctx.clearRect(0,0,W,H);
-      ctx.drawImage(bitmaps[i],0,0,W,H);
-      const imgData=ctx.getImageData(0,0,W,H);
-      const {palette,indexed}=quantize(imgData.data,W,H);
-      writer.addFrame(0,0,W,H,indexed,{
-        palette,
-        delay,
-        disposal:2
+    await new Promise((resolve,reject)=>{
+      gifshot.createGIF({
+        images: dataURLs,
+        gifWidth: Math.round(dataURLs.length>0 ? 600 : 480),
+        gifHeight: 0, // auto
+        interval: +sld.value/1000,
+        numWorkers: 2,
+        frameDuration: 1,
+        sampleInterval: 10,
+        progressCallback: p=>{
+          bar.style.width=(55+p*40)+'%';
+          lbl.textContent='Encoding... '+Math.round(p*100)+'%';
+        }
+      }, result=>{
+        if(result.error){reject(new Error(result.error));return;}
+        bar.style.width='100%';
+        lbl.textContent='Menyimpan...';
+        const a=document.createElement('a');
+        a.href=result.image;
+        a.download='stopmotion-'+kode+'.gif';
+        document.body.appendChild(a);a.click();document.body.removeChild(a);
+        lbl.textContent='Tersimpan!';
+        setTimeout(()=>{prog.style.display='none';bar.style.width='0%';},3000);
+        resolve();
       });
-      bar.style.width=(55+(i+1)/bitmaps.length*40)+'%';
-      lbl.textContent='Frame '+(i+1)+' / '+bitmaps.length+'...';
-      // Yield to browser
-      await new Promise(r=>setTimeout(r,0));
-    }
-
-    const gifData=buf.slice(0,writer.end());
-    const blob2=new Blob([gifData],{type:'image/gif'});
-    const url=URL.createObjectURL(blob2);
-    const a=document.createElement('a');
-    a.href=url; a.download='stopmotion-'+kode+'.gif';
-    document.body.appendChild(a); a.click(); document.body.removeChild(a);
-    setTimeout(()=>URL.revokeObjectURL(url),5000);
-
-    bar.style.width='100%';
-    lbl.textContent='Tersimpan! ('+Math.round(blob2.size/1024)+' KB)';
-    setTimeout(()=>{prog.style.display='none';bar.style.width='0%';},4000);
+    });
 
   }catch(err){
     console.error(err);
@@ -218,48 +208,6 @@ async function downloadVideo(){
   }finally{
     btn.disabled=false;
   }
-}
-
-// Simple median-cut color quantizer (256 colors)
-function quantize(data,w,h){
-  // Build color map using simple popularity algorithm
-  const colorMap={};
-  for(let i=0;i<data.length;i+=4){
-    // Reduce to 6-bit per channel for grouping
-    const r=data[i]>>2, g=data[i+1]>>2, b=data[i+2]>>2;
-    const key=(r<<12)|(g<<6)|b;
-    colorMap[key]=(colorMap[key]||0)+1;
-  }
-  // Sort by popularity, take top 255 (+1 transparent)
-  const sorted=Object.entries(colorMap).sort((a,b)=>b[1]-a[1]);
-  const palette=[];
-  const palMap={};
-  palette.push(0); // transparent black at 0
-  for(let j=0;j<Math.min(255,sorted.length);j++){
-    const k=+sorted[j][0];
-    const r=(k>>12)&63, g=(k>>6)&63, b=k&63;
-    palMap[k]=j+1;
-    palette.push((r<<18)|(g<<12)|(b<<6)); // pack as 24-bit
-  }
-  // Convert palette to flat RGB array for omggif
-  const flatPal=new Uint8Array(256*3);
-  for(let j=0;j<palette.length;j++){
-    flatPal[j*3]=(palette[j]>>18)&63;
-    flatPal[j*3+1]=(palette[j]>>12)&63;
-    flatPal[j*3+2]=(palette[j]>>6)&63;
-  }
-  // Expand back to full 8-bit
-  for(let j=0;j<256*3;j++) flatPal[j]=(flatPal[j]<<2)|(flatPal[j]>>4);
-
-  // Build indexed array
-  const indexed=new Uint8Array(w*h);
-  for(let i=0;i<w*h;i++){
-    const pi=i*4;
-    const r=data[pi]>>2, g=data[pi+1]>>2, b=data[pi+2]>>2;
-    const key=(r<<12)|(g<<6)|b;
-    indexed[i]=palMap[key]||0;
-  }
-  return{palette:flatPal,indexed};
 }
 
 loadImages();
