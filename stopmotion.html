@@ -181,6 +181,8 @@ async function downloadVideo(){
       mimeType:'video/webm'
     });
 
+    console.log('MediaRecorder supported:',
+MediaRecorder.isTypeSupported('video/webm'));
     const chunks=[];
 
     recorder.ondataavailable=e=>{
@@ -189,7 +191,7 @@ async function downloadVideo(){
       }
     };
 
-    recorder.start();
+    recorder.start(100);
 
     const wm=document.querySelector('.watermark img');
 
@@ -238,16 +240,24 @@ async function downloadVideo(){
       );
     }
 
-    recorder.stop();
+    recorder.requestData();
+await new Promise(r=>setTimeout(r,300));
+recorder.stop();
 
     await new Promise(resolve=>{
       recorder.onstop=resolve;
     });
 
-    const blob=new Blob(
-      chunks,
-      {type:'video/webm'}
-    );
+    if(chunks.length===0){
+  throw new Error('Video kosong (chunks = 0)');
+}
+
+const blob=new Blob(
+  chunks,
+  {type:'video/webm'}
+);
+
+console.log('Video size:',blob.size);
 
     const url=URL.createObjectURL(blob);
 
