@@ -107,13 +107,27 @@ function updSlider(){
 sld.addEventListener('input',()=>{updSlider();if(playing){clearInterval(intv);startPlay();}});
 updSlider();
 async function loadImages(){
-  const{data,error}=await sb.storage.from('customer-photo').list(kode);
-  const ov=document.getElementById('loadingOverlay');
-  ov.style.opacity='0';setTimeout(()=>ov.style.display='none',400);
-  if(error||!data||!data.length)return;
-  imgs=data.map(f=>SUPA_URL+'/storage/v1/object/public/customer-photo/'+kode+'/'+f.name);
-  document.getElementById('preview').src=imgs[0];
-}
+  const { data, error } = await sb.storage
+  .from('customer-photo')
+  .list(kode,{limit:100});
+
+if(error||!data||!data.length)return;
+
+imgs=data
+  .filter(f=>f.name && !f.name.startsWith('.'))
+  .sort((a,b)=>a.name.localeCompare(
+      b.name,
+      undefined,
+      {numeric:true}
+  ))
+  .map(f=>
+    SUPA_URL+
+    '/storage/v1/object/public/customer-photo/' +
+    kode + '/' + f.name
+  );
+
+console.log('Jumlah foto:',imgs.length);
+console.log(imgs);
 function updBadge(){
   const t=imgs.length;
   document.getElementById('progressFill').style.width=t>1?(idx/(t-1)*100)+'%':'0%';
