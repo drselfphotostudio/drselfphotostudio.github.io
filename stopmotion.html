@@ -107,23 +107,53 @@ function updSlider(){
 sld.addEventListener('input',()=>{updSlider();if(playing){clearInterval(intv);startPlay();}});
 updSlider();
 async function loadImages(){
+
   const { data, error } = await sb.storage
-  .from('customer-photo')
-  .list(kode,{limit:100});
+    .from('customer-photo')
+    .list(kode,{limit:100});
 
-if(error||!data||!data.length)return;
+  const ov=document.getElementById('loadingOverlay');
+  ov.style.opacity='0';
+  setTimeout(()=>ov.style.display='none',400);
 
-imgs = data.map(f =>
-  SUPA_URL +
-  '/storage/v1/object/public/customer-photo/' +
-  kode + '/' + f.name
-);
+  if(error){
+    console.error(error);
+    return;
+  }
 
-console.log('Jumlah foto:', imgs.length);
-console.log(imgs);
+  if(!data || data.length===0){
+    console.log('Folder kosong');
+    return;
+  }
 
-console.log('Jumlah foto:',imgs.length);
-console.log(imgs);
+  imgs=data
+    .filter(f =>
+      f.name &&
+      !f.name.startsWith('.') &&
+      /\.(jpg|jpeg|png|webp)$/i.test(f.name)
+    )
+    .sort((a,b)=>
+      a.name.localeCompare(
+        b.name,
+        undefined,
+        {numeric:true}
+      )
+    )
+    .map(f =>
+      `${SUPA_URL}/storage/v1/object/public/customer-photo/${kode}/${f.name}`
+    );
+
+  console.log('Jumlah foto:',imgs.length);
+  console.log(imgs);
+
+  if(imgs.length){
+    document.getElementById('preview').src=imgs[0];
+  }
+}
+  document.getElementById('preview').src=imgs[0];
+  document.getElementById('preview').onerror=e=>{
+  console.error('Gagal load gambar',e.target.src);
+};
 function updBadge(){
   const t=imgs.length;
   document.getElementById('progressFill').style.width=t>1?(idx/(t-1)*100)+'%':'0%';
