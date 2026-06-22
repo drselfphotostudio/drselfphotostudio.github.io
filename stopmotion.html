@@ -237,45 +237,59 @@ MediaRecorder.isTypeSupported('video/webm'));
     const wm=document.querySelector('.watermark img');
 
     for(let i=0;i<imgs.length;i++){
+      console.log(
+  'Frame video',
+  i+1,
+  '/',
+  imgs.length,
+  imgs[i]
+);
 
       const img=new Image();
 img.crossOrigin='anonymous';
 img.src=imgs[i];
 
       await new Promise(r=>{
-        img.onload=r;
-      });
+  img.onload=r;
+});
 
-      ctx.clearRect(0,0,canvas.width,canvas.height);
+ctx.clearRect(0,0,canvas.width,canvas.height);
 
-      ctx.drawImage(
-        img,
-        0,
-        0,
-        canvas.width,
-        canvas.height
-      );
+ctx.drawImage(
+  img,
+  0,
+  0,
+  canvas.width,
+  canvas.height
+);
 
-      stream.getVideoTracks()[0].requestFrame?.();
+if(wm){
 
-      if(wm){
+  const wmW=canvas.width*0.12;
+  const wmH=wm.height*(wmW/wm.width);
 
-        const wmW=canvas.width*0.12;
-        const wmH=wm.height*(wmW/wm.width);
+  ctx.globalAlpha=0.75;
 
-        ctx.globalAlpha=0.75;
+  ctx.drawImage(
+    wm,
+    20,
+    canvas.height-wmH-20,
+    wmW,
+    wmH
+  );
 
-        ctx.drawImage(
-          wm,
-          20,
-          canvas.height-wmH-20,
-          wmW,
-          wmH
-        );
+  ctx.globalAlpha=1;
+}
 
-        ctx.globalAlpha=1;
-      }
+// paksa browser menggambar dulu
+await new Promise(r=>requestAnimationFrame(r));
 
+// paksa kirim frame ke recorder
+stream.getVideoTracks()[0].requestFrame?.();
+
+// beri jeda lebih lama
+await new Promise(r=>setTimeout(r,1000));
+      
       bar.style.width=((i+1)/imgs.length*100)+'%';
       lbl.textContent='Frame '+(i+1)+' / '+imgs.length;
 
@@ -286,6 +300,8 @@ img.src=imgs[i];
 
     recorder.requestData();
 await new Promise(r=>setTimeout(r,300));
+await new Promise(r=>setTimeout(r,1000));
+await new Promise(r=>setTimeout(r,2000));
 recorder.stop();
 
     await new Promise(resolve=>{
