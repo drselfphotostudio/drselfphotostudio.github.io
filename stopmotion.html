@@ -113,18 +113,14 @@ async function loadImages(){
 
 if(error||!data||!data.length)return;
 
-imgs=data
-  .filter(f=>f.name && !f.name.startsWith('.'))
-  .sort((a,b)=>a.name.localeCompare(
-      b.name,
-      undefined,
-      {numeric:true}
-  ))
-  .map(f=>
-    SUPA_URL+
-    '/storage/v1/object/public/customer-photo/' +
-    kode + '/' + f.name
-  );
+imgs = data.map(f =>
+  SUPA_URL +
+  '/storage/v1/object/public/customer-photo/' +
+  kode + '/' + f.name
+);
+
+console.log('Jumlah foto:', imgs.length);
+console.log(imgs);
 
 console.log('Jumlah foto:',imgs.length);
 console.log(imgs);
