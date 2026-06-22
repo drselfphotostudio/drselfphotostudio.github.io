@@ -43,7 +43,7 @@
  * Also implement fix in color conversion described at http://stackoverflow.com/questions/16371712/neuquant-js-javascript-color-quantization-hidden-bug-in-js-conversion
  */
 
-export default function NeuQuant () {
+function NeuQuant() {
     var netsize = 256; // number of colours used
 
     // four primes near 500 - assume no image has a length so large
@@ -640,7 +640,7 @@ export default function NeuQuant () {
 // including animation and compression.  It does not rely on any specific
 // underlying system, so should run in the browser, Node, or Plask.
 
-export default function gifWriter (buf, width, height, gopts) {
+function GifWriter(buf,width,height,gopts) {
     var p = 0;
 
     gopts = gopts === undefined ? {} : gopts;
@@ -1045,7 +1045,7 @@ body{background:var(--bg);color:#e8e8f0;font-family:"Poppins",sans-serif;min-hei
     <div class="controls-row">
       <button class="btn btn-play" id="playBtn" onclick="togglePlay()">&#9654; Play</button>
       <button class="btn btn-fs" onclick="toggleFullscreen()">&#x26F6; Fullscreen</button>
-      <button class="btn btn-dl" id="dlBtn" onclick="downloadVideo()">&#8595; Download GIF</button>
+      <button class="btn btn-dl" id="dlBtn" onclick="downloadVideo()">&#8595; ↓ Download Stop Motion</button>
     </div>
     <div class="dl-progress" id="dlProgress">
       <div class="dl-bar-wrap"><div class="dl-bar-fill" id="dlBar"></div></div>
@@ -1142,7 +1142,7 @@ async function downloadVideo(){
       lbl.textContent='Mengunduh '+(i+1)+' / '+imgs.length+'...';
     }
 
-    lbl.textContent='Encoding GIF...';
+    lbl.textContent='Membuat GIF...';
     bar.style.width='40%';
 
     const delay=Math.round(+sld.value/10);
@@ -1166,12 +1166,19 @@ async function downloadVideo(){
       const cmap=nq.process(); // returns BGR colormap flat array 256*3
 
       // GifWriter palette: Uint8Array of 256*3 in RGB order
-      const palette=new Uint8Array(256*3);
-      for(let j=0;j<256;j++){
-        palette[j*3+0]=cmap[j*3+2]; // R
-        palette[j*3+1]=cmap[j*3+1]; // G
-        palette[j*3+2]=cmap[j*3+0]; // B
-      }
+      const palette=[];
+
+for(let j=0;j<256;j++){
+  const r=cmap[j*3+2];
+  const g=cmap[j*3+1];
+  const b=cmap[j*3+0];
+
+  palette.push(
+    (r << 16) |
+    (g << 8) |
+    b
+  );
+}
 
       // Index pixels
       const indexed=new Uint8Array(npx);
